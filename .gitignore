@@ -1,0 +1,16 @@
+# build output (made by `node tools/build.js`)
+out/
+export/
+capacitor/www/index.html
+# dependencies & native build products
+node_modules/
+capacitor/ios/App/Pods/
+capacitor/android/.gradle/
+capacitor/android/build/
+capacitor/android/app/build/
+capacitor/android/capacitor-cordova-android-plugins/build/
+capacitor/android/local.properties
+*.keystore
+*.jks
+.DS_Store
+__pycache__/

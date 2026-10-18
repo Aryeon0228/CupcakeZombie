@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "name": "CupcakeZombie tray and mold",
+  "format": "PNG RGBA",
+  "gridSizes": [
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "assets": [
+    {
+      "key": "tray_base",
+      "file": "assets/tray_base.png",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "visibleBounds": {
+        "x": 84,
+        "y": 133,
+        "width": 1087,
+        "height": 1042
+      },
+      "anchor": {
+        "x": 627,
+        "y": 1174
+      },
+      "alpha": {
+        "zero": 421161,
+        "opaque": 21,
+        "partial": 1151334,
+        "touchesCanvasEdge": false,
+        "center": 252
+      }
+    },
+    {
+      "key": "mold_player",
+      "file": "assets/mold_player.png",
+      "sourceSize": {
+        "width": 1312,
+        "height": 1199
+      },
+      "visibleBounds": {
+        "x": 151,
+        "y": 113,
+        "width": 1018,
+        "height": 1005
+      },
+      "anchor": {
+        "x": 659.5,
+        "y": 1117
+      },
+      "alpha": {
+        "zero": 942180,
+        "opaque": 15,
+        "partial": 630893,
+        "touchesCanvasEdge": false,
+        "center": 253
+      }
+    },
+    {
+      "key": "tray_well",
+      "file": "assets/tray_well.png",
+      "sourceSize": {
+        "width": 1562,
+        "height": 1007
+      },
+      "visibleBounds": {
+        "x": 147,
+        "y": 164,
+        "width": 1268,
+        "height": 663
+      },
+      "anchor": {
+        "x": 780.5,
+        "y": 826
+      },
+      "alpha": {
+        "zero": 886548,
+        "opaque": 7,
+        "partial": 686379,
+        "touchesCanvasEdge": false,
+        "center": 252
+      }
+    }
+  ]
+}

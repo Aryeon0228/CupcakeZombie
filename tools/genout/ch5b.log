@@ -1,0 +1,6 @@
+5-4 레몬요거트: first=1/12 waves=6 greedy=true surv=2 n=12 (1653ms)
+5-5 서리 낀 손님: first=2/18 waves=9 greedy=true surv=Infinity n=18 (130ms)
+5-6 늦게 터지는 연쇄: NONE (96605ms)
+5-8 향과 서리: NONE (99006ms)
+5-9 줄 선 홍차 손님: first=2/23 waves=6 greedy=false surv=Infinity n=23 (2174ms)
+5-10 5장 마무리: first=1/31 waves=9 greedy=false surv=Infinity n=31 (8068ms)

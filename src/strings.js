@@ -1,0 +1,155 @@
+// ---------- i18n ----------
+const STR = {
+ko: {
+  'title.h1': '컵케익 <span class="z">좀비</span>',
+  'title.tagline': '내가 곰팡이가 되어 진열대를 상하게 만드는 퍼즐',
+  'title.play': '시작하기', 'title.continue': '이어서 하기 · {n}',
+  'title.map': '스테이지 고르기', 'title.daily': '오늘의 퍼즐', 'title.dailyDone': '완료',
+  'title.settings': '설정', 'title.streak': '{n}일 연속', 'title.foot': 'v3 플레이테스트 빌드',
+  'map.title': '스테이지', 'map.chapter': '{n}장', 'map.locked': '앞 스테이지를 먼저 깨면 열려요',
+  'map.ariaStage': '스테이지 {n} {name}', 'map.ariaStars': ', 별 {n}개', 'map.ariaLocked': ', 잠김',
+  'aria.home': '처음으로', 'aria.back': '뒤로', 'aria.help': '이 진열대의 규칙',
+  'aria.board': '머핀 틀 게임판. 방향키로 칸을 고르고 Enter로 포자를 날려요.',
+  'play.fire': '{name}에 포자 발사!', 'play.undo': '되돌리기', 'play.retry': '다시', 'play.hint': '힌트',
+  'play.stageLabel': '{ch}장 · STAGE {n}', 'play.daily': '오늘의 퍼즐',
+  'hud.customers': '손님 {n}명 대기', 'hud.stars3': '되돌리기 없이 깨면 별 3개', 'hud.starsNow': '지금 깨면 별 {n}개',
+  'hint.default': '컵케익을 한 번 누르면 어디로 번지는지 보여요. 한 번 더 누르면 포자 발사. <b>남은 포자 {n}</b>',
+  'hint.busy': '<b>퍼지는 중…</b>', 'hint.hint': '<b>힌트</b> 노란 화살표가 가리키는 컵케익에 쏘세요.',
+  'hint.spoiled': '상한 ', 'hint.sealedInf': '비닐 안에서 상했어요. 포자가 밖으로 못 나가요.', 'hint.inf': '이미 곰팡이투성이예요.',
+  'hint.wrapPrefix': '비닐 포장 · ', 'hint.lidOn': ' (뚜껑 있음)', 'hint.lidOff': ' (뚜껑 벗겨짐 · 한 번만 더!)',
+  'hint.cust': ' 손님이 {n}턴 뒤에 사 가요!', 'hint.spatula': '주걱',
+  'rule.basic': '상하면 위·아래·양옆 네 칸에 포자를 옮겨요.',
+  'rule.berry': '상하면 대각선 네 칸에 포자를 옮겨요.',
+  'rule.sprinkle': '상하면 둘레 여덟 칸 전부에 포자가 튀어요.',
+  'rule.cherry': '상하면 체리가 네 방향으로 굴러가 처음 만나는 컵케익을 감염시켜요.',
+  'rule.cream': '상하면 크림이 네 방향으로 두 칸씩 튀어요. 빈칸 하나는 넘어가요.',
+  'rule.butter': '뚜껑 때문에 포자를 두 번 맞아야 상해요.',
+  'rule.wrap': '옆에서 옮으면 비닐 안에서 상하지만 밖으로 못 퍼뜨려요. 직접 쏘면 비닐이 찢어져요.',
+  'rule.cust': '빨간 숫자만큼 턴이 지나면 그 컵케익을 사 가요. 그 전에 상하게 만드세요.',
+  'rule.defl': '굴러가던 체리가 주걱에 부딪히면 90도로 꺾여요.',
+  'rule.earl_grey': '상하면 향이 퍼져서 거리 상관없이 다른 얼그레이 전부를 상하게 해요. 다른 컵케익엔 안 옮겨요.',
+  'rule.lemon_yogurt': '포자를 맞으면 차가워서 한 턴 버텨요. 턴이 끝날 때 상하면서 위·아래·양옆으로 옮겨요.',
+  'rule.espresso': '상하면 위·아래·양옆으로 센 포자를 날려요. 비닐도 찢고, 버터 뚜껑도 한 방에 날려요.',
+  'rule.mint_choco': '절대 안 상해요. 체리를 막고, 크림도 못 넘어가요. 클리어에는 상관없어요.',
+  'fx.pending': '버티는 중!', 'fx.espresso': '한 방!', 'toast.wall': '민트초코는 안 상해요',
+  'hint.pending': '포자를 맞고 버티는 중이에요. 이번 턴이 끝나면 상해요. 손님이 그 전에 오면 신선한 걸로 쳐요!',
+  'leg.title': '이 진열대의 컵케익', 'leg.close': '닫기', 'leg.again': '규칙 카드 다시 보기',
+  'leg.wrap': '비닐 포장', 'leg.defl': '주걱', 'leg.cust': '손님',
+  'intro.go': '시작!', 'intro.new': 'NEW',
+  'fx.lid': '뚜껑 퐁!', 'fx.sealed': '갇혔다!', 'fx.chain': '연쇄 {n}!', 'fx.boost': '포자 +1!',
+  'res.dailyClear': '오늘의 퍼즐 클리어', 'res.streak': '{n}일 연속!', 'res.wiped': '진열대 전멸!', 'res.tomorrow': '내일 새 진열대가 나와요.',
+  'res.home': '처음으로', 'res.retry': '다시 하기', 'res.stageClear': 'STAGE {n} 클리어', 'res.bakery': '빵집 전체가 상했어요!',
+  'res.msg3': '되돌리기 없이 컵케익 {n}개를 전부 상하게 했어요.',
+  'res.msgBoost': '포자를 더 받아서 깼어요. 되돌리기 없이 깨면 별 3개!',
+  'res.msgHint': '힌트로 깼어요. 힌트 없이 깨면 별 3개!',
+  'res.msgUndo': '컵케익 {n}개를 전부 상하게 했어요. 되돌리기 없이 깨면 별 3개!',
+  'res.next': '다음 스테이지', 'res.list': '스테이지 목록', 'res.stage': 'STAGE {n}',
+  'res.lost': '손님이 사 갔어요!', 'res.lostMsg': '신선한 {name} 하나가 팔려 나갔어요. 손님이 오기 전에 상하게 만들어야 해요.',
+  'res.out': '포자가 떨어졌어요', 'res.outMsg': '신선한 컵케익 {n}개가 살아남았어요. 걔네 중 하나가 출발점일지도?',
+  'res.undo': '되돌리기', 'res.boost': '포자 +1', 'res.hintN': '힌트 보기 ({n})', 'res.hintAd': '힌트 보기', 'res.view': '판 보기',
+  'toast.marked': '표시된 컵케익에 쏘세요', 'toast.unsolvable': '지금 상태로는 못 깨요. 되돌리기부터!',
+  'toast.noAds': '광고가 제거됐어요. 고마워요!', 'toast.restored': '구매를 복원했어요', 'toast.noRestore': '복원할 구매가 없어요',
+  'set.title': '설정', 'set.close': '닫기', 'set.sound': '소리', 'set.haptic': '진동', 'set.lang': '언어 / Language',
+  'set.hints': '힌트 {n}개 보유', 'set.noAds': '광고 제거 · {price}', 'set.noAdsDone': '광고 제거됨', 'set.restore': '구매 복원',
+  'set.reset': '진행 기록 지우기', 'set.resetConfirm': '별과 진행 기록이 전부 지워져요. 정말 지울까요?', 'set.resetYes': '지우기', 'set.resetNo': '취소',
+  'set.credits': '그림·기획 구름이구름 · 개발 페이블 · v3 플레이테스트 빌드',
+  'ad.hint': '광고 보고 힌트 +1', 'ad.spore': '광고 보고 포자 +1', 'ad.title': '광고',
+  'ad.sub': '테스트 빌드라 진짜 광고 대신 이 화면이 떠요. 앱에서는 여기서 광고가 나와요.',
+  'ad.wait': '{n}초…', 'ad.claim': '보상 받기', 'ad.close': '닫기', 'ad.skip': '그만 보기',
+  'daily.name': '오늘의 퍼즐', 'daily.tip': '{date}의 진열대예요. 매일 새 퍼즐이 나와요.',
+  'yuck': ['으웩!', '우웨엑!', '이게 뭐야!', '환불이요!', '곰팡이잖아!', '안 살래요!', '헉, 냄새!'],
+  'yum': ['이거 주세요~', '맛있겠다!', '찜!', '이걸로 할게요!'],
+},
+en: {
+  'title.h1': 'Cupcake <span class="z">Zombie</span>',
+  'title.tagline': "You're the mold. Spoil the whole shelf.",
+  'title.play': 'Play', 'title.continue': 'Continue · {n}',
+  'title.map': 'Select Stage', 'title.daily': 'Daily Puzzle', 'title.dailyDone': 'Done',
+  'title.settings': 'Settings', 'title.streak': '{n}-day streak', 'title.foot': 'v3 playtest build',
+  'map.title': 'Stages', 'map.chapter': 'CHAPTER {n}', 'map.locked': 'Clear the previous stage to unlock',
+  'map.ariaStage': 'Stage {n} {name}', 'map.ariaStars': ', {n} stars', 'map.ariaLocked': ', locked',
+  'aria.home': 'Home', 'aria.back': 'Back', 'aria.help': 'Rules for this shelf',
+  'aria.board': 'Muffin tin board. Use the arrow keys to pick a cell and Enter to fling a spore.',
+  'play.fire': 'Fling at the {name}!', 'play.undo': 'Undo', 'play.retry': 'Retry', 'play.hint': 'Hint',
+  'play.stageLabel': 'CH. {ch} · STAGE {n}', 'play.daily': 'Daily Puzzle',
+  'hud.customers': '{n} customer{s} waiting', 'hud.stars3': 'Clear without undo for 3 stars', 'hud.starsNow': '{n} star{s} if you clear now',
+  'hint.default': 'Tap a cupcake once to see where it spreads. Tap again to fling. <b>Spores left: {n}</b>',
+  'hint.busy': '<b>Spreading…</b>', 'hint.hint': '<b>Hint</b> Fling at the cupcake under the yellow arrow.',
+  'hint.spoiled': 'Spoiled ', 'hint.sealedInf': 'Spoiled inside the wrap. The spores can\'t get out.', 'hint.inf': 'Already covered in mold.',
+  'hint.wrapPrefix': 'Plastic wrap · ', 'hint.lidOn': ' (lid on)', 'hint.lidOff': ' (lid off · one more hit!)',
+  'hint.cust': ' A customer buys it in {n} turn{s}!', 'hint.spatula': 'Spatula',
+  'rule.basic': 'When spoiled, it passes spores to the cells above, below, left and right.',
+  'rule.berry': 'When spoiled, it passes spores to the four diagonal cells.',
+  'rule.sprinkle': 'When spoiled, spores burst into all eight surrounding cells.',
+  'rule.cherry': 'When spoiled, the cherry rolls in four directions and spoils the first cupcake it meets.',
+  'rule.cream': 'When spoiled, cream flies two cells in each direction, hopping over one gap.',
+  'rule.butter': 'The lid means it takes two spore hits to spoil.',
+  'rule.wrap': 'Spoils inside the wrap when hit from a neighbor, but can\'t spread further. A direct hit tears the wrap.',
+  'rule.cust': 'After the number of turns in red, a customer buys that cupcake. Spoil it first.',
+  'rule.defl': 'A rolling cherry that hits a spatula turns 90 degrees.',
+  'rule.earl_grey': 'When spoiled, its scent spoils every other Earl Grey on the shelf, however far. It does not spread to other cupcakes.',
+  'rule.lemon_yogurt': 'When hit, it stays chilled for one turn. At the end of the turn it spoils and spreads up, down, left and right.',
+  'rule.espresso': 'When spoiled, it fires strong spores up, down, left and right. They tear plastic wrap and pop butter lids in one hit.',
+  'rule.mint_choco': 'Never spoils. It blocks cherries and cream cannot jump over it. It does not count for clearing.',
+  'fx.pending': 'Holding on!', 'fx.espresso': 'Pow!', 'toast.wall': 'Mint Choco never spoils',
+  'hint.pending': 'Hit, but holding on. It spoils at the end of this turn. A customer arriving before then counts it as fresh!',
+  'leg.title': 'Cupcakes on this shelf', 'leg.close': 'Close', 'leg.again': 'Show the rule card again',
+  'leg.wrap': 'Plastic Wrap', 'leg.defl': 'Spatula', 'leg.cust': 'Customer',
+  'intro.go': 'Start!', 'intro.new': 'NEW',
+  'fx.lid': 'Lid pop!', 'fx.sealed': 'Sealed!', 'fx.chain': 'Chain {n}!', 'fx.boost': '+1 spore!',
+  'res.dailyClear': 'DAILY PUZZLE CLEARED', 'res.streak': '{n}-day streak!', 'res.wiped': 'Shelf wiped out!', 'res.tomorrow': 'A new shelf arrives tomorrow.',
+  'res.home': 'Home', 'res.retry': 'Retry', 'res.stageClear': 'STAGE {n} CLEARED', 'res.bakery': 'The whole bakery is spoiled!',
+  'res.msg3': 'Spoiled all {n} cupcakes without a single undo.',
+  'res.msgBoost': 'Cleared with an extra spore. Clear without undo for 3 stars!',
+  'res.msgHint': 'Cleared with a hint. Clear without hints for 3 stars!',
+  'res.msgUndo': 'Spoiled all {n} cupcakes. Clear without undo for 3 stars!',
+  'res.next': 'Next stage', 'res.list': 'Stage list', 'res.stage': 'STAGE {n}',
+  'res.lost': 'A customer bought one!', 'res.lostMsg': 'A fresh {name} was sold. Spoil it before the customer arrives.',
+  'res.out': 'Out of spores', 'res.outMsg': '{n} fresh cupcake{s} survived. Maybe one of them is the starting point?',
+  'res.undo': 'Undo', 'res.boost': '+1 spore', 'res.hintN': 'Show hint ({n})', 'res.hintAd': 'Show hint', 'res.view': 'View board',
+  'toast.marked': 'Fling at the marked cupcake', 'toast.unsolvable': 'Can\'t be solved from here. Undo first!',
+  'toast.noAds': 'Ads removed. Thank you!', 'toast.restored': 'Purchase restored', 'toast.noRestore': 'No purchase to restore',
+  'set.title': 'Settings', 'set.close': 'Close', 'set.sound': 'Sound', 'set.haptic': 'Haptics', 'set.lang': 'Language / 언어',
+  'set.hints': 'Hints: {n}', 'set.noAds': 'Remove ads · {price}', 'set.noAdsDone': 'Ads removed', 'set.restore': 'Restore purchase',
+  'set.reset': 'Reset progress', 'set.resetConfirm': 'All stars and progress will be erased. Really reset?', 'set.resetYes': 'Reset', 'set.resetNo': 'Cancel',
+  'set.credits': 'Art & design: Studio Penumbra · Code: Fable · v3 playtest build',
+  'ad.hint': 'Watch an ad: +1 hint', 'ad.spore': 'Watch an ad: +1 spore', 'ad.title': 'Ad',
+  'ad.sub': 'This is a test build, so this screen stands in for a real ad. In the app, an ad plays here.',
+  'ad.wait': '{n}s…', 'ad.claim': 'Claim reward', 'ad.close': 'Close', 'ad.skip': 'Skip',
+  'daily.name': 'Daily Puzzle', 'daily.tip': 'The shelf for {date}. A new puzzle every day.',
+  'yuck': ['Yuck!', 'Eww!', 'What is this?!', 'Refund!', "That's moldy!", 'No thanks!', 'Ugh, the smell!'],
+  'yum': ['This one, please~', 'Yummy!', 'Mine!', "I'll take it!"],
+},
+};
+const LANGS = ['ko', 'en'];
+let LANG = 'ko';
+function t(key, vars) {
+  let s = (STR[LANG] && STR[LANG][key]) ?? STR.ko[key] ?? key;
+  if (Array.isArray(s)) return s;
+  if (vars) for (const k in vars) s = s.split('{' + k + '}').join(vars[k]);
+  return glue(s);
+}
+// keep short counted phrases on one line ("한 번", "별 3개", "3 stars")
+function glue(s) {
+  if (typeof s !== 'string') return s;
+  return s.replace(/(한|두|세|네|다섯) (번|개|칸|턴|명|판)/g, '$1\u00a0$2')
+    .replace(/(별|포자|손님) (\d)/g, '$1\u00a0$2')
+    .replace(/(\d+) ([A-Za-z가-힣])/g, '$1\u00a0$2');
+}
+const plural = n => (LANG === 'en' && n !== 1 ? 's' : '');
+// localized field of a level / chapter / intro object: name → name_en when English
+function tl(obj, field) { return glue((LANG !== 'ko' && obj && obj[field + '_' + LANG]) || (obj && obj[field]) || ''); }
+const typeName = key => tl(TYPES[key], 'name');
+function detectLang() {
+  try { const l = (navigator.language || 'en').toLowerCase(); return l.startsWith('ko') ? 'ko' : 'en'; } catch (e) { return 'ko'; }
+}
+function applyLang() {
+  try { document.documentElement.lang = LANG; } catch (e) {}
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
+  document.querySelectorAll('.segbtn').forEach(b => b.classList.toggle('on', b.dataset.lang === LANG));
+}
+function localeDate(d) {
+  try { return d.toLocaleDateString(LANG === 'ko' ? 'ko-KR' : 'en-US', { month: LANG === 'ko' ? 'long' : 'short', day: 'numeric' }); }
+  catch (e) { return `${d.getMonth() + 1}/${d.getDate()}`; }
+}

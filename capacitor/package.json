@@ -1,0 +1,24 @@
+{
+  "name": "cupcake-zombie",
+  "version": "0.3.0",
+  "private": true,
+  "description": "컵케익 좀비 — 곰팡이가 되어 진열대를 상하게 만드는 퍼즐",
+  "scripts": {
+    "sync": "cap sync ios",
+    "ios": "cap open ios",
+    "copy": "cap copy ios",
+    "sync:android": "cap sync android",
+    "apk": "cap sync android && cd android && ./gradlew assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.2",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/haptics": "^6.0.1",
+    "@capacitor/ios": "^6.1.2",
+    "@capacitor/splash-screen": "^6.0.2",
+    "@capacitor/status-bar": "^6.0.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2"
+  }
+}

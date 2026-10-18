@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">컵케익 좀비</string>
+    <string name="title_activity_main">컵케익 좀비</string>
+    <string name="package_name">com.studiopenumbra.cupcakezombie</string>
+    <string name="custom_url_scheme">com.studiopenumbra.cupcakezombie</string>
+</resources>

@@ -1,0 +1,570 @@
+// ---------- platform adapters (web mock now, native plugins later) ----------
+const Native = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+function haptic(kind = 'light') {
+  if (!save.haptics) return;
+  try {
+    const H = window.CZ_HAPTICS || (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics);
+    if (H) { kind === 'success' ? H.notification({ type: 'SUCCESS' }) : H.impact({ style: kind === 'medium' ? 'MEDIUM' : 'LIGHT' }); }
+    else if (navigator.vibrate) navigator.vibrate(kind === 'success' ? [20, 40, 30] : kind === 'medium' ? 18 : 8);
+  } catch (e) {}
+}
+// Ads / Store: the native build swaps these for AdMob + StoreKit through window.CZ_NATIVE_*; on the web a mock sheet stands in.
+const Ads = {
+  async rewarded(kind) { if (Native && window.CZ_NATIVE_ADS) return window.CZ_NATIVE_ADS.rewarded(kind); return mockAd('rewarded', kind); },
+  async interstitial() { if (save.noAds) return true; if (Native && window.CZ_NATIVE_ADS) return window.CZ_NATIVE_ADS.interstitial(); return mockAd('interstitial'); },
+};
+const Store = {
+  price: '₩3,900',
+  async buyRemoveAds() { if (Native && window.CZ_NATIVE_STORE) return window.CZ_NATIVE_STORE.buy('remove_ads'); return mockPurchase(); },
+  async restore() { if (Native && window.CZ_NATIVE_STORE) return window.CZ_NATIVE_STORE.restore(); return save.noAds; },
+};
+let adResolve = null, adTimer = 0;
+function mockAd(type, kind) {
+  return new Promise(res => {
+    adResolve = res;
+    const sh = $('adSheet');
+    $('adTitle').textContent = type === 'rewarded' ? (kind === 'hint' ? t('ad.hint') : t('ad.spore')) : t('ad.title');
+    $('adSub').textContent = t('ad.sub');
+    const btn = $('adDone'); btn.disabled = true;
+    let left = type === 'rewarded' ? 5 : 3;
+    btn.textContent = t('ad.wait', { n: left });
+    clearInterval(adTimer);
+    adTimer = setInterval(() => { left--; if (left <= 0) { clearInterval(adTimer); btn.disabled = false; btn.textContent = type === 'rewarded' ? t('ad.claim') : t('ad.close'); } else btn.textContent = t('ad.wait', { n: left }); }, 1000);
+    openSheet('adSheet');
+  });
+}
+$('adDone').onclick = () => { closeSheet('adSheet'); if (adResolve) adResolve(true); adResolve = null; };
+$('adSkip').onclick = () => { clearInterval(adTimer); closeSheet('adSheet'); if (adResolve) adResolve(false); adResolve = null; };
+function mockPurchase() { return new Promise(res => setTimeout(() => res(true), 400)); }
+
+// ---------- screens & sheets ----------
+let screen = 'title';
+function showScreen(name) {
+  screen = name;
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === 'scr-' + name));
+  requestAnimationFrame(drawBg);
+  if (name === 'map') renderMap();
+  if (name === 'title') renderTitle();
+  if (name === 'play') requestAnimationFrame(layout);
+}
+function openSheet(id) { const el = $(id); el.hidden = false; requestAnimationFrame(() => el.classList.add('open')); }
+function closeSheet(id) { const el = $(id); el.classList.remove('open'); setTimeout(() => { if (!el.classList.contains('open')) el.hidden = true; }, 220); }
+let toastTimer = 0;
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.hidden = false; t.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.classList.remove('on'); setTimeout(() => t.hidden = true, 250); }, 1800); }
+
+// ---------- progress ----------
+const starsOf = i => save.stars[i] || 0;
+const unlocked = i => i === 0 || starsOf(i - 1) > 0;
+const totalStars = () => LEVELS.reduce((a, _, i) => a + starsOf(i), 0);
+function nextStage() { const i = LEVELS.findIndex((_, k) => !starsOf(k)); return i < 0 ? LEVELS.length - 1 : i; }
+function starsFor(m) { return m === 0 ? 3 : m <= 2 ? 2 : 1; }
+function currentStars() { let s = starsFor(mistakes); if (usedHint) s = Math.min(s, 2); if (boosted) s = 1; return s; }
+function dateKey(d = new Date()) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+function dailyIndex(d = new Date()) { return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000) % DAILY.length; }
+function dailyDef() { const d = new Date(); const p = DAILY[dailyIndex(d)]; return { ...p, daily: true }; }
+const levelName = d => d.daily ? t('daily.name') : tl(d, 'name');
+const levelTip = d => d.daily ? t('daily.tip', { date: localeDate(new Date()) }) : tl(d, 'tip');
+
+// ---------- title ----------
+function renderTitle() {
+  const n = nextStage();
+  $('playBtn').textContent = totalStars() === 0 ? t('title.play') : t('title.continue', { n: n + 1 });
+  $('titleStars').textContent = `★ ${totalStars()} / ${LEVELS.length * 3}`;
+  const done = !!save.daily[dateKey()];
+  $('dailyBtn').innerHTML = `${t('title.daily')} ${done ? `<span class="chip">${t('title.dailyDone')}</span>` : ''}`;
+  $('streak').textContent = save.streak.count > 1 ? t('title.streak', { n: save.streak.count }) : '';
+}
+$('playBtn').onclick = () => startStage(nextStage());
+$('mapBtn').onclick = () => showScreen('map');
+$('dailyBtn').onclick = () => startDaily();
+$('settingsBtn').onclick = () => openSettings();
+
+// ---------- map ----------
+function renderMap() {
+  $('mapStars').textContent = `★ ${totalStars()} / ${LEVELS.length * 3}`;
+  const box = $('chapterList'); box.innerHTML = '';
+  for (const ch of CHAPTERS) {
+    const got = LEVELS.slice(ch.from, ch.to + 1).reduce((a, _, k) => a + starsOf(ch.from + k), 0);
+    const wrap = document.createElement('section'); wrap.className = 'chapter';
+    wrap.innerHTML = `<div class="chap-head"><span class="eyebrow">${t('map.chapter', { n: ch.no })}</span><h3>${tl(ch, 'name')}</h3><span class="small">★ ${got} / ${(ch.to - ch.from + 1) * 3}</span></div>`;
+    const grid = document.createElement('div'); grid.className = 'stage-grid';
+    for (let i = ch.from; i <= ch.to; i++) {
+      const b = document.createElement('button');
+      const st = starsOf(i), open = unlocked(i);
+      b.className = 'stage-btn' + (st ? ' done' : '') + (open ? '' : ' locked');
+      b.innerHTML = open ? `<span class="n">${i + 1}</span>${st ? `<span class="st">${starsHTML(st)}</span>` : ''}` : `<span class="n">${i + 1}</span><span class="lock">${LOCK}</span>`;
+      b.setAttribute('aria-label', t('map.ariaStage', { n: i + 1, name: tl(LEVELS[i], 'name') }) + (open ? (st ? t('map.ariaStars', { n: st }) : '') : t('map.ariaLocked')));
+      b.onclick = () => { if (open) startStage(i); else { haptic(); toast(t('map.locked')); } };
+      grid.appendChild(b);
+    }
+    wrap.appendChild(grid); box.appendChild(wrap);
+  }
+}
+const LOCK = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="2" fill="#B9A89C"/><path d="M5 7V5a3 3 0 0 1 6 0v2" fill="none" stroke="#B9A89C" stroke-width="2"/></svg>';
+function starsHTML(n) { return [0, 1, 2].map(i => `<i class="${i < n ? 'on' : 'off'}">★</i>`).join(''); }
+$('mapBack').onclick = () => showScreen('title');
+
+// ---------- settings ----------
+function openSettings() {
+  $('setSound').checked = save.sound; $('setHaptic').checked = save.haptics;
+  $('noAdsBtn').textContent = save.noAds ? t('set.noAdsDone') : t('set.noAds', { price: Store.price });
+  $('noAdsBtn').disabled = save.noAds;
+  $('hintCount').textContent = t('set.hints', { n: save.hints });
+  applyLang();
+  $('resetConfirm').hidden = true;
+  openSheet('settingsSheet');
+}
+$('setSound').onchange = e => { save.sound = e.target.checked; writeSave(save); if (save.sound) tone(660, 0.1, 'sine', 0.06); };
+$('setHaptic').onchange = e => { save.haptics = e.target.checked; writeSave(save); haptic('medium'); };
+$('noAdsBtn').onclick = async () => { const ok = await Store.buyRemoveAds(); if (ok) { save.noAds = true; writeSave(save); openSettings(); toast(t('toast.noAds')); } };
+$('restoreBtn').onclick = async () => { const ok = await Store.restore(); if (ok) { save.noAds = true; writeSave(save); openSettings(); toast(t('toast.restored')); } else toast(t('toast.noRestore')); };
+document.querySelectorAll('.segbtn').forEach(b => { b.onclick = () => setLang(b.dataset.lang); });
+function setLang(l) {
+  if (!LANGS.includes(l) || l === LANG) return;
+  LANG = l; save.lang = l; writeSave(save); haptic();
+  applyLang();
+  if (screen === 'title') renderTitle();
+  if (screen === 'map') renderMap();
+  if (state) { renderHUD(); renderLegend(); updateHint(); if (introOpen) showIntro(); if (result) showResult(result, currentStars()); }
+  $('noAdsBtn').textContent = save.noAds ? t('set.noAdsDone') : t('set.noAds', { price: Store.price });
+  $('hintCount').textContent = t('set.hints', { n: save.hints });
+}
+$('resetBtn2').onclick = () => { $('resetConfirm').hidden = false; };
+$('resetYes').onclick = () => { try { localStorage.removeItem(STORE_KEY); } catch (e) {} location.reload(); };
+$('resetNo').onclick = () => { $('resetConfirm').hidden = true; };
+$('settingsClose').onclick = () => closeSheet('settingsSheet');
+
+// ---------- loading a level ----------
+function rebuildVis() {
+  vis = state.cells.map((c, i) => c && {
+    t: c.t, zombie: c.inf, lid: c.lid, wrap: c.wrap, sealed: c.inf && c.wrap, pend: c.pend,
+    zv: ((i * 7 + li * 3) % 3 === 0) ? 'zombieA' : 'zombieB',
+    flip: ((i * 5 + li) % 4) === 1,
+    phase: (i * 1.37) % (Math.PI * 2),
+    infAt: -1, bumpAt: -1, bumpAmp: 0, flashAt: -1, gone: false,
+  });
+}
+function loadLevel(d, opts = {}) {
+  def = d;
+  state = parseLevel(def);
+  undoStack = [];
+  if (!opts.keepMistakes) { mistakes = 0; usedHint = false; boosted = false; }
+  hintCell = -1;
+  particles = []; projs = []; timeline = []; texts = []; arm = null;
+  busy = false; result = null; hover = -1; selected = -1;
+  cursor = state.cells.findIndex(Boolean);
+  rebuildVis();
+  closeSheet('resultSheet'); closeSheet('legendSheet');
+  showScreen('play');
+  layout(); renderHUD(); renderLegend(); updateHint();
+  if (def.intro && opts.intro !== false && mode === 'stage' && !save.seen.includes(li)) showIntro(); else hideIntro();
+}
+function startStage(i) {
+  mode = 'stage'; li = Math.max(0, Math.min(LEVELS.length - 1, i));
+  save.level = li; writeSave(save);
+  loadLevel(LEVELS[li]);
+}
+function startDaily() { mode = 'daily'; li = -1; loadLevel(dailyDef()); }
+function restart() {
+  if (busy || introOpen) return;
+  if (undoStack.length) mistakes++;
+  haptic();
+  loadLevel(def, { keepMistakes: true, intro: false });
+}
+function undo() {
+  if (busy || introOpen || !undoStack.length) return;
+  mistakes++;
+  state = undoStack.pop();
+  hintCell = -1;
+  particles = []; projs = []; texts = []; arm = null; timeline = [];
+  closeSheet('resultSheet'); result = null;
+  rebuildVis(); renderHUD(); updateHint(); haptic();
+}
+
+// ---------- firing ----------
+function fireAt(idx) {
+  if (busy || result || introOpen || !canTarget(state, idx)) return;
+  audio(); haptic('medium');
+  const prev = state;
+  const turn = playTurn(state, idx);
+  const plan = planCascade(prev, [{ idx, t: DROP, direct: true }]);
+  undoStack.push(prev);
+  state = turn.state;
+  turn.cust.forEach(c => { c.k.pending = true; });
+  busy = true; selected = -1; hintCell = -1;
+  renderHUD(); updateHint();
+  projs.push({ style: 'drop', to: idx, t0: now, dur: DROP });
+  if (IMG.spore_squash) { const D = S * 0.15 * 2.7; at(DROP, () => particles.push({ kind: 'land', x: cxOf(idx), y: sporeContactY(idx), D, born: now, life: 300, vx: 0, vy: 0 })); }
+  const mold = $('moldImg'); if (mold) { mold.classList.remove('puff'); void mold.offsetWidth; mold.classList.add('puff'); }
+  tone(520, 0.3, 'sine', 0.05, 0.5);
+  const maxT = scheduleFlights(plan, 0);
+  let maxDepth = 0;
+  for (const h of plan.hits) if (h.kind === 'infect' || h.kind === 'sealed') maxDepth = Math.max(maxDepth, h.depth);
+    const end = maxT + 520;
+  if (maxDepth >= 4) at(end - 300, () => { floatText(CW / 2, padTop + state.H * S * 0.45, t('fx.chain', { n: maxDepth + 1 }), '#5B7A21', 0.62, 1300); tone(note(8), 0.3, 'sine', 0.07, 1.5); });
+  at(end, () => customerPhase(turn.cust, 0, () => playTicks(turn.ticks.length, plan.sim, () => finish(turn.res))));
+}
+// chilled lemons spoil at the end of the turn, one generation per tick
+function scheduleFlights(plan, base) {
+  let maxT = base;
+  for (const f of plan.flights) {
+    projs.push({ ...f, t0: now + base + f.t0 });
+    if (f.style === 'roll') f.path.forEach((c, k) => { if (state.tiles[c]) at(base + f.t0 + 95 * (k + 1), () => { tone(1200, 0.06, 'square', 0.025); bumpTile(c); }); });
+    if (f.miss) at(base + f.t0 + f.dur, () => missLand(f));
+    maxT = Math.max(maxT, base + f.t0 + f.dur);
+  }
+  for (const h of plan.hits) { at(base + h.t, () => { applyHit(h); if (h.kind === 'infect') haptic(); }); maxT = Math.max(maxT, base + h.t); }
+  return maxT;
+}
+function playTicks(n, sim, done) {
+  if (n <= 0) { done(); return; }
+  const rel = planRelease(sim);
+  const end = scheduleFlights(rel, 250);
+  at(end + 450, () => playTicks(n - 1, sim, done));
+}
+
+function finish(res) {
+  busy = false;
+  renderHUD(); updateHint();
+  if (res === 'win') {
+    const stars = currentStars();
+    if (mode === 'stage') { save.stars[li] = Math.max(starsOf(li), stars); save.clears++; }
+    else {
+      const k = dateKey(); save.daily[k] = Math.max(save.daily[k] || 0, stars);
+      const y = new Date(); y.setDate(y.getDate() - 1);
+      if (save.streak.last !== k) { save.streak.count = save.streak.last === dateKey(y) ? save.streak.count + 1 : 1; save.streak.last = k; }
+    }
+    writeSave(save);
+    haptic('success');
+    [0, 4, 7, 12].forEach((s, i) => tone(note(s), 0.32, 'triangle', 0.09, 1, i * 0.09));
+    for (let i = 0; i < vis.length; i++) if (vis[i]) at(i * 18, () => bump(i, 0.16));
+    at(600, () => showResult('win', stars));
+  } else if (res === 'lost') {
+    tone(330, 0.3, 'triangle', 0.08, 0.7); tone(247, 0.4, 'triangle', 0.08, 0.7, 0.18);
+    showResult('lost');
+  } else if (res === 'out') {
+    tone(300, 0.3, 'triangle', 0.07, 0.6);
+    at(300, () => showResult('out'));
+  }
+}
+
+// ---------- hint & boost ----------
+function solveNext(s) {
+  const key = st => st.turn + '|' + st.cells.map(c => c ? (c.inf ? 'I' : (c.wrap ? 'W' : '') + c.lid) : '_').join(',');
+  const memo = new Map();
+  function best(st) {
+    const k = key(st); if (memo.has(k)) return memo.get(k);
+    let b = Infinity;
+    for (let i = 0; i < st.cells.length && b > 1; i++) {
+      if (!canTarget(st, i)) continue;
+      const r = playTurn(st, i);
+      if (r.res === 'win') b = 1; else if (r.res === 'play') b = Math.min(b, 1 + best(r.state));
+    }
+    memo.set(k, b); return b;
+  }
+  let bi = -1, bv = Infinity;
+  for (let i = 0; i < s.cells.length; i++) {
+    if (!canTarget(s, i)) continue;
+    const r = playTurn(s, i);
+    const v = r.res === 'win' ? 1 : r.res === 'play' ? 1 + best(r.state) : Infinity;
+    if (v < bv) { bv = v; bi = i; }
+  }
+  return bv <= s.spores ? bi : -1;
+}
+async function onHint() {
+  if (busy || introOpen || result === 'win') return;
+  if (result) { undo(); }
+  if (hintCell >= 0) { toast(t('toast.marked')); return; }
+  if (save.hints <= 0) {
+    const ok = await Ads.rewarded('hint');
+    if (!ok) return;
+    save.hints += 1; writeSave(save); renderHUD();
+  }
+  const i = solveNext(state);
+  if (i < 0) { toast(t('toast.unsolvable')); return; }
+  save.hints -= 1; usedHint = true; hintCell = i; writeSave(save);
+  haptic('medium'); tone(880, 0.12, 'sine', 0.06, 1.3);
+  renderHUD(); updateHint();
+}
+async function onBoost() {
+  if (busy || introOpen) return;
+  const ok = await Ads.rewarded('spore');
+  if (!ok) return;
+  boosted = true; state.spores += 1;
+  closeSheet('resultSheet'); result = null;
+  floatText(CW / 2, padTop + state.H * S * 0.4, t('fx.boost'), '#5B7A21', 0.5, 1200);
+  tone(note(6), 0.2, 'triangle', 0.08);
+  renderHUD(); updateHint();
+}
+function drawHintMarker(T) {
+  if (hintCell < 0 || busy || result) return;
+  const x = cxOf(hintCell), y = cyOf(hintCell) - S * 0.95 + Math.sin(T * 6) * S * 0.06;
+  ctx.save();
+  ctx.setLineDash([5, 4]); ctx.lineDashOffset = -T * 24; ctx.lineWidth = 3; ctx.strokeStyle = '#F2B53A';
+  ctx.beginPath(); ctx.ellipse(cxOf(hintCell), wellY(hintCell), S * 0.5, S * 0.34, 0, 0, Math.PI * 2); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#F2B53A'; ctx.strokeStyle = '#4A2E27'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+  ctx.beginPath(); ctx.moveTo(x, y + S * 0.18); ctx.lineTo(x - S * 0.14, y); ctx.lineTo(x - S * 0.06, y); ctx.lineTo(x - S * 0.06, y - S * 0.16); ctx.lineTo(x + S * 0.06, y - S * 0.16); ctx.lineTo(x + S * 0.06, y); ctx.lineTo(x + S * 0.14, y); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.restore();
+}
+
+// ---------- result sheet ----------
+async function showResult(kind, stars) {
+  result = kind;
+  const sh = $('resultSheet');
+  sh.classList.toggle('win', kind === 'win'); sh.classList.toggle('lose', kind !== 'win');
+  const total = state.cells.filter(Boolean).length;
+  const btns = $('resBtns'); btns.innerHTML = '';
+  const mk = (label, cls, fn) => { const b = document.createElement('button'); b.className = 'btn ' + cls; b.innerHTML = label; b.onclick = fn; btns.appendChild(b); return b; };
+  const st = $('resStars');
+  if (kind === 'win') {
+    st.hidden = false; [...st.children].forEach((s, i) => s.className = i < stars ? 'on' : '');
+    if (mode === 'daily') {
+      $('resEyebrow').textContent = t('res.dailyClear');
+      $('resTitle').textContent = save.streak.count > 1 ? t('res.streak', { n: save.streak.count }) : t('res.wiped');
+      setText($('resMsg'), t('res.tomorrow'));
+      mk(t('res.home'), 'go', () => showScreen('title'));
+      mk(t('res.retry'), '', () => loadLevel(def, { intro: false }));
+    } else {
+      $('resEyebrow').textContent = t('res.stageClear', { n: li + 1 });
+      $('resTitle').textContent = li === LEVELS.length - 1 ? t('res.bakery') : t('res.wiped');
+      setText($('resMsg'), stars === 3 ? t('res.msg3', { n: total }) : boosted ? t('res.msgBoost') : usedHint ? t('res.msgHint') : t('res.msgUndo', { n: total }));
+      if (li < LEVELS.length - 1) mk(t('res.next'), 'go', async () => { await maybeInterstitial(); startStage(li + 1); });
+      else mk(t('res.list'), 'go', () => showScreen('map'));
+      mk(t('res.retry'), '', () => loadLevel(def, { intro: false }));
+    }
+  } else {
+    st.hidden = true;
+    const fresh = freshCount(state);
+    $('resEyebrow').textContent = mode === 'daily' ? t('play.daily') : t('res.stage', { n: li + 1 });
+    if (kind === 'lost') {
+      const k = state.customers.find(c => c.turn === state.turn && state.cells[c.r * state.W + c.c] && !state.cells[c.r * state.W + c.c].inf);
+      const cell = k && state.cells[k.r * state.W + k.c];
+      $('resTitle').textContent = t('res.lost');
+      setText($('resMsg'), t('res.lostMsg', { name: cell ? typeName(cell.t) : 'cupcake' }));
+      mk(t('res.undo'), 'go', undo);
+    } else {
+      $('resTitle').textContent = t('res.out');
+      setText($('resMsg'), t('res.outMsg', { n: fresh, s: plural(fresh) }));
+      mk(t('res.undo'), 'go', undo);
+      mk(`${AD_ICON} ${t('res.boost')}`, '', onBoost);
+    }
+    mk(save.hints > 0 ? t('res.hintN', { n: save.hints }) : `${AD_ICON} ${t('res.hintAd')}`, '', onHint);
+    mk(t('res.retry'), '', restart);
+  }
+  openSheet('resultSheet');
+  updateHint();
+}
+const AD_ICON = '<svg viewBox="0 0 20 14" width="18" height="13" aria-hidden="true"><rect x="1" y="1" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 4.5v5l4-2.5z" fill="currentColor"/></svg>';
+async function maybeInterstitial() {
+  if (save.noAds || mode !== 'stage' || li < 3) return;
+  if (save.clears - save.adClears < 3) return;
+  save.adClears = save.clears; writeSave(save);
+  await Ads.interstitial();
+}
+
+// ---------- intro card ----------
+function showIntro() {
+  const it = def.intro;
+  introOpen = true;
+  $('introTag').textContent = tl(it, 'tag') || t('intro.new');
+  $('introTitle').textContent = tl(it, 'title');
+  setText($('introText'), tl(it, 'text'));
+  const art = $('introArt'); art.innerHTML = '';
+  if (it.kind === 'type') {
+    const im = document.createElement('img'); im.src = ASSETS[TYPES[it.t].key]; im.alt = ''; art.appendChild(im);
+    art.insertAdjacentHTML('beforeend', patternSVG(TYPES[it.t].key));
+  } else {
+    const c = document.createElement('canvas'); c.width = 220; c.height = 208; c.style.height = '104px';
+    art.appendChild(c); drawIntroArt(c, it.kind);
+  }
+  $('intro').hidden = false;
+}
+function hideIntro() { introOpen = false; $('intro').hidden = true; }
+$('introGo').onclick = () => { if (mode === 'stage' && !save.seen.includes(li)) save.seen.push(li); writeSave(save); hideIntro(); audio(); haptic(); };
+function drawIntroArt(c, kind) {
+  const g = c.getContext('2d'); const sc = 150 / UNIT;
+  if (kind === 'start') { drawSpriteAt(g, 'basic', 60, 200, sc); drawSpriteAt(g, 'zombieB', 160, 200, sc); drawSpore(g, 110, 40, 16, 0, 1); }
+  else if (kind === 'spores') { drawSpore(g, 70, 104, 30); drawSpore(g, 150, 104, 30, 0.5); }
+  else if (kind === 'cust') { drawSpriteAt(g, 'basic', 110, 204, sc); drawHand(g, 110, 36, 34, false); drawTag(g, 172, 70, 20, 1, 0); }
+  else if (kind === 'wrap') { drawSpriteAt(g, 'berry', 110, 200, sc); drawWrap(g, 110, 202, 150); }
+  else if (kind === 'defl') { drawSpatula(g, 110, 110, 190, '/'); drawMoldCherry(g, 40, 160, 18, 0.4); g.strokeStyle = '#5B7A21'; g.setLineDash([6, 6]); g.lineWidth = 3; g.beginPath(); g.moveTo(60, 160); g.lineTo(110, 160); g.lineTo(110, 30); g.stroke(); }
+}
+
+// ---------- HUD ----------
+function renderHUD() {
+  $('pips').innerHTML = (ASSETS.mold_player ? `<img class="mold" id="moldImg" src="${ASSETS.mold_player}" alt="">` : '') + Array.from({ length: Math.max(def.spores, state.spores) }, (_, i) => sporeSVG(i >= state.spores)).join('');
+  const pending = state.customers.filter(c => !c.done && c.turn > state.turn);
+  $('custInfo').textContent = pending.length ? t('hud.customers', { n: pending.length, s: plural(pending.length) }) : '';
+  const st = currentStars();
+  $('starNow').innerHTML = starsHTML(st);
+  $('starText').textContent = mistakes === 0 && !usedHint && !boosted ? t('hud.stars3') : t('hud.starsNow', { n: st, s: plural(st) });
+  $('undoBtn').disabled = busy || !undoStack.length;
+  $('hintBtn').innerHTML = save.hints > 0 ? `${t('play.hint')} <span class="k">${save.hints}</span>` : `${t('play.hint')} ${AD_ICON}`;
+  const ch = mode === 'stage' ? CHAPTERS.find(c => li >= c.from && li <= c.to) : null;
+  $('stageLabel').textContent = mode === 'daily' ? localeDate(new Date()) : t('play.stageLabel', { ch: ch ? ch.no : '', n: li + 1 });
+  $('stageName').textContent = levelName(def);
+  $('fireCta').hidden = !(selected >= 0 && !busy && !result);
+  if (selected >= 0) $('fireCta').textContent = t('play.fire', { name: typeName(state.cells[selected].t) });
+}
+function patternSVG(key) {
+  const p = TYPES[Object.keys(TYPES).find(k => TYPES[k].key === key)].pattern;
+  const N = 5, cell = 9, gap = 1.5, o = 0.5;
+  let s = `<svg viewBox="0 0 ${N * cell + (N - 1) * gap + 1} ${N * cell + (N - 1) * gap + 1}" aria-hidden="true">`;
+  const hit = new Set();
+  const offs = patternOffsets(p);
+  if (offs === 'lines') [[-1, 0], [1, 0], [0, -1], [0, 1]].forEach(([a, b]) => hit.add(`${2 + 2 * a},${2 + 2 * b}`));
+  else if (offs === 'scent') ['0,0', '0,4', '4,1', '3,4'].forEach(k => hit.add(k));
+  else if (offs !== 'none') offs.forEach(([a, b]) => hit.add(`${2 + a},${2 + b}`));
+  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+    const x = o + c * (cell + gap), y = o + r * (cell + gap);
+    let fill = '#F3E9E1', stroke = '';
+    if (r === 2 && c === 2) fill = offs === 'none' ? '#5FB8A8' : '#4A2E27';
+    else if (offs === 'scent' && hit.has(`${r},${c}`)) { fill = '#BBA3DE'; }
+    else if (hit.has(`${r},${c}`)) fill = '#93B743';
+    else if (offs === 'lines' && (r === 2 || c === 2) && Math.abs(r - 2) + Math.abs(c - 2) === 1) { fill = '#FFF9F2'; stroke = ' stroke="#93B743" stroke-dasharray="2 1.5"'; }
+    s += `<rect x="${x}" y="${y}" width="${cell}" height="${cell}" rx="2.5" fill="${fill}"${stroke}/>`;
+  }
+  return s + '</svg>';
+}
+function seenTypeBefore(t) { if (mode !== 'stage') return true; for (let i = 0; i < li; i++) if (LEVELS[i].grid.join('').toLowerCase().includes(t)) return true; return false; }
+function renderLegend() {
+  $('legendTip').textContent = levelTip(def);
+  $('introAgain').hidden = !def.intro;
+  const lg = $('legend'); lg.innerHTML = '';
+  const flat = def.grid.join('');
+  for (const tk of ['o', 'x', 's', 'c', 'm', 'b', 'g', 'l', 'e', 'n']) {
+    if (!flat.toLowerCase().includes(tk)) continue;
+    const ty = TYPES[tk];
+    const row = document.createElement('div'); row.className = 'leg'; row.dataset.key = ty.key;
+    row.innerHTML = `<img src="${ASSETS[ty.key]}" alt=""><div class="txt"><b>${tl(ty, 'name')}${seenTypeBefore(tk) ? '' : '<span class="new">NEW</span>'}</b>${t('rule.' + ty.key)}</div>${patternSVG(ty.key)}`;
+    lg.appendChild(row);
+  }
+  const extra = (key, name, rule, isNew, draw) => {
+    const row = document.createElement('div'); row.className = 'leg'; row.dataset.key = key;
+    row.innerHTML = `<canvas class="ico" width="80" height="80"></canvas><div class="txt"><b>${name}${isNew ? '<span class="new">NEW</span>' : ''}</b>${rule}</div><span></span>`;
+    lg.appendChild(row); draw(row.querySelector('canvas').getContext('2d'));
+  };
+  const hasWrap = g => /[A-Z]/.test(g.join('')), hasDefl = g => /[\/\\]/.test(g.join(''));
+  const before = fn => mode === 'stage' && !LEVELS.slice(0, li).some(fn);
+  if (hasWrap(def.grid)) extra('wrap', t('leg.wrap'), t('rule.wrap'), before(l => hasWrap(l.grid)), g => { drawSpriteAt(g, 'basic', 40, 76, 62 / UNIT); drawWrap(g, 40, 76, 64); });
+  if (hasDefl(def.grid)) extra('defl', t('leg.defl'), t('rule.defl'), before(l => hasDefl(l.grid)), g => drawSpatula(g, 40, 40, 74, '/'));
+  if ((def.customers || []).length) extra('cust', t('leg.cust'), t('rule.cust'), before(l => (l.customers || []).length), g => { drawHand(g, 36, 30, 24, false); drawTag(g, 58, 58, 13, 1, 0); });
+}
+// Wrap each sentence so a line breaks between sentences rather than inside one when it can
+const esc = x => String(x).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+const sents = h => String(h).split(/(?<=[.!?])\s+(?=[^\s])/).map(p => `<span class="sent">${p}</span>`).join(' ');
+function setText(el, text) { el.innerHTML = sents(esc(text)); }
+function updateHint() {
+  const i = hover >= 0 ? hover : selected >= 0 ? selected : (cursorShown ? cursor : -1);
+  const el = $('hintLine');
+  if (i >= 0 && state.cells[i]) {
+    const c = state.cells[i], ty = TYPES[c.t];
+    let s = c.inf ? (c.wrap ? t('hint.sealedInf') : t('hint.inf')) : c.pend ? t('hint.pending') : t('rule.' + ty.key);
+    if (!c.inf && c.wrap) s = t('hint.wrapPrefix') + t('rule.wrap');
+    if (!c.inf && c.t === 'b') s += c.lid > 0 ? t('hint.lidOn') : t('hint.lidOff');
+    const k = state.customers.find(k => !k.done && k.r * state.W + k.c === i);
+    if (k && !c.inf) { const n = k.turn - state.turn; s += t('hint.cust', { n, s: plural(n) }); }
+    el.innerHTML = sents(`<b>${c.inf ? t('hint.spoiled') : ''}${tl(ty, 'name')}</b> ${s}`);
+  } else if (i >= 0 && state.tiles[i]) el.innerHTML = sents(`<b>${t('hint.spatula')}</b> ${t('rule.defl')}`);
+  else if (busy) el.innerHTML = sents(t('hint.busy'));
+  else if (result) el.innerHTML = '';
+  else if (hintCell >= 0) el.innerHTML = sents(t('hint.hint'));
+  else el.innerHTML = sents(t('hint.default', { n: state.spores }));
+}
+
+// ---------- input ----------
+canvas.addEventListener('pointermove', e => {
+  if (e.pointerType !== 'mouse') return;
+  const i = cellAt(e);
+  const h = i >= 0 && (state.cells[i] || state.tiles[i]) ? i : -1;
+  if (h !== hover) { hover = h; cursorShown = false; updateHint(); }
+  canvas.style.cursor = h >= 0 && state.cells[h] && !state.cells[h].inf && !busy ? 'pointer' : 'default';
+});
+canvas.addEventListener('pointerleave', () => { hover = -1; updateHint(); });
+canvas.addEventListener('pointerup', e => {
+  cursorShown = false;
+  const i = cellAt(e);
+  if (busy || result || introOpen) return;
+  if (i < 0 || !state.cells[i]) { selected = -1; renderHUD(); updateHint(); return; }
+  if (state.cells[i].inf || state.cells[i].wall) { selected = -1; bump(i, 0.1); haptic(); if (state.cells[i].wall) toast(t('toast.wall')); renderHUD(); updateHint(); return; }
+  if (e.pointerType === 'mouse') { fireAt(i); updateHint(); }
+  else {
+    if (selected === i) { selected = -1; fireAt(i); }
+    else { selected = i; haptic(); tone(700, 0.05, 'sine', 0.04); }
+    renderHUD(); updateHint();
+  }
+});
+$('fireCta').onclick = () => { if (selected >= 0) { const i = selected; selected = -1; fireAt(i); renderHUD(); } };
+$('undoBtn').onclick = undo;
+$('resetBtn').onclick = restart;
+$('hintBtn').onclick = onHint;
+$('helpBtn').onclick = () => openSheet('legendSheet');
+$('legendClose').onclick = () => closeSheet('legendSheet');
+$('introAgain').onclick = () => { closeSheet('legendSheet'); if (!busy && def.intro) showIntro(); };
+$('backBtn').onclick = () => { if (busy) return; showScreen(mode === 'daily' ? 'title' : 'map'); };
+$('resultClose').onclick = () => { closeSheet('resultSheet'); };
+canvas.addEventListener('keydown', e => {
+  if (introOpen) return;
+  const W = state.W, H = state.H;
+  const mv = { ArrowLeft: [0, -1], ArrowRight: [0, 1], ArrowUp: [-1, 0], ArrowDown: [1, 0] }[e.key];
+  if (mv) {
+    e.preventDefault();
+    let r = Math.floor(cursor / W), c = cursor % W;
+    for (let k = 0; k < Math.max(W, H); k++) { r = (r + mv[0] + H) % H; c = (c + mv[1] + W) % W; if (state.cells[r * W + c]) break; }
+    cursor = r * W + c; cursorShown = true; hover = -1; updateHint();
+  } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (cursor >= 0) { cursorShown = true; fireAt(cursor); updateHint(); } }
+});
+document.addEventListener('keydown', e => {
+  if (e.target.closest && e.target.closest('button, input') && (e.key === 'Enter' || e.key === ' ')) return;
+  const k = e.key.toLowerCase();
+  if (introOpen) { if (k === 'enter' || k === 'escape') $('introGo').click(); return; }
+  if (screen !== 'play') return;
+  if (k === 'z' || k === 'u') undo();
+  else if (k === 'r') restart();
+  else if (k === 'n' && result === 'win' && mode === 'stage' && li < LEVELS.length - 1) startStage(li + 1);
+});
+let resizeRaf = 0;
+new ResizeObserver(() => { cancelAnimationFrame(resizeRaf); resizeRaf = requestAnimationFrame(() => state && layout()); }).observe(boardWrap);
+window.addEventListener('resize', () => { if (state) layout(); drawBg(); });
+
+// ---------- title shelf ----------
+function renderShelf() {
+  // zombies on the right lurch after a line of panicking fresh cupcakes; the whole group runs right to left
+  const track = $('chaseTrack'); track.innerHTML = '';
+  const cast = [['basic', 'fresh lead'], ['berry', 'fresh'], ['cherry', 'fresh'], ['lemon_yogurt', 'fresh'], ['gap'], ['zombieB', 'zed']];
+  const unitH = 0.36; // css px per legacy sprite px
+  cast.forEach(([k, cls], i) => {
+    if (k === 'gap') { const g = document.createElement('span'); g.style.width = '28px'; track.appendChild(g); return; }
+    const key = ASSETS[k] ? k : (k.startsWith('zombie') ? 'zombieB' : 'basic');
+    const m = META[key] || { h: 120, k: 1 };
+    const w = document.createElement('span'); w.className = 'runner ' + cls;
+    w.style.height = Math.round(m.h * (m.k || 1) * unitH) + 'px';
+    w.style.animationDelay = (-(i * 0.17)).toFixed(2) + 's';
+    const im = document.createElement('img'); im.src = ASSETS[key]; im.alt = '';
+    w.appendChild(im);
+    if (cls.includes('lead')) { const b = document.createElement('span'); b.className = 'bang'; b.textContent = '!'; w.appendChild(b); }
+    track.appendChild(w);
+  });
+  const lane = $('chase');
+  const setW = () => { lane.style.setProperty('--laneW', lane.clientWidth + 'px'); lane.style.setProperty('--chaseDur', Math.max(7, (lane.clientWidth + track.scrollWidth) / 70) + 's'); };
+  setW(); window.addEventListener('resize', setW);
+}
+
+// ---------- boot ----------
+async function boot(data) {
+  LANG = LANGS.includes(save.lang) ? save.lang : detectLang();
+  applyLang();
+  await loadImages();
+  if (META.basic) UNIT = META.basic.w;
+  buildTints();
+  $('logoImg').src = ASSETS.zombieB;
+  renderShelf();
+  drawBg();
+  requestAnimationFrame(t => { now = t; requestAnimationFrame(frame); });
+  if (data && data.screen === 'play' && Number.isInteger(data.level)) startStage(data.level);
+  else showScreen('title');
+  try { await document.fonts.ready; if (state) renderHUD(); } catch (e) {}
+}
+try { window.claude?.hot?.snapshot?.(() => ({ screen, level: li })); } catch (e) {}
+window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot(window.claude?.hot?.data ?? {});

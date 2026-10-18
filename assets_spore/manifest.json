@@ -1,0 +1,89 @@
+{
+  "name": "CupcakeZombie spore landing",
+  "version": 1,
+  "frameSize": {
+    "width": 1254,
+    "height": 1254
+  },
+  "anchor": {
+    "x": 633,
+    "y": 1006
+  },
+  "anchorNormalized": {
+    "x": 0.5047846889952153,
+    "y": 0.8022328548644339
+  },
+  "originalFlightCenter": {
+    "x": 633,
+    "y": 634
+  },
+  "sharedReferenceDiameter": 763,
+  "scaleRule": "Use one scale for ALL frames: desiredRoundDiameter / 763. Do not normalize each frame by its own width.",
+  "sheet": {
+    "file": "spore_landing_sheet.png",
+    "width": 2508,
+    "height": 1254,
+    "columns": 2
+  },
+  "frames": [
+    {
+      "key": "round",
+      "file": "frames/00_round.png",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 1254,
+        "height": 1254
+      },
+      "width": 1254,
+      "height": 1254,
+      "visibleBounds": {
+        "x": 252,
+        "y": 262,
+        "width": 763,
+        "height": 745
+      },
+      "alpha": {
+        "transparentPixels": 1136617,
+        "clipped": false
+      }
+    },
+    {
+      "key": "squash",
+      "file": "frames/01_squash.png",
+      "rect": {
+        "x": 1254,
+        "y": 0,
+        "width": 1254,
+        "height": 1254
+      },
+      "width": 1254,
+      "height": 1254,
+      "visibleBounds": {
+        "x": 206,
+        "y": 424,
+        "width": 855,
+        "height": 583
+      },
+      "alpha": {
+        "transparentPixels": 1175936,
+        "clipped": false
+      }
+    }
+  ],
+  "contactAnimation": [
+    {
+      "frame": "round",
+      "durationMs": 40
+    },
+    {
+      "frame": "squash",
+      "durationMs": 110
+    },
+    {
+      "frame": "round",
+      "durationMs": 110
+    }
+  ],
+  "notes": "Anchor is the fixed contact point. Keep it fixed during squash; the visual center intentionally drops."
+}

@@ -1,0 +1,7 @@
+5-1 얼그레이 향: first=2/14 waves=9 greedy=true surv=2 n=14 (2189ms)
+5-2 멀리서 맡는 향: first=1/23 waves=10 greedy=true surv=4 n=23 (27627ms)
+5-3 차 한 잔의 여유: first=4/21 waves=9 greedy=true surv=Infinity n=21 (402ms)
+5-4 레몬요거트: NONE (1850ms)
+5-5 서리 낀 손님: NONE (33566ms)
+5-6 늦게 터지는 연쇄: NONE (104149ms)
+5-7 오후의 홍차: first=4/21 waves=9 greedy=true surv=Infinity n=21 (646ms)

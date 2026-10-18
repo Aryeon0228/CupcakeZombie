@@ -1,0 +1,15 @@
+{
+  "appId": "com.studiopenumbra.cupcakezombie",
+  "appName": "컵케익 좀비",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#FBEFF1",
+    "preferredContentMode": "mobile",
+    "scrollEnabled": false
+  },
+  "plugins": {
+    "SplashScreen": { "launchShowDuration": 800, "launchAutoHide": true, "backgroundColor": "#FBEFF1", "showSpinner": false },
+    "StatusBar": { "style": "LIGHT", "backgroundColor": "#FBEFF1" }
+  }
+}

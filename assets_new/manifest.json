@@ -1,0 +1,354 @@
+{
+  "version": 3,
+  "created": "2026-10-14",
+  "name": "CupcakeZombie — new cupcake sprites v3",
+  "format": "PNG RGBA",
+  "mode": "built-in image_gen",
+  "sprites": [
+    {
+      "key": "earl_grey",
+      "name": "얼그레이",
+      "flavor": "earl_grey",
+      "state": "fresh",
+      "file": "assets/earl_grey.png",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "visibleBounds": {
+        "x": 324,
+        "y": 140,
+        "width": 607,
+        "height": 998
+      },
+      "anchor": {
+        "x": 627.535,
+        "y": 1137
+      },
+      "anchorNormalized": {
+        "x": 0.500427,
+        "y": 0.906699
+      },
+      "alpha": {
+        "transparentPixels": 1217653,
+        "opaquePixels": 182,
+        "partialPixels": 354681,
+        "transparentRatio": 0.77433,
+        "touchesCanvasEdge": false
+      },
+      "neverSpoils": false,
+      "infectionDelayTurns": null,
+      "pairReferenceWidth": 607,
+      "sourceToLegacyScale": 0.189456343,
+      "logicalSize": {
+        "width": 237.578,
+        "height": 237.578
+      }
+    },
+    {
+      "key": "zombie_earl_grey",
+      "name": "얼그레이",
+      "flavor": "earl_grey",
+      "state": "zombie",
+      "file": "assets/zombie_earl_grey.png",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "visibleBounds": {
+        "x": 320,
+        "y": 140,
+        "width": 613,
+        "height": 999
+      },
+      "anchor": {
+        "x": 627.49,
+        "y": 1138
+      },
+      "anchorNormalized": {
+        "x": 0.500391,
+        "y": 0.907496
+      },
+      "alpha": {
+        "transparentPixels": 1208025,
+        "opaquePixels": 82,
+        "partialPixels": 364409,
+        "transparentRatio": 0.76821,
+        "touchesCanvasEdge": false
+      },
+      "neverSpoils": false,
+      "infectionDelayTurns": null,
+      "pairReferenceWidth": 607,
+      "sourceToLegacyScale": 0.189456343,
+      "logicalSize": {
+        "width": 237.578,
+        "height": 237.578
+      }
+    },
+    {
+      "key": "lemon_yogurt",
+      "name": "레몬요거트",
+      "flavor": "lemon_yogurt",
+      "state": "fresh",
+      "file": "assets/lemon_yogurt.png",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "visibleBounds": {
+        "x": 321,
+        "y": 184,
+        "width": 612,
+        "height": 923
+      },
+      "anchor": {
+        "x": 624.947,
+        "y": 1106
+      },
+      "anchorNormalized": {
+        "x": 0.498363,
+        "y": 0.881978
+      },
+      "alpha": {
+        "transparentPixels": 1192604,
+        "opaquePixels": 70,
+        "partialPixels": 379842,
+        "transparentRatio": 0.75841,
+        "touchesCanvasEdge": false
+      },
+      "neverSpoils": false,
+      "infectionDelayTurns": null,
+      "pairReferenceWidth": 612,
+      "sourceToLegacyScale": 0.187908497,
+      "logicalSize": {
+        "width": 235.637,
+        "height": 235.637
+      }
+    },
+    {
+      "key": "pending_lemon_yogurt",
+      "name": "레몬요거트",
+      "flavor": "lemon_yogurt",
+      "state": "pending",
+      "file": "assets/pending_lemon_yogurt.png",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "visibleBounds": {
+        "x": 309,
+        "y": 169,
+        "width": 636,
+        "height": 939
+      },
+      "anchor": {
+        "x": 626.083,
+        "y": 1107
+      },
+      "anchorNormalized": {
+        "x": 0.499269,
+        "y": 0.882775
+      },
+      "alpha": {
+        "transparentPixels": 1178761,
+        "opaquePixels": 45,
+        "partialPixels": 393710,
+        "transparentRatio": 0.7496,
+        "touchesCanvasEdge": false
+      },
+      "neverSpoils": false,
+      "infectionDelayTurns": 1,
+      "pairReferenceWidth": 612,
+      "sourceToLegacyScale": 0.187908497,
+      "logicalSize": {
+        "width": 235.637,
+        "height": 235.637
+      }
+    },
+    {
+      "key": "zombie_lemon_yogurt",
+      "name": "레몬요거트",
+      "flavor": "lemon_yogurt",
+      "state": "zombie",
+      "file": "assets/zombie_lemon_yogurt.png",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "visibleBounds": {
+        "x": 319,
+        "y": 200,
+        "width": 617,
+        "height": 914
+      },
+      "anchor": {
+        "x": 627.291,
+        "y": 1113
+      },
+      "anchorNormalized": {
+        "x": 0.500232,
+        "y": 0.88756
+      },
+      "alpha": {
+        "transparentPixels": 1196831,
+        "opaquePixels": 301,
+        "partialPixels": 375384,
+        "transparentRatio": 0.76109,
+        "touchesCanvasEdge": false
+      },
+      "neverSpoils": false,
+      "infectionDelayTurns": null,
+      "pairReferenceWidth": 612,
+      "sourceToLegacyScale": 0.187908497,
+      "logicalSize": {
+        "width": 235.637,
+        "height": 235.637
+      }
+    },
+    {
+      "key": "espresso",
+      "name": "에스프레소",
+      "flavor": "espresso",
+      "state": "fresh",
+      "file": "assets/espresso.png",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "visibleBounds": {
+        "x": 322,
+        "y": 143,
+        "width": 610,
+        "height": 997
+      },
+      "anchor": {
+        "x": 626.776,
+        "y": 1139
+      },
+      "anchorNormalized": {
+        "x": 0.499821,
+        "y": 0.908293
+      },
+      "alpha": {
+        "transparentPixels": 1217390,
+        "opaquePixels": 202,
+        "partialPixels": 354924,
+        "transparentRatio": 0.77417,
+        "touchesCanvasEdge": false
+      },
+      "neverSpoils": false,
+      "infectionDelayTurns": null,
+      "pairReferenceWidth": 610,
+      "sourceToLegacyScale": 0.18852459,
+      "logicalSize": {
+        "width": 236.41,
+        "height": 236.41
+      }
+    },
+    {
+      "key": "zombie_espresso",
+      "name": "에스프레소",
+      "flavor": "espresso",
+      "state": "zombie",
+      "file": "assets/zombie_espresso.png",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "visibleBounds": {
+        "x": 323,
+        "y": 128,
+        "width": 609,
+        "height": 1014
+      },
+      "anchor": {
+        "x": 626.537,
+        "y": 1141
+      },
+      "anchorNormalized": {
+        "x": 0.499631,
+        "y": 0.909888
+      },
+      "alpha": {
+        "transparentPixels": 1203906,
+        "opaquePixels": 210,
+        "partialPixels": 368400,
+        "transparentRatio": 0.76559,
+        "touchesCanvasEdge": false
+      },
+      "neverSpoils": false,
+      "infectionDelayTurns": null,
+      "pairReferenceWidth": 610,
+      "sourceToLegacyScale": 0.18852459,
+      "logicalSize": {
+        "width": 236.41,
+        "height": 236.41
+      }
+    },
+    {
+      "key": "mint_choco",
+      "name": "민트초코",
+      "flavor": "mint_choco",
+      "state": "fresh",
+      "file": "assets/mint_choco.png",
+      "sourceSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "visibleBounds": {
+        "x": 316,
+        "y": 136,
+        "width": 638,
+        "height": 1006
+      },
+      "anchor": {
+        "x": 634.868,
+        "y": 1141
+      },
+      "anchorNormalized": {
+        "x": 0.506274,
+        "y": 0.909888
+      },
+      "alpha": {
+        "transparentPixels": 1139072,
+        "opaquePixels": 213,
+        "partialPixels": 433231,
+        "transparentRatio": 0.72436,
+        "touchesCanvasEdge": false
+      },
+      "neverSpoils": true,
+      "infectionDelayTurns": null,
+      "pairReferenceWidth": 638,
+      "sourceToLegacyScale": 0.180250784,
+      "logicalSize": {
+        "width": 226.034,
+        "height": 226.034
+      }
+    }
+  ],
+  "stateSequences": {
+    "earl_grey": [
+      "earl_grey",
+      "zombie_earl_grey"
+    ],
+    "lemon_yogurt": [
+      "lemon_yogurt",
+      "pending_lemon_yogurt",
+      "zombie_lemon_yogurt"
+    ],
+    "espresso": [
+      "espresso",
+      "zombie_espresso"
+    ],
+    "mint_choco": [
+      "mint_choco"
+    ]
+  },
+  "rendering": {
+    "anchor": "Foot point; alpha > 40. X is lower-body alpha centroid, Y is lowest visible pixel.",
+    "legacyUnit": 115,
+    "sourceImagesUnmodified": true,
+    "scale": "Multiply existing legacy sprite scale by sourceToLegacyScale. Use the matching fresh image width for both pair states.",
+    "maxGrid": 7
+  }
+}
