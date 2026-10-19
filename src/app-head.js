@@ -30,9 +30,9 @@ function layout() {
   if (!state) return;
   const wrapW = boardWrap.clientWidth || 360;
   const wrapH = boardWrap.clientHeight || 420;
-  const s = Math.min(wrapW / (state.W + 0.8), wrapH / (state.H + 1.05), 110);
+  const s = Math.min(wrapW / (state.W + 0.8), wrapH / (state.H + 1.2), 110);
   S = Math.max(30, Math.floor(s));
-  padX = Math.round(S * 0.4); padTop = Math.round(S * 0.7); padBot = Math.round(S * 0.35);
+  padX = Math.round(S * 0.4); padTop = Math.round(S * 0.7); padBot = Math.round(S * 0.5);
   CW = state.W * S + padX * 2; CH = state.H * S + padTop + padBot;
   DPR = Math.min(2.5, window.devicePixelRatio || 1);
   canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
@@ -68,8 +68,8 @@ function drawBg() {
   if (screen === 'play' && state) {
     const cr = canvas.getBoundingClientRect();
     const gap = S * 0.18;
-    midTop = cr.top - ar.top + padTop - S * 0.3 - gap;
-    midBot = midTop + gap * 2 + state.H * S + S * 0.5;
+    midTop = cr.top - ar.top + padTop + S * 0.16 - gap;
+    midBot = midTop + gap * 2 + state.H * S + S * 0.16;
   } else { midTop = topH; midBot = H - botH; }
   if (midBot < midTop) midBot = midTop;
   g.fillStyle = bg.wall; g.fillRect(0, 0, W, Math.max(0, midTop - topH) + 1);

@@ -389,20 +389,22 @@ function isZombieShown(v) { return v.infAt >= 0 ? (now - v.infAt >= 230) : v.zom
 
 // Hand-drawn tray: the base is 9-sliced so the rim keeps its thickness on any board shape,
 // and the tray with its wells is cached until the layout changes.
-const TRAY_PAD = { tray_base: 5.22, tray_well: 2.2 };
+const TRAY_PAD = { tray_base: 5.22, tray_well: 2.18 };
 let trayCache = { key: '', cv: null };
-function trayRect() { return { x: padX - S * 0.22, y: padTop - S * 0.3, w: state.W * S + S * 0.44, h: state.H * S + S * 0.5 }; }
+// Equal gap (0.34 cell) between the outermost wells and the rim on all four sides.
+// Wells span x ±0.4 around the cell centre and y [cy+0.0, cy+0.48]; cupcakes in the top row may stand above the rim.
+function trayRect() { return { x: padX - S * 0.24, y: padTop + S * 0.16, w: state.W * S + S * 0.48, h: state.H * S + S * 0.16 }; }
 function drawTrayArt(g) {
   const { x, y, w, h } = trayRect();
   const im = IMG.tray_base, p = TRAY_PAD.tray_base;
   const sx0 = p, sy0 = p, sw = im.width - 2 * p, sh = im.height - 2 * p;
-  const c = sw * 0.12, k = Math.min(w, h) / Math.min(sw, sh), d = Math.min(c * k, Math.min(w, h) / 2);
+  const c = sw * 0.12, d = Math.min(S * 0.42, Math.min(w, h) / 2); // rim inner edge lands ~0.22 cell in
   g.fillStyle = 'rgba(74, 46, 39, 0.16)'; roundRect(g, x + 6, y + 9, w, h, S * 0.3); g.fill();
   const xs = [[sx0, c, x, d], [sx0 + c, sw - 2 * c, x + d, w - 2 * d], [sx0 + sw - c, c, x + w - d, d]];
   const ys = [[sy0, c, y, d], [sy0 + c, sh - 2 * c, y + d, h - 2 * d], [sy0 + sh - c, c, y + h - d, d]];
   for (const [sx, sw2, dx, dw] of xs) for (const [sy, sh2, dy, dh] of ys) g.drawImage(im, sx, sy, sw2, sh2, dx - 0.3, dy - 0.3, dw + 0.6, dh + 0.6);
   const wl = IMG.tray_well, q = TRAY_PAD.tray_well;
-  for (let i = 0; i < state.W * state.H; i++) g.drawImage(wl, q, q, wl.width - 2 * q, wl.height - 2 * q, cxOf(i) - S * 0.4, wellY(i) - S * 0.26, S * 0.8, S * 0.52);
+  for (let i = 0; i < state.W * state.H; i++) g.drawImage(wl, q, q, wl.width - 2 * q, wl.height - 2 * q, cxOf(i) - S * 0.4, wellY(i) - S * 0.24, S * 0.8, S * 0.48);
 }
 function drawTray() {
   if (IMG.tray_base && IMG.tray_well) {
@@ -426,7 +428,7 @@ function drawTray() {
   ctx.restore();
 }
 function drawTrayPlain() {
-  const x = padX - S * 0.22, y = padTop - S * 0.3, w = state.W * S + S * 0.44, h = state.H * S + S * 0.5;
+  const { x, y, w, h } = trayRect();
   ctx.save();
   ctx.fillStyle = 'rgba(74, 46, 39, 0.16)';
   roundRect(ctx, x + 6, y + 9, w, h, S * 0.3); ctx.fill();
