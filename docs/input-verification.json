@@ -1,0 +1,45 @@
+{
+  "checks": [
+    "mouse first tap selects; second tap fires",
+    "touch first tap selects; second tap fires",
+    "pen first tap selects; second tap fires",
+    "mouse hover reacts once without selecting or firing",
+    "quick swipe visits crossed cells; release selects and later tap fires",
+    "out-and-back swipe on selected cupcake never fires on release",
+    "within-cell drag exceeding slop never confirms",
+    "outside release, empty cell, wall and spoiled cupcake cannot fire",
+    "pointercancel clears without firing",
+    "lostpointercapture clears without firing",
+    "blur clears without firing",
+    "secondary pointer cannot overwrite or release primary gesture",
+    "busy, result and intro block pointer reactions",
+    "reentering a cupcake during cooldown does not restart motion"
+  ],
+  "stages": 200,
+  "turns": 394,
+  "scope": "Real pointer handlers and game rules in a Node VM; native browser gestures and iOS hardware require separate checks.",
+  "browserChecks": {
+    "stage": 4,
+    "gesture": "Native mouse drag through the in-app browser",
+    "swipeSelectsWithoutFiring": true,
+    "nextClickClears": true,
+    "stars": 3,
+    "spoiled": 15,
+    "separateFireButtonRemoved": true,
+    "viewport320x568": {
+      "beforeSelection": {
+        "x": 15,
+        "y": 64,
+        "width": 290,
+        "height": 310
+      },
+      "afterSelection": {
+        "x": 15,
+        "y": 64,
+        "width": 290,
+        "height": 310
+      }
+    },
+    "notes": "Touch/pen pointer paths were checked in the VM. iOS hardware was not tested. Browser logs contained two MutationObserver.observe messages without source URLs; this API is absent from game source. No pointer-capture or gameplay failure was observed."
+  }
+}

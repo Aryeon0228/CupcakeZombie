@@ -551,14 +551,18 @@ function drawPreview(i, T) {
   ctx.restore();
 }
 
-// Resting sprites keep their original pixels and a fixed foot point. Only an
-// actual hit compresses them, briefly; neighboring zombies and chilled lemons
-// must not make the board vibrate while the player is thinking.
+// Resting sprites keep their original pixels and a fixed foot point. Hits and
+// pointer entries get one bounded response, with no repeating idle animation.
 function cupcakePose(v, time = now, reduced = reduceMotion) {
+  if (reduced) return { sx: 1, sy: 1 };
   const p = (time - v.bumpAt) / 420;
-  const k = !reduced && v.bumpAt >= 0 && p >= 0 && p < 1
+  let k = v.bumpAt >= 0 && p >= 0 && p < 1
     ? Math.min(0.12, v.bumpAmp) * Math.sin(p * Math.PI * 2) * (1 - p) ** 2
     : 0;
+  const q = (time - v.peekAt) / 300;
+  if (!(v.bumpAt >= 0 && p >= 0 && p < 1) && v.peekAt >= 0 && q >= 0 && q < 1) {
+    k = q < 0.22 ? 0.035 * Math.sin(q / 0.22 * Math.PI) : -0.06 * Math.sin((q - 0.22) / 0.78 * Math.PI) ** 2;
+  }
   return { sx: 1 + k * 0.55, sy: 1 - k };
 }
 function drawCupcake(i, v, sc) {

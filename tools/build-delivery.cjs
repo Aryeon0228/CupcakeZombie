@@ -14,10 +14,11 @@ const changes=`<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="
 <tr><td>모바일 비율</td><td>판 영역 폭에 좌우 여백 20px가 포함되어, CSS가 가로만 줄일 수 있었어요.</td><td>실제 그림을 놓을 수 있는 폭과 높이로 계산해요. 작은 화면에서도 판 전체가 같은 비율로 들어가요.</td></tr>
 <tr><td>작은 화면 하단</td><td>320px 폭에서 포자 3개와 별 표시가 겹칠 수 있었어요.</td><td>포자 아이콘을 조금 줄이고 별과 설명을 위아래로 배치해요.</td></tr>
 <tr><td>스테이지 탐색</td><td>긴 장 목록을 직접 내려야 했어요.</td><td>20개 장 바로가기와 이어하기 버튼을 넣었어요. 다음 미완료 판에 테두리를 표시해요.</td></tr>
-<tr><td>선택과 발사</td><td>터치는 두 번, 마우스는 한 번만 눌러도 발사되어 안내와 달랐어요.</td><td>둘 다 첫 입력은 미리보기, 같은 칸을 다시 누르면 발사해요. 12px 넘게 끌거나 다른 칸에서 놓으면 발사하지 않아요. Esc로 선택을 해제할 수 있어요.</td></tr>
+<tr><td>선택과 발사</td><td>터치는 두 번, 마우스는 한 번만 눌러도 발사되어 안내와 달랐어요.</td><td>별도 발사 버튼을 없앴어요. 첫 입력은 미리보기, 같은 컵케익을 다시 누르면 발사해요. 드래그하면 지나간 친구들이 반응하고 마지막 친구가 선택돼요. 손을 뗄 때는 발사하지 않으며, 밖에 놓거나 입력이 취소되면 선택을 풀어요. Esc로도 선택을 해제할 수 있어요.</td></tr>
 <tr><td>동작 줄이기</td><td>OS 설정을 켜도 포자 이동과 입자 효과가 계속 나왔어요.</td><td>큰 이동과 입자는 생략하고 접촉 지점에 잠깐 표시해요. 판정 순서와 손님 타이밍은 같아요.</td></tr>
-<tr><td>대기 중 떨림 · 10/20 추가 수정</td><td>대기 중에도 그림의 크기와 위치가 바뀌고, 좀비 옆의 친구와 서리 상태 레몬은 빠르게 떨었어요.</td><td>생각하는 동안 그림과 발을 고정해요. 실제로 닿았을 때만 420ms 안에 살짝 눌렸다 돌아와요. 감염 색상도 같은 위치에 겹쳐 윤곽이 두 겹으로 떨리지 않아요.</td></tr>
+<tr><td>대기 중 떨림 · 10/20 추가 수정</td><td>대기 중에도 그림의 크기와 위치가 바뀌고, 좀비 옆의 친구와 서리 상태 레몬은 빠르게 떨었어요.</td><td>생각하는 동안 그림과 발을 고정해요. 실제로 닿았을 때는 420ms 안에 살짝 눌렸다 돌아와요. 커서나 손가락이 들어올 때는 300ms 동안 한 번 움찔하고 멈춰요. 같은 칸에 계속 있어도 반복하지 않아요. 감염 색상도 같은 위치에 겹쳐 윤곽이 두 겹으로 떨리지 않아요.</td></tr>
 <tr><td>설명에 따른 판 이동 · 10/20 추가 수정</td><td>기본 안내와 맛 설명의 줄 수가 달라지면 쟁반과 배경이 위아래로 움직였어요.</td><td>설명은 항상 세 줄 높이를 확보하고 긴 내용은 그 안에서 스크롤해요. 판 공간은 내용 크기와 독립적으로 계산하고, 같은 크기의 캔버스는 다시 초기화하지 않아요.</td></tr>
+<tr><td>쓸어서 고르기 · 10/20 추가 수정</td><td>선택하면 발사 버튼이 설명 위에 뜨고, 터치 드래그는 무시했어요.</td><td>버튼 대신 선택한 컵케익을 다시 눌러 발사해요. 빠르게 쓸어도 중간에 지난 친구들이 차례로 움찔해요. 누른 채 쓸 때만 작은 음이 나고, 연속 음은 간격을 두어요. 대기 중에는 계속 움직이지 않고 동작 줄이기 설정도 유지해요.</td></tr>
 </tbody></table>
 <h2>화면 비교</h2><div class="frames"><figure><img src="media/before-stage-200.png" alt="수정 전 200 스테이지"><figcaption>수정 전 · 390px</figcaption></figure><figure><img src="media/after-390.png" alt="수정 후 200 스테이지"><figcaption>수정 후 · 390px</figcaption></figure><figure><img src="media/after-320.png" alt="작은 화면의 200 스테이지"><figcaption>작은 화면 · 320px</figcaption></figure><figure><img src="media/map-20.png" alt="장 바로가기 화면"><figcaption>장 바로가기와 진행 표시</figcaption></figure></div>
 <h2>포자가 닿는 순간</h2><div class="frames"><figure><img src="media/drop-250.png" alt="가속하며 내려오는 포자"><figcaption>250ms · 내려오기</figcaption></figure><figure><img src="media/drop-475.png" alt="살짝 눌린 포자"><figcaption>475ms · 접점에서 압축</figcaption></figure><figure><img src="media/drop-580.png" alt="다시 둥글게 회복하는 포자"><figcaption>580ms · 회복과 사라짐</figcaption></figure></div>
@@ -27,6 +28,7 @@ const changes=`<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="
 node tools/test_cascade.js
 node tools/audit-stages.js
 node tools/test-cupcake-motion.cjs
+node tools/test-board-input.cjs --report
 node tools/build.js
 # Playwright와 브라우저를 설치한 환경에서
 node tools/test-ui.cjs

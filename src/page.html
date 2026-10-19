@@ -150,13 +150,14 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 #scr-play.has-bg > .hud { background: rgba(255, 249, 242, 0.84); backdrop-filter: blur(4px); }
 #scr-play.has-bg > .hintline { margin: 0 14px 4px; background: rgba(255, 249, 242, 0.7); border-radius: 12px; backdrop-filter: blur(3px); }
 .board-wrap { flex: 1 1 0; min-height: 0; display: flex; align-items: center; justify-content: center; position: relative; padding: 4px 10px; }
-#board { display: block; touch-action: manipulation; border-radius: 12px; max-width: 100%; }
+#board { display: block; touch-action: none; border-radius: 12px; max-width: 100%; user-select: none; -webkit-user-select: none; }
 #board:focus-visible { outline: 3px dashed var(--mold-deep); outline-offset: 4px; }
 .sent { display: inline-block; }
 /* Reserve three lines, including padding. Hover, selection and busy copy must
    not resize the tray or change the cell underneath a stationary pointer. */
 .hintline { flex: 0 0 auto; height: calc(4.2em + 12px); min-height: calc(4.2em + 12px); overflow-y: auto; overscroll-behavior: contain; text-wrap: balance; padding: 6px 18px; font-size: 13px; color: var(--ink-soft); text-align: center; line-height: 1.4; }
 .hintline b { font-family: var(--f-display); font-weight: 400; color: var(--ink); margin-right: 6px; }
+.selection-tip { display: block; color: var(--mold-deep); font-size: 0.92em; }
 .hud {
   background: var(--paper); border-top: 2px solid var(--ink);
   padding: 10px 16px calc(12px + var(--sab)); display: grid; gap: 8px; position: relative;
@@ -175,7 +176,6 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 .starline .st { white-space: nowrap; flex-shrink: 0; font-family: var(--f-display); font-size: 20px; letter-spacing: 1px; line-height: 1; }
 @media (max-width: 360px) { .starline { flex-direction: column; align-items: flex-end; gap: 3px; } #starText { text-align: right; font-size: 10px; } .pips img.pip, .pips svg { width: 28px; } .pips .mold { width: 38px; } }
 .hud-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-.cta { position: absolute; left: 16px; right: 16px; top: -58px; min-height: 50px; font-size: 18px; animation: popin .25s cubic-bezier(.3, 1.6, .5, 1); }
 
 /* ---- sheets ---- */
 .sheet { position: fixed; inset: 0; z-index: 30; display: flex; align-items: flex-end; justify-content: center; background: rgba(74, 46, 39, .35); opacity: 0; transition: opacity .2s ease; }
@@ -242,7 +242,7 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 @keyframes fadein { from { opacity: 0 } }
 @keyframes popin { from { transform: scale(.85); opacity: 0 } }
 @keyframes starpop { from { transform: scale(0) rotate(-40deg); } }
-@media (prefers-reduced-motion: reduce) { .overlay, .card, .bigstars span.on, .cta, .chase-track, .runner, .runner::after, .logo-big img, .bang, .pips .mold { animation: none; } .chase-track { transform: translateX(10%); } .btn, .sheet, .sheet-card { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .overlay, .card, .bigstars span.on, .chase-track, .runner, .runner::after, .logo-big img, .bang, .pips .mold { animation: none; } .chase-track { transform: translateX(10%); } .btn, .sheet, .sheet-card { transition: none; } }
 @media (max-height: 700px) { .hintline { font-size: 12px; } .logo-big h1 { font-size: 40px; } .chase { height: 80px; } #app.has-bg .title-wrap { padding-top: 90px; } }
 </style>
 
@@ -283,7 +283,6 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
     </div>
     <div class="hintline" id="hintLine" aria-live="polite"></div>
     <div class="hud">
-      <button class="btn go cta" id="fireCta" hidden>포자 발사!</button>
       <div class="hud-row">
         <div class="pips" id="pips"></div>
         <div class="starline"><span class="st" id="starNow"></span><span class="small" id="starText"></span></div>

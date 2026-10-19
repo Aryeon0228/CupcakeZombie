@@ -10,7 +10,9 @@ const root = path.resolve(__dirname,'..'), solutions = require('./solutions.json
  await page.route('**/fonts.googleapis.com/**',r=>r.abort());
  await page.goto('file://'+path.join(root,'out/www/index.html'));
  await page.waitForFunction(()=>typeof IMG!=='undefined'&&IMG.blueberry&&IMG.cinnamon_roll);
- await page.evaluate(()=>{save.sound=false;save.haptics=false;window.requestAnimationFrame=()=>0;});
+ await page.evaluate(()=>{save.sound=false;save.haptics=false;window.requestAnimationFrame=()=>0;
+ // Synthetic PointerEvents have no native capture; real capture is checked with UI gestures.
+ const captured=new Set();canvas.setPointerCapture=id=>captured.add(id);canvas.hasPointerCapture=id=>captured.has(id);canvas.releasePointerCapture=id=>captured.delete(id);});
  await page.waitForTimeout(80);
  await page.addStyleTag({content:'.screen{transition:none!important}'});
  report.viewport=[];
@@ -28,11 +30,12 @@ const root = path.resolve(__dirname,'..'), solutions = require('./solutions.json
   startStage(60);hideIntro();layout();frame(now+16);
   const b=canvas.getBoundingClientRect(),p={x:b.left+cxOf(12),y:b.top+cyOf(12)};
   const ev=(type,x,y,kind='mouse')=>canvas.dispatchEvent(new PointerEvent(type,{clientX:x,clientY:y,pointerId:1,isPrimary:true,pointerType:kind,bubbles:true}));
-  ev('pointerdown',p.x,p.y);ev('pointerup',p.x+30,p.y); const dragIgnored=selected===-1&&!busy;
+  ev('pointerdown',p.x,p.y);ev('pointerup',p.x+30,p.y); const dragPreviews=selected===12&&!busy;
+  document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
   ev('pointerdown',p.x,p.y);ev('pointerup',p.x,p.y);const previews=selected===12&&!busy;
   document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));const escapeClears=selected===-1;
   ev('pointerdown',p.x,p.y);ev('pointerup',p.x,p.y);ev('pointerdown',p.x,p.y);ev('pointerup',p.x,p.y);const secondFires=busy&&state.turn===1;
-  return {dragIgnored,previews,escapeClears,secondFires};
+  return {dragPreviews,previews,escapeClears,secondFires};
  }); console.log(report.input); Object.values(report.input).forEach(v=>assert.equal(v,true));
  report.animation=await page.evaluate(()=>{
   const start=projs.find(p=>p.style==='drop').t0;

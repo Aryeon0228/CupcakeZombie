@@ -156,7 +156,7 @@ function rebuildVis() {
     zv: ((i * 7 + li * 3) % 3 === 0) ? 'zombieA' : 'zombieB',
     flip: ((i * 5 + li) % 4) === 1,
     phase: (i * 1.37) % (Math.PI * 2),
-    infAt: -1, bumpAt: -1, bumpAmp: 0, flashAt: -1, gone: false,
+    infAt: -1, bumpAt: -1, bumpAmp: 0, peekAt: -1, flashAt: -1, gone: false,
   });
 }
 function loadLevel(d, opts = {}) {
@@ -166,6 +166,7 @@ function loadLevel(d, opts = {}) {
   if (!opts.keepMistakes) { mistakes = 0; usedHint = false; boosted = false; }
   hintCell = -1;
   particles = []; projs = []; timeline = []; texts = []; arm = null;
+  resetBoardPress();
   busy = false; result = null; hover = -1; selected = -1;
   cursor = state.cells.findIndex(Boolean);
   rebuildVis();
@@ -188,6 +189,7 @@ function restart() {
 }
 function undo() {
   if (busy || introOpen || !undoStack.length) return;
+  resetBoardPress(); hover = -1; selected = -1;
   mistakes++;
   state = undoStack.pop();
   hintCell = -1;
@@ -419,8 +421,6 @@ function renderHUD() {
   const ch = mode === 'stage' ? CHAPTERS.find(c => li >= c.from && li <= c.to) : null;
   $('stageLabel').textContent = mode === 'daily' ? localeDate(new Date()) : t('play.stageLabel', { ch: ch ? ch.no : '', n: li + 1 });
   $('stageName').textContent = levelName(def);
-  $('fireCta').hidden = !(selected >= 0 && !busy && !result);
-  if (selected >= 0) $('fireCta').textContent = t('play.fire', { name: typeName(state.cells[selected].t) });
 }
 function patternSVG(key) {
   const p = TYPES[Object.keys(TYPES).find(k => TYPES[k].key === key)].pattern;
@@ -481,6 +481,7 @@ function updateHint() {
     const k = state.customers.find(k => !k.done && k.r * state.W + k.c === i);
     if (k && !c.inf) { const n = k.turn - state.turn; s += t('hint.cust', { n, s: plural(n) }); }
     el.innerHTML = sents(`<b>${c.inf ? t('hint.spoiled') : ''}${tl(ty, 'name')}</b> ${s}`);
+    if (i === selected && !busy && !result && canTarget(state, i)) el.innerHTML += `<span class="selection-tip">${t('hint.confirm')}</span>`;
   } else if (i >= 0 && state.tiles[i]) el.innerHTML = sents(`<b>${t('hint.spatula')}</b> ${t('rule.defl')}`);
   else if (busy) el.innerHTML = sents(t('hint.busy'));
   else if (result) el.innerHTML = '';
@@ -490,32 +491,79 @@ function updateHint() {
 
 // ---------- input ----------
 let press = null;
-canvas.addEventListener('pointerdown', e => {
-  if (e.isPrimary === false || e.button > 0) return;
-  press = { id: e.pointerId, x: e.clientX, y: e.clientY, cell: cellAt(e) };
-});
-canvas.addEventListener('pointercancel', () => { press = null; });
-canvas.addEventListener('pointermove', e => {
-  if (e.pointerType !== 'mouse') return;
+let lastPeekNote = -Infinity;
+function resetBoardPress() {
+  const down = press; press = null;
+  if (down && canvas.hasPointerCapture(down.id)) canvas.releasePointerCapture(down.id);
+}
+function boardInputReady() { return !!state && screen === 'play' && !busy && !result && !introOpen; }
+function pointPreview(e, pick = false, audible = false) {
   const i = cellAt(e);
   const h = i >= 0 && (state.cells[i] || state.tiles[i]) ? i : -1;
-  if (h !== hover) { hover = h; cursorShown = false; updateHint(); }
-  canvas.style.cursor = h >= 0 && state.cells[h] && !state.cells[h].inf && !busy ? 'pointer' : 'default';
-});
-canvas.addEventListener('pointerleave', () => { hover = -1; updateHint(); });
-canvas.addEventListener('pointerup', e => {
-  const down = press; press = null;
-  if (!down || down.id !== e.pointerId || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 12 || down.cell !== cellAt(e)) return;
-  cursorShown = false;
+  const entered = h !== hover, previousSelection = selected;
+  if (entered) {
+    hover = h; cursorShown = false;
+    if (h >= 0 && vis[h] && !vis[h].gone && (vis[h].peekAt < 0 || now - vis[h].peekAt >= 350)) {
+      vis[h].peekAt = now;
+      if (audible && now - lastPeekNote >= 70) {
+        lastPeekNote = now;
+        tone([523, 587, 659, 784, 880][h % 5], 0.065, 'sine', 0.018, 1.12);
+      }
+    }
+  }
+  if (pick) selected = canTarget(state, h) ? h : -1;
+  canvas.style.cursor = canTarget(state, h) ? 'pointer' : 'default';
+  return entered || selected !== previousSelection;
+}
+function sweepPreview(e) {
+  const down = press;
+  if (!down || down.id !== e.pointerId) return;
+  if (Math.hypot(e.clientX - down.x, e.clientY - down.y) > 12 || cellAt(e) !== down.cell) down.moved = true;
+  // Cover cells crossed between sparse touch events, even during a quick swipe.
+  const dx = e.clientX - down.lastX, dy = e.clientY - down.lastY;
+  const steps = Math.min(100, Math.max(1, Math.ceil(Math.hypot(dx, dy) / Math.max(4, S / 3))));
+  let changed = false;
+  for (let n = 1; n <= steps; n++) changed = pointPreview({ clientX: down.lastX + dx * n / steps, clientY: down.lastY + dy * n / steps }, true, true) || changed;
+  down.lastX = e.clientX; down.lastY = e.clientY;
+  if (changed) updateHint();
+}
+canvas.addEventListener('pointerdown', e => {
+  if (e.isPrimary === false || e.button > 0 || press || !boardInputReady()) return;
   const i = cellAt(e);
-  if (busy || result || introOpen) return;
-  if (i < 0 || !state.cells[i]) { selected = -1; renderHUD(); updateHint(); return; }
-  if (state.cells[i].inf || state.cells[i].wall) { selected = -1; bump(i, 0.1); haptic(); if (state.cells[i].wall) toast(t('toast.wall')); renderHUD(); updateHint(); return; }
-  if (selected === i) { selected = -1; fireAt(i); }
-  else { selected = i; haptic(); tone(700, 0.05, 'sine', 0.04); }
+  press = { id: e.pointerId, x: e.clientX, y: e.clientY, lastX: e.clientX, lastY: e.clientY, cell: i, confirm: selected === i && canTarget(state, i), moved: false };
+  canvas.setPointerCapture(e.pointerId);
+  pointPreview(e, true, true);
+  updateHint();
+});
+function cancelBoardPress(e) {
+  if (!press || (e && e.pointerId !== press.id)) return;
+  resetBoardPress(); hover = -1; selected = -1;
+  updateHint();
+}
+canvas.addEventListener('pointercancel', cancelBoardPress);
+canvas.addEventListener('lostpointercapture', cancelBoardPress);
+window.addEventListener('blur', () => cancelBoardPress());
+canvas.addEventListener('pointermove', e => {
+  if (e.isPrimary === false || !boardInputReady()) return;
+  if (press) { sweepPreview(e); return; }
+  if (e.pointerType !== 'mouse' && e.pointerType !== 'pen') return;
+  if (pointPreview(e)) updateHint();
+});
+canvas.addEventListener('pointerleave', () => { if (!press) { hover = -1; if (state) updateHint(); } });
+canvas.addEventListener('pointerup', e => {
+  const down = press;
+  if (!down || down.id !== e.pointerId) return;
+  if (!boardInputReady()) { cancelBoardPress(e); return; }
+  sweepPreview(e);
+  resetBoardPress(); cursorShown = false;
+  const i = cellAt(e);
+  if (e.pointerType !== 'mouse') hover = -1;
+  // Releasing a swipe only selects. A separate, stationary tap confirms it.
+  if (!down.moved && down.confirm && i === down.cell && canTarget(state, i)) fireAt(i);
+  else if (!down.moved && selected >= 0) haptic();
+  else if (!down.moved && i >= 0 && state.cells[i]?.wall) toast(t('toast.wall'));
   renderHUD(); updateHint();
 });
-$('fireCta').onclick = () => { if (selected >= 0) { const i = selected; selected = -1; fireAt(i); renderHUD(); } };
 $('undoBtn').onclick = undo;
 $('resetBtn').onclick = restart;
 $('hintBtn').onclick = onHint;
@@ -540,7 +588,7 @@ document.addEventListener('keydown', e => {
   const k = e.key.toLowerCase();
   if (introOpen) { if (k === 'enter' || k === 'escape') $('introGo').click(); return; }
   if (screen !== 'play') return;
-  if (k === 'escape') { selected = -1; hover = -1; renderHUD(); updateHint(); }
+  if (k === 'escape') { cancelBoardPress(); selected = -1; hover = -1; renderHUD(); updateHint(); }
   else if (k === 'z' || k === 'u') undo();
   else if (k === 'r') restart();
   else if (k === 'n' && result === 'win' && mode === 'stage' && li < LEVELS.length - 1) startStage(li + 1);
