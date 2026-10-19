@@ -1,12 +1,15 @@
 // ---------- i18n ----------
 const STR = {
 ko: {
+  'rule.blueberry': '대각선 한 칸과 두 칸에 퍼져요. 빈칸은 넘지만 바로 앞 민트초코는 못 넘어요.',
+  'rule.cinnamon_roll': '바로 옆은 건너뛰고 십자·대각선 두 칸 앞에 퍼져요. 중간 민트초코가 막아요.',
   'title.h1': '컵케익 <span class="z">좀비</span>',
   'title.tagline': '내가 곰팡이가 되어 진열대를 상하게 만드는 퍼즐',
   'title.play': '시작하기', 'title.continue': '이어서 하기 · {n}',
   'title.map': '스테이지 고르기', 'title.daily': '오늘의 퍼즐', 'title.dailyDone': '완료',
   'title.settings': '설정', 'title.streak': '{n}일 연속', 'title.foot': 'v3 플레이테스트 빌드',
   'map.title': '스테이지', 'map.chapter': '{n}장', 'map.locked': '앞 스테이지를 먼저 깨면 열려요',
+  'map.navigation': '스테이지 탐색', 'map.jump': '장 바로가기',
   'map.ariaStage': '스테이지 {n} {name}', 'map.ariaStars': ', 별 {n}개', 'map.ariaLocked': ', 잠김',
   'aria.home': '처음으로', 'aria.back': '뒤로', 'aria.help': '이 진열대의 규칙',
   'aria.board': '머핀 틀 게임판. 방향키로 칸을 고르고 Enter로 포자를 날려요.',
@@ -30,7 +33,7 @@ ko: {
   'rule.earl_grey': '상하면 향이 퍼져서 거리 상관없이 다른 얼그레이 전부를 상하게 해요. 다른 컵케익엔 안 옮겨요.',
   'rule.lemon_yogurt': '포자를 맞으면 차가워서 한 턴 버텨요. 턴이 끝날 때 상하면서 위·아래·양옆으로 옮겨요.',
   'rule.espresso': '상하면 위·아래·양옆으로 센 포자를 날려요. 비닐도 찢고, 버터 뚜껑도 한 방에 날려요.',
-  'rule.mint_choco': '절대 안 상해요. 체리를 막고, 크림도 못 넘어가요. 클리어에는 상관없어요.',
+  'rule.mint_choco': '절대 안 상해요. 체리를 막고, 크림·블루베리·시나몬도 못 넘어가요. 클리어에는 상관없어요.',
   'fx.pending': '버티는 중!', 'fx.espresso': '한 방!', 'toast.wall': '민트초코는 안 상해요',
   'hint.pending': '포자를 맞고 버티는 중이에요. 이번 턴이 끝나면 상해요. 손님이 그 전에 오면 신선한 걸로 쳐요!',
   'leg.title': '이 진열대의 컵케익', 'leg.close': '닫기', 'leg.again': '규칙 카드 다시 보기',
@@ -61,12 +64,15 @@ ko: {
   'yum': ['이거 주세요~', '맛있겠다!', '찜!', '이걸로 할게요!'],
 },
 en: {
+  'rule.blueberry': 'Spreads one and two cells diagonally. It crosses gaps; an adjacent Mint Choco blocks that direction.',
+  'rule.cinnamon_roll': 'Skips neighbors and reaches two cells in all eight directions. Mint Choco in between blocks the ray.',
   'title.h1': 'Cupcake <span class="z">Zombie</span>',
   'title.tagline': "You're the mold. Spoil the whole shelf.",
   'title.play': 'Play', 'title.continue': 'Continue · {n}',
   'title.map': 'Select Stage', 'title.daily': 'Daily Puzzle', 'title.dailyDone': 'Done',
   'title.settings': 'Settings', 'title.streak': '{n}-day streak', 'title.foot': 'v3 playtest build',
   'map.title': 'Stages', 'map.chapter': 'CHAPTER {n}', 'map.locked': 'Clear the previous stage to unlock',
+  'map.navigation': 'Stage navigation', 'map.jump': 'Jump to chapter',
   'map.ariaStage': 'Stage {n} {name}', 'map.ariaStars': ', {n} stars', 'map.ariaLocked': ', locked',
   'aria.home': 'Home', 'aria.back': 'Back', 'aria.help': 'Rules for this shelf',
   'aria.board': 'Muffin tin board. Use the arrow keys to pick a cell and Enter to fling a spore.',
@@ -90,7 +96,7 @@ en: {
   'rule.earl_grey': 'When spoiled, its scent spoils every other Earl Grey on the shelf, however far. It does not spread to other cupcakes.',
   'rule.lemon_yogurt': 'When hit, it stays chilled for one turn. At the end of the turn it spoils and spreads up, down, left and right.',
   'rule.espresso': 'When spoiled, it fires strong spores up, down, left and right. They tear plastic wrap and pop butter lids in one hit.',
-  'rule.mint_choco': 'Never spoils. It blocks cherries and cream cannot jump over it. It does not count for clearing.',
+  'rule.mint_choco': 'Never spoils. Blocks cherries and jumps from cream, blueberry and cinnamon. Does not count for clearing.',
   'fx.pending': 'Holding on!', 'fx.espresso': 'Pow!', 'toast.wall': 'Mint Choco never spoils',
   'hint.pending': 'Hit, but holding on. It spoils at the end of this turn. A customer arriving before then counts it as fresh!',
   'leg.title': 'Cupcakes on this shelf', 'leg.close': 'Close', 'leg.again': 'Show the rule card again',
@@ -153,3 +159,4 @@ function localeDate(d) {
   try { return d.toLocaleDateString(LANG === 'ko' ? 'ko-KR' : 'en-US', { month: LANG === 'ko' ? 'long' : 'short', day: 'numeric' }); }
   catch (e) { return `${d.getMonth() + 1}/${d.getDate()}`; }
 }
+

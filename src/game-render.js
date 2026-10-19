@@ -21,7 +21,7 @@ function loadImages() {
   })));
 }
 function buildTints() {
-  for (const k of ['basic', 'berry', 'sprinkle', 'cherry', 'cream', 'butter_open', 'butter', 'earl_grey', 'lemon_yogurt', 'pending_lemon_yogurt', 'espresso']) {
+  for (const k of ['basic', 'berry', 'sprinkle', 'cherry', 'cream', 'butter_open', 'butter', 'earl_grey', 'lemon_yogurt', 'pending_lemon_yogurt', 'espresso', 'blueberry', 'cinnamon_roll']) {
     const m = META[k], im = IMG[k];
     if (!im) continue;
     const c = document.createElement('canvas'); c.width = m.w; c.height = m.h;
@@ -46,12 +46,24 @@ const zombieKey = (v) => IMG['zombie_' + TYPES[v.t].key] ? 'zombie_' + TYPES[v.t
 
 
 // ---------- audio ----------
-let AC = null;
+let AC = null, audioBus = null, lastChainNote = -Infinity;
 function audio() {
   if (!save.sound) return null;
-  try { if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); } catch (e) { return null; }
+  try {
+    if (!AC) {
+      AC = new (window.AudioContext || window.webkitAudioContext)();
+      audioBus = AC.createGain();
+      const limiter = AC.createDynamicsCompressor();
+      limiter.threshold.value = -18; limiter.knee.value = 12; limiter.ratio.value = 6;
+      limiter.attack.value = 0.003; limiter.release.value = 0.12;
+      audioBus.connect(limiter).connect(AC.destination);
+    }
+    audioBus.gain.setTargetAtTime(0.7, AC.currentTime, 0.01);
+    if (AC.state === 'suspended') AC.resume().catch(() => {});
+  } catch (e) { return null; }
   return AC;
 }
+function syncSound() { if (AC && audioBus) audioBus.gain.setTargetAtTime(save.sound ? 0.7 : 0, AC.currentTime, 0.01); }
 function tone(freq, dur = 0.16, type = 'triangle', vol = 0.12, slide = 0, delay = 0) {
   const a = audio(); if (!a) return;
   const t = a.currentTime + delay;
@@ -59,7 +71,8 @@ function tone(freq, dur = 0.16, type = 'triangle', vol = 0.12, slide = 0, delay 
   o.type = type; o.frequency.setValueAtTime(freq, t);
   if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(30, freq * slide), t + dur);
   g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-  o.connect(g).connect(a.destination); o.start(t); o.stop(t + dur + 0.02);
+  o.connect(g).connect(audioBus); o.start(t); o.stop(t + dur + 0.02);
+  o.onended = () => { o.disconnect(); g.disconnect(); };
 }
 function noise(vol = 0.18, cutoff = 900, dur = 0.22) {
   const a = audio(); if (!a) return;
@@ -68,7 +81,8 @@ function noise(vol = 0.18, cutoff = 900, dur = 0.22) {
   const s = a.createBufferSource(); s.buffer = buf;
   const f = a.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = cutoff;
   const g = a.createGain(); g.gain.value = vol;
-  s.connect(f).connect(g).connect(a.destination); s.start();
+  s.connect(f).connect(g).connect(audioBus); s.start();
+  s.onended = () => { s.disconnect(); f.disconnect(); g.disconnect(); };
 }
 const SCALE = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21, 24, 26, 28, 31, 33, 36];
 const note = i => 262 * Math.pow(2, SCALE[Math.min(i, SCALE.length - 1)] / 12);
@@ -282,7 +296,7 @@ const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
 
 // ---------- cascade: same rules as logic.fire, played out on a clock ----------
-const DROP = 520, INCUBATE = 150;
+const DROP = 420, LAND = 260, INCUBATE = 150;
 function travelTime(sp) {
   if (sp.style === 'roll') return 95 * sp.path.length + 60;
   if (sp.style === 'lob') return sp.dist === 2 ? 430 : 320;
@@ -335,7 +349,10 @@ function applyHit(h) {
   const v = vis[h.idx]; if (!v) return;
   const x = cxOf(h.idx), y = cyOf(h.idx);
   if (h.kind === 'thud') { bump(h.idx, 0.06); return; }
-  if (h.direct) { sporeDust(x, y - S * 0.2, 16); noise(0.16, 700); }
+  if (h.direct) {
+    if (!reduceMotion) sporeDust(x, sporeContactY(h.idx), 7, 0.55);
+    tone(360, 0.085, 'sine', 0.065, 0.55); noise(0.045, 650, 0.07);
+  }
   if (h.torn) { v.wrap = false; wrapShreds(h.idx); tone(900, 0.08, 'square', 0.03, 0.4); }
   if (h.kind === 'pending') {
     v.pend = true; v.pendAt = now; bump(h.idx, 0.18);
@@ -359,7 +376,11 @@ function applyHit(h) {
   moldPuffs(h.idx, h.kind === 'sealed' ? 6 : 12, h.kind === 'sealed' ? 0.25 : 0.42);
   if (!h.direct) sporeDust(x, y - S * 0.25, 6, 0.7);
   if (v.t === 's' && h.kind === 'infect') at(INCUBATE - 20, () => { sprinkleBurst(h.idx); noise(0.08, 3000, 0.12); });
-  tone(note(h.depth), 0.2, 'triangle', 0.1);
+  // One note for simultaneous hits, so a large cascade keeps a readable rhythm.
+  if (now - lastChainNote >= 45) {
+    lastChainNote = now;
+    tone(note(h.depth), 0.18, v.t === 'u' ? 'sine' : 'triangle', 0.065);
+  }
   if (h.kind === 'sealed') { v.flashAt = now; tone(180, 0.12, 'square', 0.03); floatText(x, y - S * 0.8, t('fx.sealed'), '#6E8FB4', 0.24, 800); }
 }
 
@@ -572,19 +593,34 @@ function pathPoint(pts, p) {
   return [pts[pts.length - 1][0], pts[pts.length - 1][1], total];
 }
 
+// A single bottom-anchored object owns flight, compression and recovery.
+function dropPose(age, dur = DROP) {
+  if (age < dur) { const p = Math.max(0, age / dur); return { fall: p * p, squash: 0, lift: 0, alpha: Math.min(1, p * 6) }; }
+  const t = age - dur;
+  const squash = t < 55 ? t / 55 : t < 100 ? 1 : Math.max(0, 1 - (t - 100) / 90);
+  const lift = t >= 100 && t < 190 ? Math.sin((t - 100) / 90 * Math.PI) * 0.025 : 0;
+  return { fall: 1, squash, lift, alpha: Math.max(0, Math.min(1, (LAND - t) / 80)) };
+}
 function drawProjectiles(sc) {
-  projs = projs.filter(f => now < f.t0 + f.dur + 40);
+  projs = projs.filter(f => now < f.t0 + f.dur + (f.style === 'drop' ? LAND : 0));
   for (const f of projs) {
     if (now < f.t0) continue;
     const p = Math.min(1, (now - f.t0) / f.dur);
     if (f.style === 'drop') {
-      const tx = cxOf(f.to), ty = IMG.spore_round ? sporeContactY(f.to) - S * 0.405 * (SPORE_ART.by - SPORE_ART.cy) / SPORE_ART.ref : cyOf(f.to) - S * 0.3;
-      const e = 1 - Math.pow(1 - p, 2.2);
-      const x = tx + Math.sin(p * Math.PI * 2.2) * S * 0.18 * (1 - p), y = -S * 0.3 + (ty + S * 0.3) * e;
-      if (Math.random() < 0.7) trailMote(x, y);
-      drawSpore(ctx, x, y, S * 0.15, p * 3, 1, 12);
+      const age = now - f.t0, pose = dropPose(age, f.dur);
+      const tx = cxOf(f.to), ty = cyOf(f.to) + f.contactOffset * S;
+      const sy = Math.max(-S * 0.3, ty - S * 2.5);
+      const x = tx + (reduceMotion ? 0 : Math.sin(p * Math.PI) * S * 0.035);
+      const y = reduceMotion ? ty : sy + (ty - sy) * pose.fall - S * pose.lift;
+      if (reduceMotion && age < f.dur) continue;
+      const mix = IMG.spore_squash && !reduceMotion ? pose.squash : 0;
+      if (IMG.spore_round) {
+        if (mix < 1) drawSporeArt(ctx, 'spore_round', x, y, S * 0.32, 0, pose.alpha * (1 - mix), true);
+        if (mix > 0) drawSporeArt(ctx, 'spore_squash', x, y, S * 0.32, 0, pose.alpha * mix, true);
+      } else drawSpore(ctx, x, y - S * 0.12, S * 0.12, 0, pose.alpha);
       continue;
     }
+    if (reduceMotion) continue;
     const a = f.from;
     if (f.style === 'roll') {
       const pts = [[cxOf(a), wellY(a) - S * 0.1]].concat(f.path.map(c => [cxOf(c), wellY(c) - S * 0.1]));
@@ -620,6 +656,7 @@ function drawProjectiles(sc) {
 
 function drawParticles(dt) {
   particles = particles.filter(p => now < p.born + p.life);
+  if (reduceMotion) return;
   for (const p of particles) {
     if (now < p.born) continue;
     const age = (now - p.born) / p.life;
@@ -633,11 +670,6 @@ function drawParticles(dt) {
       const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
       g.addColorStop(0, `rgba(${p.col}, ${a})`); g.addColorStop(0.6, `rgba(${p.col}, ${a * 0.6})`); g.addColorStop(1, `rgba(${p.col}, 0)`);
       ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.fill();
-    } else if (p.kind === 'land') {
-      // touch down: round 40ms, squash 110ms, round 110ms with a small rebound, then melt into the cupcake
-      const e = now - p.born, up = e > 150 ? Math.sin(Math.min(1, (e - 150) / 110) * Math.PI) * S * 0.04 : 0;
-      ctx.globalAlpha = e > 230 ? Math.max(0, 1 - (e - 230) / 70) : 1;
-      drawSporeArt(ctx, e >= 40 && e < 150 ? 'spore_squash' : 'spore_round', p.x, p.y - up, p.D, 0, 1, true);
     } else if (p.kind === 'mote') {
       ctx.globalAlpha = (1 - age) * 0.9;
       ctx.fillStyle = '#EEF6D6'; ctx.strokeStyle = '#7E9E3A'; ctx.lineWidth = 0.8;
@@ -711,4 +743,5 @@ function drawTexts() {
     ctx.restore();
   }
 }
+
 

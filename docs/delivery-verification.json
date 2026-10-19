@@ -1,0 +1,13 @@
+{
+  "catalogueStages": 200,
+  "stage200BoardCells": 49,
+  "stage200AnswerSteps": 3,
+  "artLoaded": true,
+  "search": true,
+  "reviewJump": [
+    61,
+    200
+  ],
+  "reviewSaveSeparate": true,
+  "errors": []
+}

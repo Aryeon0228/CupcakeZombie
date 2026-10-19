@@ -1,0 +1,12 @@
+const fs=require('node:fs'),path=require('node:path'),{execFileSync}=require('node:child_process');
+const root=path.resolve(__dirname,'..'),out=path.join(root,'export/CupcakeZombie-200');
+fs.mkdirSync(out,{recursive:true});
+for(const [from,to]of [['out/playtest-200.html','playtest-200.html'],['out/www/index.html','game.html'],['outputs/cupcake-zombie-200/CupcakeZombie-200-stage-design.xlsx','stage-design.xlsx']])fs.copyFileSync(path.join(root,from),path.join(out,to));
+fs.cpSync(path.join(root,'docs'),path.join(out,'docs'),{recursive:true});
+fs.cpSync(path.join(root,'assets_extended'),path.join(out,'new-art'),{recursive:true});
+fs.mkdirSync(path.join(out,'new-art/runtime'),{recursive:true});
+for(const f of ['blueberry','zombie_blueberry','cinnamon_roll','zombie_cinnamon_roll'])fs.copyFileSync(path.join(root,'assets',f+'.png'),path.join(out,'new-art/runtime',f+'.png'));
+fs.writeFileSync(path.join(out,'START.html'),`<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>컵케익 좀비 200</title><style>body{max-width:680px;margin:60px auto;padding:24px;background:#f2eadb;color:#49342e;font:18px/1.8 -apple-system,sans-serif}a{color:#53713b}li{margin:18px 0}</style><h1>컵케익 좀비 200</h1><p>원하는 스테이지부터 바로 살펴볼 수 있어요.</p><ul><li><a href="playtest-200.html#stage-61">검토용 플레이 · 모든 판 바로가기</a></li><li><a href="game.html">일반 게임 · 순서대로 진행</a></li><li><a href="docs/stage-guide.html">200 스테이지 도감과 정답</a></li><li><a href="docs/changes.html">어디를 고쳤는지 보기</a></li><li><a href="stage-design.xlsx">설계표 내려받기</a></li></ul><p>new-art 폴더에는 새 맛의 원본, 투명 게임 이미지, 프롬프트와 발 기준점이 들어 있어요.</p><p>검토용 플레이는 일반 게임과 다른 진행 기록을 사용해요. iOS 실기기 검사는 별도로 남아 있어요.</p></html>`);
+const zip=path.join(root,'export/CupcakeZombie-200-playtest.zip');if(fs.existsSync(zip))fs.unlinkSync(zip);
+execFileSync('zip',['-q','-r',zip,'CupcakeZombie-200'],{cwd:path.join(root,'export')});
+console.log('Packaged review:',fs.statSync(zip).size,'bytes');

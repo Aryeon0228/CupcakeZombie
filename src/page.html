@@ -119,6 +119,10 @@ button { font: inherit; color: inherit; touch-action: manipulation; }
 .chap-head .small { margin-left: auto; white-space: nowrap; }
 .chap-head h3 { margin: 0; flex: 0 1 auto; white-space: nowrap; font-family: var(--f-display); font-weight: 400; font-size: 20px; }
 .stage-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px 8px; }
+.map-nav { display: flex; gap: 8px; align-items: center; padding: 8px 16px; background: var(--paper); }
+.map-nav select { min-width: 0; flex: 1; min-height: 44px; border: 2px solid var(--ink); border-radius: 12px; padding: 6px; color: var(--ink); background: var(--paper); font: inherit; font-size: 13px; }
+.map-nav .btn { min-height: 44px; font-size: 12px; padding: 6px 10px; }
+.stage-btn.next-stage { outline: 3px solid #70983e; outline-offset: 2px; }
 .stage-btn {
   aspect-ratio: 1; width: 100%; border: 2px solid var(--ink); border-radius: 50% 46% 52% 44% / 46% 50% 44% 52%;
   background: #fff; font-family: var(--f-display); cursor: pointer; display: grid; place-items: center; align-content: center; gap: 0; padding: 0;
@@ -156,7 +160,7 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
   padding: 10px 16px calc(12px + var(--sab)); display: grid; gap: 8px; position: relative;
 }
 .hud-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-.pips { display: flex; gap: 4px; align-items: center; min-height: 34px; }
+.pips { display: flex; gap: 4px; align-items: center; min-height: 34px; flex-shrink: 0; }
 .pips svg { width: 32px; height: 32px; display: block; }
 .pips .mold { width: 44px; height: auto; margin: -8px 2px -4px -4px; transform-origin: 50% 100%; }
 .pips .mold.puff { animation: puff .5s cubic-bezier(.3, 1.6, .5, 1); }
@@ -164,9 +168,10 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 .pips svg.used { opacity: .25; filter: grayscale(1); }
 .pips img.pip { width: 34px; height: auto; display: block; }
 .pips img.pip.used { opacity: .25; filter: grayscale(1); }
-.starline { display: flex; align-items: center; gap: 6px; }
+.starline { display: flex; align-items: center; gap: 6px; min-width: 0; }
 #starText { text-wrap: balance; }
 .starline .st { white-space: nowrap; flex-shrink: 0; font-family: var(--f-display); font-size: 20px; letter-spacing: 1px; line-height: 1; }
+@media (max-width: 360px) { .starline { flex-direction: column; align-items: flex-end; gap: 3px; } #starText { text-align: right; font-size: 10px; } .pips img.pip, .pips svg { width: 28px; } .pips .mold { width: 38px; } }
 .hud-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 .cta { position: absolute; left: 16px; right: 16px; top: -58px; min-height: 50px; font-size: 18px; animation: popin .25s cubic-bezier(.3, 1.6, .5, 1); }
 
@@ -261,6 +266,7 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 
   <section class="screen" id="scr-map">
     <header class="bar"><button class="btn small" id="mapBack" data-i18n-aria="aria.home" aria-label="처음으로">←</button><h2 data-i18n="map.title">스테이지</h2><span class="small" id="mapStars"></span></header>
+    <nav class="map-nav" data-i18n-aria="map.navigation"><select id="chapterJump" data-i18n-aria="map.jump"></select><button class="btn small" id="mapContinue"></button></nav>
     <div class="scroll" id="chapterList"></div>
   </section>
 
@@ -359,3 +365,4 @@ const BG = /*BG*/null; // per chapter [{ src, w, h, band, wall, floor }] or null
 /*RENDER*/
 /*APP*/
 </script>
+

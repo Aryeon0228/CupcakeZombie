@@ -1,5 +1,6 @@
 // ---------- copy ----------
 const TYPE_TINT = { basic: '120, 214, 196', berry: '246, 206, 80', sprinkle: '244, 160, 190', cherry: '232, 96, 104', cream: '186, 140, 104', butter: '130, 176, 232', earl_grey: '186, 160, 222', lemon_yogurt: '255, 236, 140', espresso: '214, 112, 96', mint_choco: '0, 0, 0' };
+Object.assign(TYPE_TINT, {blueberry:'120, 143, 220', cinnamon_roll:'207, 157, 101'});
 
 // ---------- dom ----------
 const $ = id => document.getElementById(id);
@@ -28,10 +29,11 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 // ---------- board geometry ----------
 function layout() {
   if (!state) return;
-  const wrapW = boardWrap.clientWidth || 360;
-  const wrapH = boardWrap.clientHeight || 420;
+  const css = getComputedStyle(boardWrap);
+  const wrapW = Math.max(1, (boardWrap.clientWidth || 360) - parseFloat(css.paddingLeft) - parseFloat(css.paddingRight));
+  const wrapH = Math.max(1, (boardWrap.clientHeight || 420) - parseFloat(css.paddingTop) - parseFloat(css.paddingBottom));
   const s = Math.min(wrapW / (state.W + 0.8), wrapH / (state.H + 1.2), 110);
-  S = Math.max(30, Math.floor(s));
+  S = Math.max(1, Math.floor(s));
   padX = Math.round(S * 0.4); padTop = Math.round(S * 0.7); padBot = Math.round(S * 0.5);
   CW = state.W * S + padX * 2; CH = state.H * S + padTop + padBot;
   DPR = Math.min(2.5, window.devicePixelRatio || 1);
@@ -91,3 +93,4 @@ function cellAt(ev) {
   if (c < 0 || c >= state.W || rr < 0 || rr >= state.H) return -1;
   return rr * state.W + c;
 }
+

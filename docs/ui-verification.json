@@ -1,0 +1,155 @@
+{
+  "viewport": [
+    {
+      "width": 320,
+      "height": 568,
+      "logical": [
+        289,
+        304
+      ],
+      "actual": [
+        289,
+        304
+      ],
+      "within": true,
+      "bodyOverflow": false
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "logical": [
+        367,
+        386
+      ],
+      "actual": [
+        367,
+        386
+      ],
+      "within": true,
+      "bodyOverflow": false
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "logical": [
+        406,
+        426
+      ],
+      "actual": [
+        406,
+        426
+      ],
+      "within": true,
+      "bodyOverflow": false
+    }
+  ],
+  "input": {
+    "dragIgnored": true,
+    "previews": true,
+    "escapeClears": true,
+    "secondFires": true
+  },
+  "animation": [
+    {
+      "t": 0,
+      "drops": 1,
+      "landParticles": 0,
+      "pose": {
+        "fall": 0,
+        "squash": 0,
+        "lift": 0,
+        "alpha": 0
+      }
+    },
+    {
+      "t": 200,
+      "drops": 1,
+      "landParticles": 0,
+      "pose": {
+        "fall": 0.22675736961451246,
+        "squash": 0,
+        "lift": 0,
+        "alpha": 1
+      }
+    },
+    {
+      "t": 419,
+      "drops": 1,
+      "landParticles": 0,
+      "pose": {
+        "fall": 0.9952437641723356,
+        "squash": 0,
+        "lift": 0,
+        "alpha": 1
+      }
+    },
+    {
+      "t": 420,
+      "drops": 1,
+      "landParticles": 0,
+      "pose": {
+        "fall": 1,
+        "squash": 0,
+        "lift": 0,
+        "alpha": 1
+      }
+    },
+    {
+      "t": 475,
+      "drops": 1,
+      "landParticles": 0,
+      "pose": {
+        "fall": 1,
+        "squash": 1,
+        "lift": 0,
+        "alpha": 1
+      }
+    },
+    {
+      "t": 520,
+      "drops": 1,
+      "landParticles": 0,
+      "pose": {
+        "fall": 1,
+        "squash": 1,
+        "lift": 0,
+        "alpha": 1
+      }
+    },
+    {
+      "t": 610,
+      "drops": 1,
+      "landParticles": 0,
+      "pose": {
+        "fall": 1,
+        "squash": 0,
+        "lift": 0,
+        "alpha": 0.875
+      }
+    },
+    {
+      "t": 680,
+      "drops": 0,
+      "landParticles": 0,
+      "pose": {
+        "fall": 1,
+        "squash": 0,
+        "lift": 0,
+        "alpha": 0
+      }
+    }
+  ],
+  "stages": 200,
+  "totalStars": 600,
+  "map": {
+    "chapters": 20,
+    "buttons": 200,
+    "chapter20Visible": true
+  },
+  "sound": {
+    "busCreated": true,
+    "muted": true
+  },
+  "reducedMotion": true,
+  "errors": []
+}

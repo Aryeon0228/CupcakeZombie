@@ -83,15 +83,22 @@ $('settingsBtn').onclick = () => openSettings();
 function renderMap() {
   $('mapStars').textContent = `★ ${totalStars()} / ${LEVELS.length * 3}`;
   const box = $('chapterList'); box.innerHTML = '';
+  const jump = $('chapterJump'); jump.innerHTML = '';
+  const next = nextStage();
+  $('mapContinue').textContent = t('title.continue', { n: next + 1 });
   for (const ch of CHAPTERS) {
     const got = LEVELS.slice(ch.from, ch.to + 1).reduce((a, _, k) => a + starsOf(ch.from + k), 0);
-    const wrap = document.createElement('section'); wrap.className = 'chapter';
+    const wrap = document.createElement('section'); wrap.className = 'chapter'; wrap.id = 'chapter-' + ch.no;
+    const option = document.createElement('option'); option.value = ch.no;
+    option.textContent = `${t('map.chapter', { n: ch.no })} · ${tl(ch, 'name')}`;
+    jump.appendChild(option);
     wrap.innerHTML = `<div class="chap-head"><span class="eyebrow">${t('map.chapter', { n: ch.no })}</span><h3>${tl(ch, 'name')}</h3><span class="small">★ ${got} / ${(ch.to - ch.from + 1) * 3}</span></div>`;
     const grid = document.createElement('div'); grid.className = 'stage-grid';
     for (let i = ch.from; i <= ch.to; i++) {
       const b = document.createElement('button');
       const st = starsOf(i), open = unlocked(i);
       b.className = 'stage-btn' + (st ? ' done' : '') + (open ? '' : ' locked');
+      if (i === next) { b.classList.add('next-stage'); b.setAttribute('aria-current', 'step'); }
       b.innerHTML = open ? `<span class="n">${i + 1}</span>${st ? `<span class="st">${starsHTML(st)}</span>` : ''}` : `<span class="n">${i + 1}</span><span class="lock">${LOCK}</span>`;
       b.setAttribute('aria-label', t('map.ariaStage', { n: i + 1, name: tl(LEVELS[i], 'name') }) + (open ? (st ? t('map.ariaStars', { n: st }) : '') : t('map.ariaLocked')));
       b.onclick = () => { if (open) startStage(i); else { haptic(); toast(t('map.locked')); } };
@@ -99,7 +106,15 @@ function renderMap() {
     }
     wrap.appendChild(grid); box.appendChild(wrap);
   }
+  jump.value = CHAPTERS.find(ch => next >= ch.from && next <= ch.to).no;
+  requestAnimationFrame(() => jumpToChapter(jump.value));
 }
+function jumpToChapter(no) {
+  const box = $('chapterList'), chapter = $('chapter-' + no);
+  if (chapter) box.scrollTop += chapter.getBoundingClientRect().top - box.getBoundingClientRect().top - 16;
+}
+$('chapterJump').onchange = e => jumpToChapter(e.target.value);
+$('mapContinue').onclick = () => startStage(nextStage());
 const LOCK = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="2" fill="#B9A89C"/><path d="M5 7V5a3 3 0 0 1 6 0v2" fill="none" stroke="#B9A89C" stroke-width="2"/></svg>';
 function starsHTML(n) { return [0, 1, 2].map(i => `<i class="${i < n ? 'on' : 'off'}">★</i>`).join(''); }
 $('mapBack').onclick = () => showScreen('title');
@@ -114,7 +129,7 @@ function openSettings() {
   $('resetConfirm').hidden = true;
   openSheet('settingsSheet');
 }
-$('setSound').onchange = e => { save.sound = e.target.checked; writeSave(save); if (save.sound) tone(660, 0.1, 'sine', 0.06); };
+$('setSound').onchange = e => { save.sound = e.target.checked; syncSound(); writeSave(save); if (save.sound) tone(660, 0.1, 'sine', 0.06); };
 $('setHaptic').onchange = e => { save.haptics = e.target.checked; writeSave(save); haptic('medium'); };
 $('noAdsBtn').onclick = async () => { const ok = await Store.buyRemoveAds(); if (ok) { save.noAds = true; writeSave(save); openSettings(); toast(t('toast.noAds')); } };
 $('restoreBtn').onclick = async () => { const ok = await Store.restore(); if (ok) { save.noAds = true; writeSave(save); openSettings(); toast(t('toast.restored')); } else toast(t('toast.noRestore')); };
@@ -186,6 +201,7 @@ function fireAt(idx) {
   if (busy || result || introOpen || !canTarget(state, idx)) return;
   audio(); haptic('medium');
   const prev = state;
+  const contactOffset = (sporeContactY(idx) - cyOf(idx)) / S;
   const turn = playTurn(state, idx);
   const plan = planCascade(prev, [{ idx, t: DROP, direct: true }]);
   undoStack.push(prev);
@@ -193,10 +209,9 @@ function fireAt(idx) {
   turn.cust.forEach(c => { c.k.pending = true; });
   busy = true; selected = -1; hintCell = -1;
   renderHUD(); updateHint();
-  projs.push({ style: 'drop', to: idx, t0: now, dur: DROP });
-  if (IMG.spore_squash) { const D = S * 0.15 * 2.7; at(DROP, () => particles.push({ kind: 'land', x: cxOf(idx), y: sporeContactY(idx), D, born: now, life: 300, vx: 0, vy: 0 })); }
+  projs.push({ style: 'drop', to: idx, contactOffset, t0: now, dur: DROP });
   const mold = $('moldImg'); if (mold) { mold.classList.remove('puff'); void mold.offsetWidth; mold.classList.add('puff'); }
-  tone(520, 0.3, 'sine', 0.05, 0.5);
+  tone(640, 0.16, 'sine', 0.025, 0.65);
   const maxT = scheduleFlights(plan, 0);
   let maxDepth = 0;
   for (const h of plan.hits) if (h.kind === 'infect' || h.kind === 'sealed') maxDepth = Math.max(maxDepth, h.depth);
@@ -474,6 +489,12 @@ function updateHint() {
 }
 
 // ---------- input ----------
+let press = null;
+canvas.addEventListener('pointerdown', e => {
+  if (e.isPrimary === false || e.button > 0) return;
+  press = { id: e.pointerId, x: e.clientX, y: e.clientY, cell: cellAt(e) };
+});
+canvas.addEventListener('pointercancel', () => { press = null; });
 canvas.addEventListener('pointermove', e => {
   if (e.pointerType !== 'mouse') return;
   const i = cellAt(e);
@@ -483,17 +504,16 @@ canvas.addEventListener('pointermove', e => {
 });
 canvas.addEventListener('pointerleave', () => { hover = -1; updateHint(); });
 canvas.addEventListener('pointerup', e => {
+  const down = press; press = null;
+  if (!down || down.id !== e.pointerId || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 12 || down.cell !== cellAt(e)) return;
   cursorShown = false;
   const i = cellAt(e);
   if (busy || result || introOpen) return;
   if (i < 0 || !state.cells[i]) { selected = -1; renderHUD(); updateHint(); return; }
   if (state.cells[i].inf || state.cells[i].wall) { selected = -1; bump(i, 0.1); haptic(); if (state.cells[i].wall) toast(t('toast.wall')); renderHUD(); updateHint(); return; }
-  if (e.pointerType === 'mouse') { fireAt(i); updateHint(); }
-  else {
-    if (selected === i) { selected = -1; fireAt(i); }
-    else { selected = i; haptic(); tone(700, 0.05, 'sine', 0.04); }
-    renderHUD(); updateHint();
-  }
+  if (selected === i) { selected = -1; fireAt(i); }
+  else { selected = i; haptic(); tone(700, 0.05, 'sine', 0.04); }
+  renderHUD(); updateHint();
 });
 $('fireCta').onclick = () => { if (selected >= 0) { const i = selected; selected = -1; fireAt(i); renderHUD(); } };
 $('undoBtn').onclick = undo;
@@ -520,7 +540,8 @@ document.addEventListener('keydown', e => {
   const k = e.key.toLowerCase();
   if (introOpen) { if (k === 'enter' || k === 'escape') $('introGo').click(); return; }
   if (screen !== 'play') return;
-  if (k === 'z' || k === 'u') undo();
+  if (k === 'escape') { selected = -1; hover = -1; renderHUD(); updateHint(); }
+  else if (k === 'z' || k === 'u') undo();
   else if (k === 'r') restart();
   else if (k === 'n' && result === 'win' && mode === 'stage' && li < LEVELS.length - 1) startStage(li + 1);
 });
@@ -568,3 +589,4 @@ async function boot(data) {
 }
 try { window.claude?.hot?.snapshot?.(() => ({ screen, level: li })); } catch (e) {}
 window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot(window.claude?.hot?.data ?? {});
+

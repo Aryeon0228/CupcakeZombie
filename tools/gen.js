@@ -129,7 +129,7 @@ function featureMatters(spec, def, a) {
     const b = analyze(d2);
     return b.first !== a.first;
   }
-  if ('xscmgle'.includes(f)) {
+  if ('xscmgleur'.includes(f)) {
     const d2 = { ...def, grid: def.grid.map(r => r.replace(new RegExp(f, 'g'), 'o').replace(new RegExp(f.toUpperCase(), 'g'), 'O')) };
     return !solvable(d2);
   }
@@ -161,6 +161,9 @@ function featureMatters(spec, def, a) {
 }
 
 function fits(spec, def, a) {
+  const counts = {};
+  for (const t of def.grid.join('').toLowerCase()) counts[t] = (counts[t] || 0) + 1;
+  if (Object.entries(spec.require || {}).some(([t, n]) => (counts[t] || 0) < n)) return false;
   if (a.cupcakes < (spec.minCells || 8) || a.cupcakes > (spec.maxCells || 99)) return false;
   if (a.first < 1 || a.first > (spec.maxFirst || 99) || a.first < (spec.minFirst || 1)) return false;
   if (a.fewer) return false;
@@ -204,3 +207,4 @@ if (require.main === module) {
     console.log(lines.join('\n'));
   }
 }
+

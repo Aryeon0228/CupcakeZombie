@@ -1,0 +1,17 @@
+const {chromium}=require('playwright'),path=require('node:path'),fs=require('node:fs'),assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..');
+(async()=>{const browser=await chromium.launch({headless:true,...(process.env.CHROME_PATH?{executablePath:process.env.CHROME_PATH}:{})});const page=await browser.newPage({viewport:{width:1100,height:1000}}),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.route('**/fonts.googleapis.com/**',r=>r.abort());
+await page.goto('file://'+path.join(root,'docs/stage-guide.html')+'#stage-200');
+assert.equal(await page.locator('#stageSelect option').count(),200);assert.ok((await page.locator('#stage h2').textContent()).startsWith('200.'));
+await page.locator('#solution summary').click();await page.waitForFunction(()=>document.querySelectorAll('#board .step').length===3);assert.equal(await page.locator('#board .step').count(),3);
+assert.equal(await page.locator('#board .cell').count(),49);
+assert.equal(await page.locator('#stage img').evaluateAll(ims=>ims.filter(i=>!i.complete||!i.naturalWidth).length),0);
+await page.screenshot({path:path.join(root,'out/qa/guide-200.png'),fullPage:false});
+await page.locator('#search').fill('블루베리');assert.ok(await page.locator('#stageSelect option').count()>0);await page.locator('#search').fill('없는이름zz');assert.equal(await page.locator('#stageSelect option').count(),0);
+await page.goto('file://'+path.join(root,'docs/changes.html'));assert.equal(await page.locator('img').evaluateAll(ims=>ims.filter(i=>!i.complete||!i.naturalWidth).length),0);
+await page.goto('file://'+path.join(root,'out/playtest-200.html')+'#stage-61');
+const frame=page.frames().find(f=>f!==page.mainFrame());await frame.waitForFunction(()=>typeof IMG!=='undefined'&&IMG.blueberry&&typeof li!=='undefined'&&li===60);
+assert.equal(await frame.evaluate(()=>STORE_KEY),'cupcake-zombie-review-200');await frame.evaluate(()=>{save.sound=false;hideIntro();});
+await page.locator('#choose').selectOption('199');await page.locator('#go').click();await frame.waitForFunction(()=>li===199);
+await page.waitForTimeout(200);await page.screenshot({path:path.join(root,'out/qa/review-player.png')});
+assert.deepEqual(errors,[]);fs.writeFileSync(path.join(root,'docs/delivery-verification.json'),JSON.stringify({catalogueStages:200,stage200BoardCells:49,stage200AnswerSteps:3,artLoaded:true,search:true,reviewJump:[61,200],reviewSaveSeparate:true,errors},null,2));await browser.close();console.log('Catalogue, change report, review player and independent save key passed.');})().catch(e=>{console.error(e);process.exit(1);});

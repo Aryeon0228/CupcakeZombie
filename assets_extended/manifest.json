@@ -1,0 +1,82 @@
+{
+  "canvas": [
+    256,
+    360
+  ],
+  "anchor": [
+    128,
+    340
+  ],
+  "displayScale": 0.5,
+  "assets": {
+    "blueberry": {
+      "sourceBox": {
+        "left": 73,
+        "top": 83,
+        "width": 940,
+        "height": 1275
+      },
+      "sourceScale": 0.24468085106382978,
+      "exportSize": [
+        230,
+        312
+      ],
+      "foot": [
+        128,
+        340
+      ]
+    },
+    "zombie_blueberry": {
+      "sourceBox": {
+        "left": 73,
+        "top": 75,
+        "width": 946,
+        "height": 1281
+      },
+      "sourceScale": 0.24468085106382978,
+      "exportSize": [
+        231,
+        313
+      ],
+      "foot": [
+        128,
+        340
+      ]
+    },
+    "cinnamon_roll": {
+      "sourceBox": {
+        "left": 69,
+        "top": 153,
+        "width": 942,
+        "height": 1213
+      },
+      "sourceScale": 0.24416135881104034,
+      "exportSize": [
+        230,
+        296
+      ],
+      "foot": [
+        128,
+        340
+      ]
+    },
+    "zombie_cinnamon_roll": {
+      "sourceBox": {
+        "left": 64,
+        "top": 150,
+        "width": 965,
+        "height": 1213
+      },
+      "sourceScale": 0.24416135881104034,
+      "exportSize": [
+        236,
+        296
+      ],
+      "foot": [
+        128,
+        340
+      ]
+    }
+  },
+  "mode": "Built-in image generation; source art retained in assets_extended. Shared pair scale, uniform crop/resize and transparent padding only."
+}

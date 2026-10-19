@@ -81,3 +81,8 @@ module.exports = {
     '6-10': ['Chapter 6 Finale', 'Last one of Chapter 6. Scent, frost, walls and caffeine. Use them all.'],
   },
 };
+const extra = require('./plan-extra.js');
+Object.assign(module.exports.chapters, extra.EN.chapters);
+Object.assign(module.exports.stages, extra.EN.stages);
+Object.assign(module.exports.intros, extra.EN.intros);
+
