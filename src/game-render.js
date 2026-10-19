@@ -482,13 +482,6 @@ function draw(dt) {
     drawSpatula(ctx, cxOf(i), wellY(i) - S * 0.02 - b * S * 0.06, S * (0.82 + b * 0.08), tk);
   });
 
-  const scared = new Set();
-  vis.forEach((v, i) => {
-    if (!v || !isZombieShown(v) || v.gone) return;
-    const r = Math.floor(i / W), c = i % W;
-    for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) { const rr = r + dr, cc = c + dc; if (rr >= 0 && rr < state.H && cc >= 0 && cc < W) scared.add(rr * W + cc); }
-  });
-
   const focusIdx = introOpen ? -1 : hover >= 0 ? hover : selected >= 0 ? selected : (cursorShown ? cursor : -1);
   const canPreview = focusIdx >= 0 && !busy && !result && state.cells[focusIdx] && !state.cells[focusIdx].inf;
   if (focusIdx >= 0 && !result && !introOpen) {
@@ -508,7 +501,7 @@ function draw(dt) {
     const v = vis[i];
     if (!v || v.gone) continue;
     if (arm && arm.idx === i && arm.fresh && now - arm.t0 > 430) continue;
-    drawCupcake(i, v, sc, T, scared.has(i));
+    drawCupcake(i, v, sc);
   }
 
   if (canPreview) drawPreview(focusIdx, T);
@@ -558,31 +551,33 @@ function drawPreview(i, T) {
   ctx.restore();
 }
 
-function drawCupcake(i, v, sc, T, scared) {
+// Resting sprites keep their original pixels and a fixed foot point. Only an
+// actual hit compresses them, briefly; neighboring zombies and chilled lemons
+// must not make the board vibrate while the player is thinking.
+function cupcakePose(v, time = now, reduced = reduceMotion) {
+  const p = (time - v.bumpAt) / 420;
+  const k = !reduced && v.bumpAt >= 0 && p >= 0 && p < 1
+    ? Math.min(0.12, v.bumpAmp) * Math.sin(p * Math.PI * 2) * (1 - p) ** 2
+    : 0;
+  return { sx: 1 + k * 0.55, sy: 1 - k };
+}
+function drawCupcake(i, v, sc) {
   const x0 = cxOf(i), by = baseY(i);
   const zombie = isZombieShown(v);
-  let rot = 0, sx = 1, sy = 1, dx = 0, dy = 0;
-  if (!reduceMotion) {
-    if (zombie) rot = Math.sin(T * 1.7 + v.phase) * 0.055;
-    else {
-      dy = Math.sin(T * 2.4 + v.phase) * S * 0.012;
-      sy = 1 + Math.sin(T * 2.4 + v.phase) * 0.012; sx = 2 - sy;
-      if (scared) { dx = Math.sin(T * 47 + v.phase * 3) * S * 0.012; rot = Math.sin(T * 31 + v.phase) * 0.02; }
-    }
-    if (v.bumpAt >= 0) { const e = (now - v.bumpAt) / 1000; if (e < 0.7) { const k = v.bumpAmp * Math.exp(-e * 7) * Math.cos(e * 26); sy *= 1 - k; sx *= 1 + k * 0.8; } }
-  }
+  const { sx, sy } = cupcakePose(v);
   ctx.save(); ctx.fillStyle = 'rgba(60, 40, 40, 0.18)';
   ctx.beginPath(); ctx.ellipse(x0, by - S * 0.04, S * 0.33, S * 0.09, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
   let freshKey = v.t === 'b' ? (v.lid > 0 ? 'butter' : 'butter_open') : TYPES[v.t].key;
   if (v.pend && !zombie) {
     if (IMG['pending_' + freshKey]) freshKey = 'pending_' + freshKey;
-    if (!reduceMotion) { dx += Math.sin(T * 60 + v.phase) * S * 0.018; rot = Math.sin(T * 40) * 0.025; }
   }
   if (!zombie) {
-    drawSpriteAt(ctx, freshKey, x0 + dx, by + dy, sc, rot, sx, sy);
-    if (v.infAt >= 0 && TINT[freshKey]) { const p = Math.min(1, (now - v.infAt) / 230); drawSpriteAt(ctx, freshKey, x0 + dx, by + dy, sc, rot + Math.sin(now / 18) * 0.05 * p, sx, sy, false, p, TINT[freshKey]); }
-  } else drawSpriteAt(ctx, zombieKey(v), x0 + dx, by + dy, sc, rot, sx, sy, v.flip);
-  if (v.wrap) { const fl = v.flashAt >= 0 ? Math.max(0, 1 - (now - v.flashAt) / 500) : 0; drawWrap(ctx, x0 + dx, by + dy + 2, S * 0.86, 1, fl); }
+    drawSpriteAt(ctx, freshKey, x0, by, sc, 0, sx, sy);
+    // The tint shares the exact same pose; rotating a second copy made two
+    // outlines shimmer against each other during the infection fade.
+    if (v.infAt >= 0 && TINT[freshKey]) { const p = Math.min(1, (now - v.infAt) / 230); drawSpriteAt(ctx, freshKey, x0, by, sc, 0, sx, sy, false, p, TINT[freshKey]); }
+  } else drawSpriteAt(ctx, zombieKey(v), x0, by, sc, 0, sx, sy, v.flip);
+  if (v.wrap) { const fl = v.flashAt >= 0 ? Math.max(0, 1 - (now - v.flashAt) / 500) : 0; drawWrap(ctx, x0, by + 2, S * 0.86, 1, fl); }
 }
 
 function pathPoint(pts, p) {

@@ -16,6 +16,8 @@ const changes=`<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="
 <tr><td>스테이지 탐색</td><td>긴 장 목록을 직접 내려야 했어요.</td><td>20개 장 바로가기와 이어하기 버튼을 넣었어요. 다음 미완료 판에 테두리를 표시해요.</td></tr>
 <tr><td>선택과 발사</td><td>터치는 두 번, 마우스는 한 번만 눌러도 발사되어 안내와 달랐어요.</td><td>둘 다 첫 입력은 미리보기, 같은 칸을 다시 누르면 발사해요. 12px 넘게 끌거나 다른 칸에서 놓으면 발사하지 않아요. Esc로 선택을 해제할 수 있어요.</td></tr>
 <tr><td>동작 줄이기</td><td>OS 설정을 켜도 포자 이동과 입자 효과가 계속 나왔어요.</td><td>큰 이동과 입자는 생략하고 접촉 지점에 잠깐 표시해요. 판정 순서와 손님 타이밍은 같아요.</td></tr>
+<tr><td>대기 중 떨림 · 10/20 추가 수정</td><td>대기 중에도 그림의 크기와 위치가 바뀌고, 좀비 옆의 친구와 서리 상태 레몬은 빠르게 떨었어요.</td><td>생각하는 동안 그림과 발을 고정해요. 실제로 닿았을 때만 420ms 안에 살짝 눌렸다 돌아와요. 감염 색상도 같은 위치에 겹쳐 윤곽이 두 겹으로 떨리지 않아요.</td></tr>
+<tr><td>설명에 따른 판 이동 · 10/20 추가 수정</td><td>기본 안내와 맛 설명의 줄 수가 달라지면 쟁반과 배경이 위아래로 움직였어요.</td><td>설명은 항상 세 줄 높이를 확보하고 긴 내용은 그 안에서 스크롤해요. 판 공간은 내용 크기와 독립적으로 계산하고, 같은 크기의 캔버스는 다시 초기화하지 않아요.</td></tr>
 </tbody></table>
 <h2>화면 비교</h2><div class="frames"><figure><img src="media/before-stage-200.png" alt="수정 전 200 스테이지"><figcaption>수정 전 · 390px</figcaption></figure><figure><img src="media/after-390.png" alt="수정 후 200 스테이지"><figcaption>수정 후 · 390px</figcaption></figure><figure><img src="media/after-320.png" alt="작은 화면의 200 스테이지"><figcaption>작은 화면 · 320px</figcaption></figure><figure><img src="media/map-20.png" alt="장 바로가기 화면"><figcaption>장 바로가기와 진행 표시</figcaption></figure></div>
 <h2>포자가 닿는 순간</h2><div class="frames"><figure><img src="media/drop-250.png" alt="가속하며 내려오는 포자"><figcaption>250ms · 내려오기</figcaption></figure><figure><img src="media/drop-475.png" alt="살짝 눌린 포자"><figcaption>475ms · 접점에서 압축</figcaption></figure><figure><img src="media/drop-580.png" alt="다시 둥글게 회복하는 포자"><figcaption>580ms · 회복과 사라짐</figcaption></figure></div>
@@ -24,6 +26,7 @@ const changes=`<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="
 <h3>다시 빌드하고 확인하기</h3><pre>node tools/test-new-types.js
 node tools/test_cascade.js
 node tools/audit-stages.js
+node tools/test-cupcake-motion.cjs
 node tools/build.js
 # Playwright와 브라우저를 설치한 환경에서
 node tools/test-ui.cjs

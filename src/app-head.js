@@ -38,7 +38,10 @@ function layout() {
   CW = state.W * S + padX * 2; CH = state.H * S + padTop + padBot;
   DPR = Math.min(2.5, window.devicePixelRatio || 1);
   canvas.style.width = CW + 'px'; canvas.style.height = CH + 'px';
-  canvas.width = Math.round(CW * DPR); canvas.height = Math.round(CH * DPR);
+  // Setting either bitmap dimension clears the canvas, even if unchanged.
+  const bitmapW = Math.round(CW * DPR), bitmapH = Math.round(CH * DPR);
+  if (canvas.width !== bitmapW) canvas.width = bitmapW;
+  if (canvas.height !== bitmapH) canvas.height = bitmapH;
   requestAnimationFrame(drawBg);
 }
 // Background art in three slices: shop (top), parchment band (middle, stretched), under-shelf (bottom).
