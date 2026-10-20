@@ -2,6 +2,8 @@ const fs = require('fs'), path = require('path');
 const root = path.join(__dirname, '..');
 const assets = {};
 for (const f of fs.readdirSync(path.join(root, 'assets')).sort()) if (/\.png$/i.test(f)) assets[f.replace(/\.png$/i, '')] = 'data:image/png;base64,' + fs.readFileSync(path.join(root, 'assets', f)).toString('base64');
+const { loadRigAssets } = require('./rig-assets.cjs');
+Object.assign(assets, loadRigAssets(root));
 const rd = f => fs.readFileSync(path.join(root, 'src', f), 'utf8');
 const { LEVELS, CHAPTERS, DAILY } = require(path.join(root, 'src/levels.js'));
 let page = rd('page.html');
