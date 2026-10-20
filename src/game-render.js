@@ -602,6 +602,19 @@ function drawPreview(i, T, preview = previewOf(state, i)) {
 // pointer entries get one bounded response, with no repeating idle animation.
 function cupcakePose(v, time = now, reduced = reduceMotion) {
   if (reduced) return { sx: 1, sy: 1 };
+  // A fresh sprite finishes its infection fade at 230 ms. Give the newly
+  // revealed zombie its own single squash/stretch instead of inheriting only
+  // the tiny tail of the original hit. Deriving this from infAt avoids queued
+  // callbacks replaying after undo/restart or extending when a frame is late.
+  const revealAge = v.infAt >= 0 ? time - v.infAt - 230 : -1;
+  const laterHit = v.bumpAt > v.infAt + 230 && time >= v.bumpAt && time - v.bumpAt < 420;
+  if (revealAge >= 0 && revealAge < 380 && !laterHit) {
+    const q = revealAge / 380;
+    const k = q < 0.28
+      ? 0.10 * Math.sin(q / 0.28 * Math.PI) ** 2
+      : -0.12 * Math.sin((q - 0.28) / 0.72 * Math.PI) ** 2;
+    return { sx: 1 + k * 0.55, sy: 1 - k };
+  }
   const p = (time - v.bumpAt) / 420;
   let k = v.bumpAt >= 0 && p >= 0 && p < 1
     ? Math.min(0.12, v.bumpAmp) * Math.sin(p * Math.PI * 2) * (1 - p) ** 2
