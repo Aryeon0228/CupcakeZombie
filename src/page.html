@@ -196,6 +196,20 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 .sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .sheet-head .btn { white-space: nowrap; flex-shrink: 0; }
 .center { text-align: center; justify-items: center; }
+/* Keep the completed board within reach without a competing footer action. */
+.result-card { position: relative; padding: 20px 22px calc(24px + var(--sab)); gap: 12px; }
+.result-card #resEyebrow { min-height: 24px; padding: 0 40px; align-content: center; }
+.result-card #resBtns { width: 100%; max-width: 400px; gap: 12px; margin-top: 6px; }
+.result-card #resBtns .btn { min-height: 48px; }
+.result-card #cardRewards { max-width: 100%; min-width: 0; }
+.result-dismiss {
+  position: absolute; top: 8px; right: 8px; display: grid; place-items: center;
+  width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%;
+  background: transparent; color: var(--ink-soft); cursor: pointer;
+}
+.result-dismiss:focus-visible { outline: 3px solid var(--mold); outline-offset: -3px; }
+.result-dismiss:active { background: var(--paper-edge); }
+@media (hover: hover) { .result-dismiss:hover { background: var(--paper-edge); } }
 .win h2 { color: var(--mold-deep); }
 .lose h2 { color: var(--cherry); }
 .bigstars { display: flex; gap: 6px; font-family: var(--f-display); font-size: 44px; line-height: 1; justify-content: center; }
@@ -315,14 +329,16 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 </div>
 
 <div class="sheet" id="resultSheet" hidden>
-  <div class="sheet-card center">
+  <div class="sheet-card center result-card">
     <div class="eyebrow" id="resEyebrow"></div>
     <div class="bigstars" id="resStars" hidden><span>★</span><span>★</span><span>★</span></div>
     <h2 id="resTitle"></h2>
     <p id="resMsg"></p>
     <div class="row" id="resBtns"></div>
     <div id="cardRewards" hidden></div>
-    <button class="btn quiet" id="resultClose" data-i18n="res.view">판 보기</button>
+    <button class="result-dismiss" id="resultClose" data-i18n-aria="res.view" aria-label="결과 닫고 진열대 보기">
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg>
+    </button>
   </div>
 </div>
 
