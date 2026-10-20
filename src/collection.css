@@ -25,8 +25,6 @@
 .uncollected { background:#e7dfd2; border-style:dashed; box-shadow:2px 3px #b5a18e; }
 .uncollected img { filter:brightness(0); opacity:.15; }
 .card-question { position:absolute; font:36px var(--f-display); color:var(--ink-soft); }
-.collection-tile.gold { background:linear-gradient(135deg,#fff9df,#efd293 54%,#fff9df); }
-.collection-tile.aurora { background:linear-gradient(135deg,#f6dce9,#e0eed7 40%,#dce5f6 70%,#f9e4cd); }
 .collection-tile:focus-visible, .collector-card:focus-visible { outline:3px solid var(--mold-deep); outline-offset:5px; }
 .card-dialog { width:min(100%,380px); max-height:94dvh; overflow-y:auto; padding:4px 12px 14px; text-align:center; }
 .card-dialog-head { display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--paper); text-shadow:0 1px 2px var(--ink); margin:4px 0 12px; font-family:var(--f-display); }
@@ -44,7 +42,6 @@
 .card-picture img { position:relative; z-index:1; max-height:180px; max-width:80%; width:auto; object-fit:contain; margin:22px 0 8px; filter:drop-shadow(2px 4px 0 #4a2e2726); }
 .card-state { position:absolute; top:9px; left:9px; font:11px var(--f-display); padding:3px 9px; border-radius:14px; background:#fff9e9e6; color:var(--ink); }
 .card-glint { position:absolute; right:12px; bottom:10px; font-size:27px; color:#fff9; }
-.card-back .card-picture { background-color:#b8c18e; }
 .card-name { display:block; padding:8px 4px; font:24px var(--f-display); border:2px solid var(--ink); border-top:0; background:var(--flavor); }
 .card-rule { display:block; padding:12px 2px 8px; font-size:13px; line-height:1.45; min-height:62px; }
 .card-stats { display:grid; grid-template-columns:repeat(3,1fr); align-items:center; gap:6px; margin-top:auto; padding-top:6px; border-top:1px dashed #a58d78; }
@@ -53,10 +50,55 @@
 .card-stats strong { font:21px var(--f-display); color:#9d7024; }
 .card-stats .state-word { font-size:14px; color:var(--ink); }
 .card-stats svg { width:40px; height:40px; }
-.gold .card-face { background:linear-gradient(125deg,#fff9e7,#f1d697 48%,#fff9e7); }
-.aurora .card-face { background:linear-gradient(135deg,#f9deed,#e3f0d6 35%,#dae7fa 68%,#f9e4ca); }
-.gold .card-face::after, .aurora .card-face::after { content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none; background:linear-gradient(110deg,transparent 25%,#fff8 43%,#fff0 57%); background-size:220% 100%; background-position:var(--shine) 50%; mix-blend-mode:soft-light; opacity:.7; }
-.aurora .card-picture::after { content:''; position:absolute; inset:0; z-index:2; pointer-events:none; background:linear-gradient(115deg,#f4acd455,#f8efbb33,#b1e9dd55,#b8c8f544,#f4acd455); background-size:220% 100%; background-position:var(--shine) 50%; mix-blend-mode:soft-light; }
+/* ---- card finishes ----
+   Every card is tinted from its cupcake (--bg1/--bg2, --band). Gold and aurora add foil:
+   a metallic frame, a specular streak and (aurora) a holographic layer in three colours picked
+   to suit that cupcake (--h1..--h3). --mx/--my (0–100%) follow the tilt; --sweep runs once on open. */
+.card-face { background:linear-gradient(160deg,var(--bg1),var(--bg2)); }
+.card-picture { background:radial-gradient(circle,#ffffff70 1.4px,transparent 2px) 0 0/15px 15px,linear-gradient(155deg,#ffffff55 40%,#fff0 40%),linear-gradient(170deg,var(--bg1),var(--band)); }
+.card-name { background:var(--band); }
+.card-rule { color:var(--ink); }
+.card-back { --bg1:#e4e8c8; --bg2:#b9c48c; --band:#a8b878; }
+.card-back .card-picture { background:radial-gradient(circle,#ffffff50 1.4px,transparent 2px) 0 0/15px 15px,linear-gradient(170deg,#dfe6b8,#9fb06a); }
+.card-fx { position:absolute; inset:0; border-radius:inherit; pointer-events:none; z-index:3; }
+/* metallic frame: gold for gold cards, silver-holo for aurora */
+.gold .card-face, .aurora .card-face { border-width:4px; }
+.gold .card-face::before, .aurora .card-face::before { content:''; position:absolute; inset:3px; border-radius:18px 14px 20px 15px; pointer-events:none; z-index:4; padding:5px;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude; }
+.gold .card-face::before { background:linear-gradient(calc(110deg + var(--tilt-angle,0deg)),#8a5a12,#f7dc7a 18%,#fff7d6 26%,#c99325 38%,#f3cf66 55%,#fffbe8 63%,#a8741c 78%,#f2d27a); background-size:200% 200%; background-position:var(--mx,50%) var(--my,50%); }
+.aurora .card-face::before { background:linear-gradient(115deg,#8f98a3,#f4f6fa 12%,var(--h1) 24%,#ffffff 32%,var(--h2) 44%,#dfe4ec 52%,var(--h3) 64%,#ffffff 72%,var(--h1) 84%,#8f98a3); background-size:240% 240%; background-position:var(--mx,50%) var(--my,50%); }
+/* specular streak: a narrow bright band that slides across as the card turns */
+.gold .card-glare, .aurora .card-glare { background:linear-gradient(105deg,transparent 0 42%,#fff0 44%,#ffffff99 48.5%,#ffffffee 50%,#ffffff99 51.5%,#fff0 56%,transparent 58%); background-size:320% 100%; background-position:calc(100% - var(--mx,50%)) 0; mix-blend-mode:soft-light; opacity:.9;
+  -webkit-mask-image:linear-gradient(#000 0 60%,#0007 72%,#0004); mask-image:linear-gradient(#000 0 60%,#0007 72%,#0004); }
+.aurora .card-glare { mix-blend-mode:overlay; }
+.aurora .card-glare::after, .gold .card-glare::after { content:''; position:absolute; inset:0; border-radius:inherit; background:radial-gradient(circle at var(--mx,50%) var(--my,50%),#ffffff80,#fff0 24%); mix-blend-mode:soft-light; }
+/* gold leaf: warm metallic sheen over the picture and name band */
+.gold .card-picture::after, .gold .card-name { background-blend-mode:normal; }
+.gold .card-picture::after { content:''; position:absolute; inset:0; z-index:2; pointer-events:none; background:linear-gradient(120deg,#fff0 30%,#ffe9a0aa 45%,#fff7d9 50%,#e8b84aaa 56%,#fff0 70%); background-size:250% 100%; background-position:calc(100% - var(--mx,50%)) 0; mix-blend-mode:soft-light; }
+.gold .card-name { background:linear-gradient(110deg,#d9a83c,#fff1b8 30%,#e7bd52 48%,#fff6d2 62%,#c8922c); background-size:220% 100%; background-position:var(--mx,50%) 0; }
+/* aurora holo: banded iridescence in three colours + fine diffraction lines + sparkle */
+/* reverse-holo: the cupcake stays crisp, the background behind it shimmers */
+.aurora .card-picture::before { content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(circle,#fff 0 1px,#fff0 2px) 0 0/23px 29px,
+    radial-gradient(circle,#fff 0 .8px,#fff0 1.6px) 11px 14px/31px 37px,
+    repeating-linear-gradient(62deg,#ffffff00 0 3px,#ffffff40 3px 4px,#ffffff00 4px 7px),
+    repeating-linear-gradient(118deg,var(--h1) 0%,var(--h2) 6%,var(--h3) 12%,var(--h1) 18%);
+  background-size:23px 29px,31px 37px,auto,260% 260%;
+  background-position:0 0,11px 14px,0 0,var(--mx,50%) var(--my,50%);
+  mix-blend-mode:multiply; opacity:.62; }
+.aurora .card-picture::after { content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),#ffffffb0,#fff0 32%); mix-blend-mode:soft-light; opacity:calc(.3 + var(--sparkle,0) * .7); }
+/* a lighter shimmer on the card body (text area kept readable) */
+.aurora .card-holo { background:repeating-linear-gradient(118deg,var(--h1) 0%,var(--h2) 6%,var(--h3) 12%,var(--h1) 18%);
+  background-size:260% 260%; background-position:var(--mx,50%) var(--my,50%); mix-blend-mode:soft-light; opacity:.85;
+  -webkit-mask-image:linear-gradient(#0000 0 57%,#0007 60%,#0004 100%); mask-image:linear-gradient(#0000 0 57%,#0007 60%,#0004 100%); }
+.aurora .card-picture img, .gold .card-picture img { filter:drop-shadow(2px 4px 0 #4a2e2726) drop-shadow(0 0 10px #ffffff80); }
+.aurora .card-name { background:linear-gradient(110deg,var(--band),#ffffff 35%,var(--band) 55%); background-size:240% 100%; background-position:var(--mx,50%) 0; }
+.card-glint { color:#fffd; text-shadow:0 0 8px #fff; }
+/* the grid tiles echo the finish */
+.collection-tile.gold { background:linear-gradient(135deg,#fff6d6,#f0cf7c 30%,#fff9e6 48%,#d9a845 72%,#fff3c8); }
+.collection-tile.aurora { background:linear-gradient(125deg,#ffe0f0,#e3f7ff 25%,#fff7d8 45%,#e7ddff 65%,#d9fff1 85%); }
 .card-flip-hint { color:var(--paper); font-size:12px; margin:12px 0 0; text-shadow:0 1px 2px var(--ink); }
 #cardSheet { background:rgba(45,32,31,.8); z-index:35; }
 #cardRewards p { margin:12px 0 8px; font:17px var(--f-display); color:var(--mold-deep); }
@@ -66,6 +108,7 @@
 .reward-card small { display:block; font-size:11px; color:var(--mold-deep); margin-top:3px; }
 @media(max-height:700px) { .collector-card { height:390px; } .card-picture img { max-height:132px; } .card-name { font-size:21px; padding:5px 3px; } .card-rule { font-size:12px; min-height:54px; padding:8px 2px 6px; } .card-dialog-head { margin-bottom:8px; } .card-dialog { max-width:330px; } }
 @media(prefers-reduced-motion:reduce) {
+  .card-tilt { --sparkle:0; }
   .btn, .stage-btn, .collection-tile, .segbtn, .card-tilt, .card-rotator { transition:none!important; }
   .btn:not(:disabled):hover, .stage-btn:hover, .collection-tile:hover, .segbtn:hover { transform:none; }
   .btn.ui-pressed:not(:disabled), .stage-btn.ui-pressed, .collection-tile.ui-pressed, .segbtn.ui-pressed { transform:translate(2px,2px); }
