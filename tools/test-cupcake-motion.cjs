@@ -31,6 +31,15 @@ for(let t=230;t<=1200;t+=5){
   if(t>=610){assert.equal(pose.sx,1);assert.equal(pose.sy,1,'Transformation must settle once, not loop');}
 }
 assert.ok(zombieSquash&&zombieStretch,'Zombie needs both a visible squeeze and a rebound');
+env.IMG.zombie_basic = {};
+env.now = 700;
+calls.length = 0;
+env.drawCupcake(0, {...infect, flip:true}, 1);
+assert.equal(calls[0][7], false, 'Flavor zombie must keep its authored facing');
+delete env.IMG.zombie_basic;
+calls.length = 0;
+env.drawCupcake(0, {...infect, flip:true}, 1);
+assert.equal(calls[0][7], true, 'Generic fallback must retain its chosen facing');
 for(let t=400;t<820;t+=5){
   const interrupted={...infect,bumpAt:400,bumpAmp:.06};
   assert.deepEqual(env.cupcakePose(interrupted,t,false),env.cupcakePose({...interrupted,infAt:-1},t,false),'A later impact takes priority over reveal bounce');
