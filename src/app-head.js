@@ -5,6 +5,8 @@ Object.assign(TYPE_TINT, {blueberry:'120, 143, 220', cinnamon_roll:'207, 157, 10
 // ---------- dom ----------
 const $ = id => document.getElementById(id);
 const canvas = $('board'), ctx = canvas.getContext('2d');
+const dropCanvas = $('dropCanvas'), dropCtx = dropCanvas.getContext('2d');
+let dropOrigin = { x: 0, y: 0, ceiling: 0 };
 const boardWrap = $('boardWrap');
 
 // ---------- storage (per-device progress) ----------
@@ -42,6 +44,12 @@ function layout() {
   const bitmapW = Math.round(CW * DPR), bitmapH = Math.round(CH * DPR);
   if (canvas.width !== bitmapW) canvas.width = bitmapW;
   if (canvas.height !== bitmapH) canvas.height = bitmapH;
+  const appRect = $('app').getBoundingClientRect(), boardRect = canvas.getBoundingClientRect();
+  const dropW = Math.round(appRect.width * DPR), dropH = Math.round(appRect.height * DPR);
+  if (dropCanvas.width !== dropW) dropCanvas.width = dropW;
+  if (dropCanvas.height !== dropH) dropCanvas.height = dropH;
+  dropOrigin = { x: boardRect.left - appRect.left, y: boardRect.top - appRect.top,
+    ceiling: $('scr-play').querySelector('.bar').getBoundingClientRect().bottom - boardRect.top };
   requestAnimationFrame(drawBg);
 }
 // Background art in three slices: shop (top), parchment band (middle, stretched), under-shelf (bottom).

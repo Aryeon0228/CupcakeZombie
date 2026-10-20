@@ -47,6 +47,13 @@ const zombieKey = (v) => IMG['zombie_' + TYPES[v.t].key] ? 'zombie_' + TYPES[v.t
 
 // ---------- audio ----------
 let AC = null, audioBus = null, lastChainNote = -Infinity;
+let audioResume = null;
+const soundBuffers = {}, soundVersions = { button: 0, meow: 0 };
+function resumeAudio(a) {
+  if (a.state === 'running') return Promise.resolve();
+  if (!audioResume) audioResume = a.resume().finally(() => { audioResume = null; });
+  return audioResume;
+}
 function audio() {
   if (!save.sound) return null;
   try {
@@ -59,15 +66,37 @@ function audio() {
       audioBus.connect(limiter).connect(AC.destination);
     }
     audioBus.gain.setTargetAtTime(0.7, AC.currentTime, 0.01);
-    if (AC.state === 'suspended') AC.resume().catch(() => {});
+    if (AC.state === 'suspended' || AC.state === 'interrupted') resumeAudio(AC).catch(() => {});
   } catch (e) { return null; }
   return AC;
 }
 function syncSound() {
+  if (!save.sound) { soundVersions.button++; soundVersions.meow++; } // Cancel pending sounds when muted.
   if (!AC || !audioBus) return;
   const g = audioBus.gain; g.cancelScheduledValues(AC.currentTime);
   if (save.sound) g.setTargetAtTime(0.7, AC.currentTime, 0.01); else g.setValueAtTime(0, AC.currentTime); // muting is immediate
 }
+function buttonSound() { return playUISound('button'); }
+function cupcakeSound(index) { return playUISound('meow', [1, 1.04, .97, 1.02, .99][index % 5]); }
+async function playUISound(key, pitch = 1) {
+  const a = audio(); if (!a) return;
+  const version = ++soundVersions[key];
+  try {
+    if (!soundBuffers[key]) {
+      const bytes = Uint8Array.from(atob(SOUNDS[key]), c => c.charCodeAt(0));
+      soundBuffers[key] = a.decodeAudioData(bytes.buffer).catch(e => { delete soundBuffers[key]; throw e; });
+    }
+    const [buffer] = await Promise.all([soundBuffers[key], resumeAudio(a)]);
+    if (!save.sound || version !== soundVersions[key] || a.state !== 'running') return;
+    const source = a.createBufferSource();
+    source.buffer = buffer;
+    source.playbackRate.value = pitch;
+    source.connect(audioBus);
+    source.onended = () => source.disconnect();
+    source.start(a.currentTime + 0.005);
+  } catch (e) { /* Audio availability must never block navigation. */ }
+}
+
 function tone(freq, dur = 0.16, type = 'triangle', vol = 0.12, slide = 0, delay = 0) {
   const a = audio(); if (!a) return;
   const t = a.currentTime + delay;
@@ -406,6 +435,9 @@ function customerPhase(list, k, done) {
 function frame(t) {
   const dt = Math.min(0.05, (t - now) / 1000);
   now = t;
+  dropCtx.setTransform(1, 0, 0, 1, 0, 0);
+  dropCtx.clearRect(0, 0, dropCanvas.width, dropCanvas.height);
+  dropCtx.setTransform(DPR, 0, 0, DPR, dropOrigin.x * DPR, dropOrigin.y * DPR);
   runTimeline();
   if (state && screen === 'play') draw(dt);
   requestAnimationFrame(frame);
@@ -642,9 +674,9 @@ function drawCupcake(i, v, sc) {
   ctx.beginPath(); ctx.ellipse(x0, by - S * 0.04, S * 0.33, S * 0.09, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
   const freshKey = freshSpriteKey(v);
   if (!zombie) {
-    const react = v.reactAt >= 0 && selected === i && v.infAt < 0 &&
+    const react = v.reactAt >= 0 && selected === i && !busy && !result && !introOpen && v.infAt < 0 &&
       !(v.bumpAt >= 0 && now - v.bumpAt < 420) &&
-      drawCupcakeReaction(ctx, freshKey, x0, by, sc, sx, sy, now - v.reactAt, reduceMotion);
+      drawCupcakeReaction(ctx, freshKey, x0, by, sc, sx, sy, now - v.reactAt, reduceMotion, true);
     if (!react) drawSpriteAt(ctx, freshKey, x0, by, sc, 0, sx, sy);
     // The tint shares the exact same pose; rotating a second copy made two
     // outlines shimmer against each other during the infection fade.
@@ -677,15 +709,19 @@ function drawProjectiles(sc) {
     if (f.style === 'drop') {
       const age = now - f.t0, pose = dropPose(age, f.dur);
       const tx = cxOf(f.to), ty = cyOf(f.to) + f.contactOffset * S;
-      const sy = Math.max(-S * 0.3, ty - S * 2.5);
+      // The parent falls over the shop, outside the board's clipped bitmap.
+      const sy = Math.max(dropOrigin.ceiling + S * .9, ty - S * 2.5);
       const x = tx + (reduceMotion ? 0 : Math.sin(p * Math.PI) * S * 0.035);
       const y = reduceMotion ? ty : sy + (ty - sy) * pose.fall - S * pose.lift;
       if (reduceMotion && age < f.dur) continue;
-      const mix = IMG.spore_squash && !reduceMotion ? pose.squash : 0;
-      if (IMG.spore_round) {
-        if (mix < 1) drawSporeArt(ctx, 'spore_round', x, y, S * 0.32, 0, pose.alpha * (1 - mix), true);
-        if (mix > 0) drawSporeArt(ctx, 'spore_squash', x, y, S * 0.32, 0, pose.alpha * mix, true);
-      } else drawSpore(ctx, x, y - S * 0.12, S * 0.12, 0, pose.alpha);
+      // The large parent owns the whole drop. Babies are only outward flights.
+      const key = IMG.mold_drop ? 'mold_drop' : 'mold_player', m = META[key];
+      if (m && IMG[key]) {
+        const squash = reduceMotion ? 0 : pose.squash;
+        const size = S * .82 / m.w;
+        drawSpriteAt(dropCtx, key, x, y, size / (m.k || 1), 0,
+          1 + squash * .3, 1 - squash * .52, false, pose.alpha);
+      }
       continue;
     }
     if (reduceMotion) continue;

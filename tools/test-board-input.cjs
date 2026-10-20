@@ -11,7 +11,7 @@ const listeners = {}, win = {}, captured = new Set(), fired = [], sounds = [];
 const canvas = { style: {}, addEventListener:(k,f)=>listeners[k]=f, setPointerCapture:id=>captured.add(id), hasPointerCapture:id=>captured.has(id), releasePointerCapture(id){captured.delete(id);listeners.lostpointercapture({pointerId:id});} };
 const env = { canvas, window:{addEventListener:(k,f)=>win[k]=f}, state:null, screen:'play', now:1000, S:60, vis:[], hover:-1, selected:-1, cursorShown:false, busy:false, result:null, introOpen:false, canTarget,
   cellAt(e){const c=Math.floor(e.clientX/60),r=Math.floor(e.clientY/60);return c>=0&&c<env.state.W&&r>=0&&r<env.state.H?r*env.state.W+c:-1;},
-  tone:(...a)=>sounds.push(a), haptic(){}, toast(){}, t:k=>k, updateHint(){}, renderHUD(){},
+  cupcakeSound:(...a)=>sounds.push(a), haptic(){}, toast(){}, t:k=>k, updateHint(){}, renderHUD(){},
   fireAt(i){assert.ok(canTarget(env.state,i));fired.push(i);const turn=playTurn(env.state,i);env.state=turn.state;env.result=turn.res==='play'?null:turn.res;env.busy=true;env.selected=-1;}
 };
 vm.createContext(env);vm.runInContext(fragment,env);

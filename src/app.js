@@ -130,7 +130,7 @@ function openSettings() {
   $('resetConfirm').hidden = true;
   openSheet('settingsSheet');
 }
-$('setSound').onchange = e => { save.sound = e.target.checked; syncSound(); writeSave(save); if (save.sound) tone(660, 0.1, 'sine', 0.06); };
+$('setSound').onchange = e => { save.sound = e.target.checked; syncSound(); writeSave(save); if (save.sound) buttonSound(); };
 $('setHaptic').onchange = e => { save.haptics = e.target.checked; writeSave(save); haptic('medium'); };
 $('noAdsBtn').onclick = async () => { const ok = await Store.buyRemoveAds(); if (ok) { save.noAds = true; writeSave(save); openSettings(); toast(t('toast.noAds')); } };
 $('restoreBtn').onclick = async () => { const ok = await Store.restore(); if (ok) { save.noAds = true; writeSave(save); openSettings(); toast(t('toast.restored')); } else toast(t('toast.noRestore')); };
@@ -510,13 +510,16 @@ function pointPreview(e, pick = false, audible = false) {
     hover = h; cursorShown = false;
     if (h >= 0 && vis[h] && !vis[h].gone && (vis[h].peekAt < 0 || now - vis[h].peekAt >= 350)) {
       vis[h].peekAt = now;
-      if (audible && now - lastPeekNote >= 70) {
+      if (audible && now - lastPeekNote >= 115) {
         lastPeekNote = now;
-        tone([523, 587, 659, 784, 880][h % 5], 0.065, 'sine', 0.018, 1.12);
+        cupcakeSound(h);
       }
     }
   }
-  if (pick) selected = canTarget(state, h) ? h : -1;
+  if (pick) {
+    selected = canTarget(state, h) ? h : -1;
+    if (selected >= 0 && selected !== previousSelection && vis[selected]) vis[selected].reactAt = now;
+  }
   canvas.style.cursor = canTarget(state, h) ? 'pointer' : 'default';
   return entered || selected !== previousSelection;
 }
@@ -603,29 +606,6 @@ let resizeRaf = 0;
 new ResizeObserver(() => { cancelAnimationFrame(resizeRaf); resizeRaf = requestAnimationFrame(() => state && layout()); }).observe(boardWrap);
 window.addEventListener('resize', () => { if (state) layout(); drawBg(); });
 
-// ---------- title shelf ----------
-function renderShelf() {
-  // zombies on the right lurch after a line of panicking fresh cupcakes; the whole group runs right to left
-  const track = $('chaseTrack'); track.innerHTML = '';
-  const cast = [['basic', 'fresh lead'], ['berry', 'fresh'], ['cherry', 'fresh'], ['lemon_yogurt', 'fresh'], ['gap'], ['zombieB', 'zed']];
-  const unitH = 0.36; // css px per legacy sprite px
-  cast.forEach(([k, cls], i) => {
-    if (k === 'gap') { const g = document.createElement('span'); g.style.width = '28px'; track.appendChild(g); return; }
-    const key = ASSETS[k] ? k : (k.startsWith('zombie') ? 'zombieB' : 'basic');
-    const m = META[key] || { h: 120, k: 1 };
-    const w = document.createElement('span'); w.className = 'runner ' + cls;
-    w.style.height = Math.round(m.h * (m.k || 1) * unitH) + 'px';
-    w.style.animationDelay = (-(i * 0.17)).toFixed(2) + 's';
-    const im = document.createElement('img'); im.src = ASSETS[key]; im.alt = '';
-    w.appendChild(im);
-    if (cls.includes('lead')) { const b = document.createElement('span'); b.className = 'bang'; b.textContent = '!'; w.appendChild(b); }
-    track.appendChild(w);
-  });
-  const lane = $('chase');
-  const setW = () => { lane.style.setProperty('--laneW', lane.clientWidth + 'px'); lane.style.setProperty('--chaseDur', Math.max(7, (lane.clientWidth + track.scrollWidth) / 70) + 's'); };
-  setW(); window.addEventListener('resize', setW);
-}
-
 // ---------- boot ----------
 async function boot(data) {
   save.collection = recoverCollection(save, LEVELS); writeSave(save);
@@ -635,7 +615,6 @@ async function boot(data) {
   installCupcakeRigs();
   if (META.basic) UNIT = META.basic.w;
   buildTints();
-  renderShelf();
   drawBg();
   requestAnimationFrame(t => { now = t; requestAnimationFrame(frame); });
   if (data && data.screen === 'play' && Number.isInteger(data.level)) startStage(data.level);

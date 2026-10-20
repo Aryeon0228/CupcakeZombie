@@ -1,6 +1,6 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const events={},windows={},tones=[];
-const env={document:{addEventListener:(k,f)=>(events[k]??=[]).push(f)},window:{addEventListener:(k,f)=>(windows[k]??=[]).push(f)},reduceMotion:false,matchMedia:()=>({matches:false}),performance:{now:()=>100},tone:(...args)=>tones.push(args)};
+const env={document:{addEventListener:(k,f)=>(events[k]??=[]).push(f)},window:{addEventListener:(k,f)=>(windows[k]??=[]).push(f)},reduceMotion:false,matchMedia:()=>({matches:false}),performance:{now:()=>100},buttonSound:(...args)=>tones.push(args)};
 vm.createContext(env);vm.runInContext(fs.readFileSync(require('node:path').join(__dirname,'../src/ui-interactions.js'),'utf8'),env);
 function button(){const classes=new Set(),animations=[];return{disabled:false,isConnected:true,classes,animations,classList:{add:c=>classes.add(c),remove:c=>classes.delete(c)},closest(){return this},matches:()=>false,getBoundingClientRect:()=>({left:0,top:0,right:100,bottom:50}),animate(frames,options){const a={frames,options,cancelled:false,cancel(){this.cancelled=true}};animations.push(a);return a}}}
 function emit(name,b,extra={}){const e={target:b,pointerId:1,clientX:20,clientY:20,button:0,isPrimary:true,...extra};for(const f of events[name]||[])f(e)}

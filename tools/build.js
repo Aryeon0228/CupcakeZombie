@@ -10,6 +10,7 @@ let page = rd('page.html');
 const put = (k, v) => { page = page.replace(k, () => v); };
 put('/*TITLE_LOGO*/', 'data:image/png;base64,' + fs.readFileSync(path.join(root, 'logo/cupcake-zombie-logo.png')).toString('base64'));
 put('/*ASSETS*/null', JSON.stringify(assets));
+put('/*SOUNDS*/null', JSON.stringify({ button: fs.readFileSync(path.join(root, 'assets/audio/ui-click.wav')).toString('base64'), meow: fs.readFileSync(path.join(root, 'assets/audio/cupcake-nya.wav')).toString('base64') }));
 const scaleFile = path.join(root, 'assets/scale.json');
 put('/*SPRITE_K*/null', fs.existsSync(scaleFile) ? fs.readFileSync(scaleFile, 'utf8') : '{}');
 put('/*LOGIC*/', rd('logic.js'));

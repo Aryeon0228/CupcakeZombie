@@ -22,6 +22,25 @@ const CUPCAKE_RIG_PROFILES = {
       x: 28, y: 64, rx: 5.5, ry: 7.5, overlay: true }]
   }
 };
+// Anchors in each source PNG, outside the paper cup edge.
+for (const [key, size, left, right, reach] of [
+  ['berry', [115,152], [11,106], [101,107], 17],
+  ['sprinkle', [113,164], [10,112], [103,117], 14],
+  ['cherry', [115,178], [11,132], [101,133], 18],
+  ['cream', [115,157], [11,112], [101,113], 18],
+  ['butter_open', [115,146], [12,103], [100,102], 18],
+  ['earl_grey', [233,381], [26,280], [207,281], 32],
+  ['lemon_yogurt', [233,350], [22,250], [209,249], 32],
+  ['pending_lemon_yogurt', [242,356], [27,267], [215,267], 30],
+  ['espresso', [233,379], [28,283], [209,282], 32],
+  ['blueberry', [256,360], [30,252], [225,251], 34],
+  ['cinnamon_roll', [256,360], [36,243], [220,240], 34]
+]) {
+  const arm = ([x,y], side) => ({ pivot: [x,y], side,
+    cut: [[x-side*1.5,y-4], [x+side*reach*.22,y+reach],
+      [side>0?0:size[0],y+reach], [side>0?0:size[0],y-4]] });
+  CUPCAKE_RIG_PROFILES[key] = { size, arms: [arm(left,1),arm(right,-1)], eyes: [] };
+}
 const CUPCAKE_RIG_CACHE = {};
 function rigCanvas(w, h) {
   const c = document.createElement('canvas'); c.width = w; c.height = h; return c;
@@ -79,7 +98,11 @@ function installCupcakeRigs() {
     if (rig) IMG[key] = rig.rest;
   }
 }
-function cupcakeReactionPose(age, reduced = false) {
+function cupcakeReactionPose(age, reduced = false, held = false) {
+  if (held && !reduced && age >= 0) {
+    const ease = Math.min(1, age / 120);
+    return { active: true, arms: ease * (.75 + .42 * Math.sin(age / 320 * Math.PI * 2)), eyes: 1 + .32 * ease };
+  }
   if (reduced || age < 0 || age >= 460) return { active: false, arms: 0, eyes: 1 };
   const t = age / 460;
   const envelope = Math.sin(Math.PI * t) ** 0.8;
@@ -90,8 +113,8 @@ function cupcakeReactionPose(age, reduced = false) {
     eyes: 1 + 0.42 * Math.sin(Math.PI * Math.min(1, age / 360)) ** 0.7
   };
 }
-function drawCupcakeReaction(g, key, x, by, sc, sx, sy, age, reduced = false) {
-  const pose = cupcakeReactionPose(age, reduced);
+function drawCupcakeReaction(g, key, x, by, sc, sx, sy, age, reduced = false, held = false) {
+  const pose = cupcakeReactionPose(age, reduced, held);
   if (!pose.active) return false;
   return drawCupcakeRig(g, key, x, by, sc, sx, sy, pose);
 }

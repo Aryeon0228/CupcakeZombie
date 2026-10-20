@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-20",
+  "checks": {
+    "feedback_audio_resume_mute_and_drop": "passed",
+    "pointer_input": {
+      "checks": 14,
+      "stages": 200,
+      "turns": 394
+    },
+    "first_hop_previews": 4003,
+    "rules_vs_animation": 39209,
+    "motion_and_button_interactions": "passed"
+  },
+  "browser": {
+    "sizes": [
+      [
+        320,
+        568
+      ],
+      [
+        390,
+        844
+      ]
+    ],
+    "first_button_sample_seconds": 0.21,
+    "drag_sample_seconds": 0.17,
+    "audio_context_running": true,
+    "title_controls_visible": true,
+    "selection_and_drag_no_fire": true,
+    "mold_flight_and_squash": "rendered from production functions"
+  },
+  "limits": [
+    "iOS physical audio and touch feel not tested",
+    "Nya sound is an original synthesized kitten-like voice, not a recording"
+  ],
+  "progress_key": "cupcake-zombie-v3",
+  "release_target": "https://studio-penumbra.com/cupcake-zombie/"
+}

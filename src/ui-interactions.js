@@ -47,7 +47,7 @@ document.addEventListener('keydown', e => { if (!e.repeat && (e.key === ' ' || e
 document.addEventListener('keyup', e => { if (e.key === ' ' || e.key === 'Enter') releaseButton(springButton(e.target)); }, true);
 document.addEventListener('focusout', e => releaseButton(springButton(e.target), false), true);
 document.addEventListener('click', e => {
-  const b = springButton(e.target); if (!b || b.disabled) return;
+  const b = e.target?.closest?.('button'); if (!b || b.disabled) return;
   const t = performance.now();
-  if (t - lastButtonNote > 65) { lastButtonNote = t; tone(520, .045, 'sine', .016, 1.5); }
+  if (t - lastButtonNote > 65) { lastButtonNote = t; buttonSound(); }
 }, true);

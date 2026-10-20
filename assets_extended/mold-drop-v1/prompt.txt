@@ -1,0 +1,4 @@
+Built-in image_gen edit, transparent background.
+Edit target: approved.png, supplied by the user.
+Change ONLY the small brown w-shaped smile to a small surprised open round O mouth in the same position and brown colored-pencil line weight. Keep eyes, blush, triangular fluffy body, three antennae, thick dark brown outline, colors, pencil texture, exact silhouette, proportions, position and framing unchanged. Dark brown O mouth interior. Transparent background, no shadow, text, or added objects.
+Output: mouth-open.png. Game copies preserve aspect ratio and alpha at 240x237. Used for the full bottom-anchored fall/squash; outward projectiles remain baby spores. Previous master is retained in mold-outline-v2.
