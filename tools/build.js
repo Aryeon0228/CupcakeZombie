@@ -37,7 +37,7 @@ if (fs.existsSync(bgDir) && !process.env.NO_BG) {
 }
 put('/*BG*/null', JSON.stringify(BG));
 put('/*HEAD*/', rd('strings.js') + '\n' + rd('app-head.js'));
-put('/*RENDER*/', rd('game-render.js'));
+put('/*RENDER*/', rd('cupcake-reactions.js') + '\n' + rd('game-render.js'));
 put('/*COLLECTION_CSS*/', rd('collection.css'));
 put('/*COLLECTION*/', rd('collection.js'));
 put('/*UI_INTERACTIONS*/', rd('ui-interactions.js'));

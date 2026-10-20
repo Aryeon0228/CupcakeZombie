@@ -1,6 +1,6 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const source=fs.readFileSync(require('node:path').join(__dirname,'../src/game-render.js'),'utf8');
-const fragment=source.slice(source.indexOf('function cupcakePose('),source.indexOf('\nfunction pathPoint('));
+const fragment=source.slice(source.indexOf('function freshSpriteKey('),source.indexOf('\nfunction drawPreviewOutline('))+'\n'+source.slice(source.indexOf('function cupcakePose('),source.indexOf('\nfunction pathPoint('));
 const calls=[];
 const env={now:0,reduceMotion:false,S:64,ctx:{save(){},restore(){},beginPath(){},ellipse(){},fill(){}},IMG:{pending_lemon_yogurt:{}},TINT:{basic:{},lemon_yogurt:{}},TYPES:{o:{key:'basic'},l:{key:'lemon_yogurt'},m:{key:'mint_choco'}},cxOf:()=>100,baseY:()=>200,zombieKey:()=> 'zombieB',drawSpriteAt:(...args)=>calls.push(args.slice(1)),drawWrap(){},isZombieShown:v=>v.infAt>=0?env.now-v.infAt>=230:v.zombie};
 vm.createContext(env);vm.runInContext(fragment,env);

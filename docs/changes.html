@@ -2,6 +2,9 @@
 *{box-sizing:border-box}body{margin:0;background:#f2eadb;color:#49342e;font:16px/1.75 -apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',sans-serif}main{max-width:1000px;margin:auto;padding:40px 24px}h1{font-size:38px;line-height:1.25}h2{font-size:25px;margin:42px 0 16px}h3{font-size:18px}p{max-width:780px}.meta{font-size:13px;color:#79685c}table{border-collapse:collapse;width:100%;font-size:14px;background:#fffaf1}th,td{text-align:left;border-bottom:1px solid #d8cbbc;padding:14px;vertical-align:top}th{color:#53713b}code{background:#e7dfd1;border-radius:4px;padding:2px 4px;font-size:12px}pre{overflow:auto;background:#fffaf1;padding:18px;border-radius:12px;font-size:13px}.frames{display:flex;gap:20px;overflow:auto}.frames figure{margin:0;flex:0 0 220px}.frames img{width:220px;border-radius:12px}.frames figcaption{font-size:13px}a{color:#53713b}.box{padding:22px;background:#fffaf1;border-radius:16px;margin:22px 0}li{margin:8px 0}@media(max-width:600px){h1{font-size:29px}table{font-size:12px}th,td{padding:9px}.frames figure,.frames img{width:190px;flex-basis:190px}}
 </style><main><p class="meta">CUPCAKE ZOMBIE · 2026-10-20</p><h1>200 스테이지 확장과<br>플레이 감각 개선</h1><p>기존 60개에 140개를 더해 20개 장, 200 스테이지로 확장했어요. 새로운 두 맛의 그림·규칙·설명·정답을 함께 넣고, 포자 낙하와 모바일 화면, 효과음을 다듬었어요.</p><p><a href="stage-guide.html">스테이지 도감 열기 →</a></p>
 <h2>어디를 고쳤나요?</h2><table><thead><tr><th>부분</th><th>기존 상태</th><th>바뀐 동작</th></tr></thead><tbody>
+<tr><td>포자 미리보기</td><td>작은 포자가 얼굴을 가리고 가는 점선과 섞여, 도착 대상이 잘 드러나지 않았어요.</td><td>미리보기의 포자 배지를 제거하고, 첫 전파가 영향을 주는 컵케이크에 크림색·올리브색 외곽선을 넣었어요. 점선은 그림 뒤에서 출발점 → 목적지로 흐르고, 옅은 받침 선으로 배경과 구분돼요. 선택한 컵케이크는 금색 받침으로 표시해요.</td></tr>
+<tr><td>미리보기 판정</td><td>그 컵케이크가 상했다고 가정한 경로를 표시했어요.</td><td>직접 포자를 맞았을 때 곧바로 나오는 첫 전파를 실제 규칙으로 계산해요. 버터 뚜껑·차가워지는 레몬은 첫 전파를 약속하지 않고, 강한 포자가 포장된 좀비에게 주는 영향은 표시해요. 턴 전체의 최종 연쇄를 보여주는 기능은 아니에요.</td></tr>
+<tr><td>선택 반응 시안</td><td>전체 그림이 잠깐 눌렸다가 돌아왔어요.</td><td>초코 머핀을 누르면 기존 그림의 팔과 눈이 따로 움직여요. 두 번의 작은 파닥 동작과 커지는 눈이 460ms 안에 끝나고 발 위치는 고정돼요. 원본 PNG는 그대로예요. 다른 맛은 아직 기존 반응이며 어깨·눈 위치를 맞춘 뒤 확장할 수 있어요.</td></tr>
 <tr><td>포자 낙하</td><td>화면 위부터 좌우로 흔들리며 내려오고, 닿기 직전에 감속했어요.</td><td>목표에서 최대 2.5칸 위에서 내려와 가속해요. 낙하는 520 → 420ms, 좌우 흔들림은 0.18 → 0.035칸으로 줄였어요.</td></tr>
 <tr><td>착지 연결</td><td>낙하 포자가 접촉 후에도 남고, 착지용 포자가 따로 생성되어 잠깐 겹쳤어요.</td><td>포자 한 개가 낙하부터 착지까지 담당해요. 아래 접점이 고정된 채 둥근 그림 → 눌린 그림 → 회복을 연결하고 260ms에 걸쳐 마무리해요.</td></tr>
 <tr><td>접촉 효과</td><td>큰 먼지 16개와 비교적 큰 잡음이 한꺼번에 났어요.</td><td>작은 먼지 7개와 짧은 저음의 톡 소리로 접촉을 알려요. 포자 표시 크기도 0.405 → 0.32칸으로 줄였어요.</td></tr>
@@ -29,8 +32,10 @@ node tools/test_cascade.js
 node tools/audit-stages.js
 node tools/test-cupcake-motion.cjs
 node tools/test-board-input.cjs --report
+node tools/test-preview-reactions.cjs
+node tools/build-reaction-lab.cjs
 node tools/build.js
 # Playwright와 브라우저를 설치한 환경에서
 node tools/test-ui.cjs
 node tools/build-guide.cjs
-node tools/build-delivery.cjs</pre><p class="meta">기본 빌드·규칙 검사는 Node만 필요해요. 브라우저 검사는 Playwright와 Chromium, 원본 이미지 재변환은 sharp, 엑셀 재작성은 Codex의 스프레드시트 런타임을 사용해요. 검토용 플레이 파일은 모든 판으로 바로 이동하며 별도의 진행 저장을 써요. 일반 게임 파일은 순서대로 잠금이 풀려요.</p><div class="box"><strong>전달 상태</strong><p>변경은 별도 브랜치와 검토용 PR에 담아요. 공개 웹사이트 배포나 앱스토어 제출은 포함하지 않았어요. 이 문서의 화면과 수치는 첨부된 검증 결과를 기준으로 작성했어요.</p></div></main></html>
+node tools/build-delivery.cjs</pre><p class="meta">기본 빌드·규칙 검사는 Node만 필요해요. 브라우저 검사는 Playwright와 Chromium, 원본 이미지 재변환은 sharp, 엑셀 재작성은 Codex의 스프레드시트 런타임을 사용해요. 검토용 플레이 파일은 모든 판으로 바로 이동하며 별도의 진행 저장을 써요. 일반 게임 파일은 순서대로 잠금이 풀려요.</p><div class="box"><strong>전달 상태</strong><p>변경은 별도 브랜치와 검토용 PR에 담아요. 검토용 웹은 studio-penumbra.com/cupcake-zombie-preview/에 공개되어 있고, 기존 게임과 진행을 따로 저장해요. 앱스토어 제출과 iOS 실기기 검사는 별도로 남아 있어요. 이 문서의 화면과 수치는 첨부된 검증 결과를 기준으로 작성했어요.</p></div></main></html>

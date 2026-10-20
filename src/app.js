@@ -158,7 +158,7 @@ function rebuildVis() {
     zv: ((i * 7 + li * 3) % 3 === 0) ? 'zombieA' : 'zombieB',
     flip: ((i * 5 + li) % 4) === 1,
     phase: (i * 1.37) % (Math.PI * 2),
-    infAt: -1, bumpAt: -1, bumpAmp: 0, peekAt: -1, flashAt: -1, gone: false,
+    infAt: -1, bumpAt: -1, bumpAmp: 0, peekAt: -1, reactAt: -1, flashAt: -1, gone: false,
   });
 }
 function loadLevel(d, opts = {}) {
@@ -538,6 +538,7 @@ canvas.addEventListener('pointerdown', e => {
   press = { id: e.pointerId, x: e.clientX, y: e.clientY, lastX: e.clientX, lastY: e.clientY, cell: i, confirm: selected === i && canTarget(state, i), moved: false };
   canvas.setPointerCapture(e.pointerId);
   pointPreview(e, true, true);
+  if (canTarget(state, i) && vis[i] && !vis[i].gone) vis[i].reactAt = now;
   updateHint();
 });
 function cancelBoardPress(e) {

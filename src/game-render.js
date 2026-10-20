@@ -483,12 +483,16 @@ function draw(dt) {
   });
 
   const focusIdx = introOpen ? -1 : hover >= 0 ? hover : selected >= 0 ? selected : (cursorShown ? cursor : -1);
-  const canPreview = focusIdx >= 0 && !busy && !result && state.cells[focusIdx] && !state.cells[focusIdx].inf;
+  const canPreview = focusIdx >= 0 && !busy && !result && canTarget(state, focusIdx);
+  const preview = canPreview ? previewOf(state, focusIdx) : null;
   if (focusIdx >= 0 && !result && !introOpen) {
-    ctx.save(); ctx.setLineDash([6, 5]); ctx.lineDashOffset = -T * 20; ctx.lineWidth = 3;
-    ctx.strokeStyle = canPreview ? '#5B7A21' : 'rgba(74,46,39,0.4)';
-    ctx.beginPath(); ctx.ellipse(cxOf(focusIdx), wellY(focusIdx), S * 0.46, S * 0.32, 0, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.lineWidth = Math.max(2, S * 0.045);
+    ctx.fillStyle = canPreview ? 'rgba(246,200,93,.3)' : 'rgba(74,46,39,.06)';
+    ctx.strokeStyle = canPreview ? '#806022' : 'rgba(74,46,39,0.4)';
+    ctx.beginPath(); ctx.ellipse(cxOf(focusIdx), wellY(focusIdx), S * 0.43, S * 0.28, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.restore();
   }
+  // Routes travel behind the artwork; target silhouettes remain readable above.
+  if (preview) drawPreview(focusIdx, T, preview);
   for (const k of state.customers) {
     if (k.done && !k.pending) continue;
     const i = k.r * W + k.c;
@@ -501,10 +505,9 @@ function draw(dt) {
     const v = vis[i];
     if (!v || v.gone) continue;
     if (arm && arm.idx === i && arm.fresh && now - arm.t0 > 430) continue;
+    if (preview && preview.targets.includes(i)) drawPreviewOutline(i, v, sc);
     drawCupcake(i, v, sc);
   }
-
-  if (canPreview) drawPreview(focusIdx, T);
 
   for (const k of state.customers) {
     if (k.done && !k.pending) continue;
@@ -522,14 +525,56 @@ function draw(dt) {
   if (!reduceMotion) vis.forEach((v, i) => { if (v && !v.gone && isZombieShown(v) && !v.sealed && Math.random() < dt * 0.09) stink(i); });
 }
 
-// pattern preview: where this cupcake's spores would go if it went bad right now
-function drawPreview(i, T) {
-  const spreads = spreadsOf(state, i, true);
+// Only the first outward spread is previewed. A lid/pending lemon does not
+// promise an immediate chain; the rules and hint still describe that state.
+function previewOf(s, i) {
+  if (!canTarget(s, i)) return { spreads: [], targets: [] };
+  const trial = cloneState(s);
+  if (!hitCell(trial, { idx: i, direct: true }).spread) return { spreads: [], targets: [] };
+  const spreads = spreadsOf(trial, i, true);
+  const strong = !!TYPES[trial.cells[i].t].strong;
+  const targets = [...new Set(spreads.filter(sp =>
+    sp.to >= 0 && hitCell(trial, { idx: sp.to, direct: false, strong }).kind !== 'none'
+  ).map(sp => sp.to))];
+  return { spreads, targets };
+}
+const PREVIEW_OUTLINES = {};
+function previewOutlineArt(key) {
+  if (PREVIEW_OUTLINES[key]) return PREVIEW_OUTLINES[key];
+  const im = IMG[key], m = META[key]; if (!im || !m) return null;
+  const pad = Math.ceil(10 / (m.k || 1));
+  const art = document.createElement('canvas'); art.width = im.width + pad * 2; art.height = im.height + pad * 2;
+  const g = art.getContext('2d');
+  for (const [radius, color] of [[8, '#647c38'], [5.5, '#FFF9E5']]) {
+    const layer = document.createElement('canvas'); layer.width = art.width; layer.height = art.height;
+    const l = layer.getContext('2d'), r = radius / (m.k || 1);
+    for (let n = 0; n < 20; n++) {
+      const a = n * Math.PI / 10; l.drawImage(im, pad + Math.cos(a) * r, pad + Math.sin(a) * r);
+    }
+    l.globalCompositeOperation = 'source-in'; l.fillStyle = color; l.fillRect(0, 0, layer.width, layer.height);
+    g.drawImage(layer, 0, 0);
+  }
+  return PREVIEW_OUTLINES[key] = { art, pad };
+}
+function freshSpriteKey(v) {
+  let key = v.t === 'b' ? (v.lid > 0 ? 'butter' : 'butter_open') : TYPES[v.t].key;
+  if (v.pend && IMG['pending_' + key]) key = 'pending_' + key;
+  return key;
+}
+function drawPreviewOutline(i, v, sc) {
+  const zombie = isZombieShown(v);
+  const key = zombie ? zombieKey(v) : freshSpriteKey(v), m = META[key], outline = previewOutlineArt(key);
+  if (!outline || !m) return;
+  const pose = cupcakePose(v);
+  ctx.save(); ctx.translate(cxOf(i), baseY(i)); ctx.scale(sc * (m.k || 1) * pose.sx * (zombie && v.flip ? -1 : 1), sc * (m.k || 1) * pose.sy);
+  ctx.drawImage(outline.art, -m.ax - outline.pad, -m.ay - outline.pad); ctx.restore();
+}
+function drawPreview(i, T, preview = previewOf(state, i)) {
   ctx.save();
-  ctx.lineWidth = 2; ctx.setLineDash([3, 5]); ctx.lineDashOffset = -T * 16; ctx.lineCap = 'round';
-  for (const sp of spreads) {
-    const fresh = sp.to >= 0 && !state.cells[sp.to].inf;
-    ctx.strokeStyle = fresh ? 'rgba(91, 122, 33, 0.75)' : 'rgba(91, 122, 33, 0.28)';
+  const dash = Math.max(2, S * 0.045), gap = Math.max(4, S * 0.095);
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  for (const sp of preview.spreads) {
+    const fresh = preview.targets.includes(sp.to);
     ctx.beginPath();
     if (sp.style === 'roll') {
       ctx.moveTo(cxOf(i), wellY(i));
@@ -541,12 +586,14 @@ function drawPreview(i, T) {
       const lift = sp.style === 'lob' ? S * (sp.dist === 2 ? 0.9 : 0.5) : S * 0.25;
       ctx.moveTo(ax, ay); ctx.quadraticCurveTo((ax + bx) / 2, Math.min(ay, by) - lift, bx, by);
     }
-    ctx.stroke();
-  }
-  ctx.setLineDash([]);
-  for (const sp of spreads) {
-    if (sp.to < 0 || state.cells[sp.to].inf) continue;
-    drawSpore(ctx, cxOf(sp.to), cyOf(sp.to) - S * 0.2, S * 0.085 * (1 + Math.sin(T * 5 + sp.to) * 0.08), T * 0.6, 1, 9);
+    // A pale backing keeps the moving olive dashes distinct on every chapter.
+    ctx.setLineDash([]); ctx.strokeStyle = fresh ? 'rgba(255,249,229,.8)' : 'rgba(255,249,229,.3)';
+    ctx.lineWidth = Math.max(3.5, S * 0.075); ctx.stroke();
+    ctx.setLineDash([dash, gap]);
+    // Negative offset advances dashes from the path's start toward its end.
+    ctx.lineDashOffset = reduceMotion ? 0 : -(T * 34) % (dash + gap);
+    ctx.strokeStyle = fresh ? '#536D2D' : 'rgba(91,122,33,.32)';
+    ctx.lineWidth = Math.max(1.8, S * 0.04); ctx.stroke();
   }
   ctx.restore();
 }
@@ -571,12 +618,12 @@ function drawCupcake(i, v, sc) {
   const { sx, sy } = cupcakePose(v);
   ctx.save(); ctx.fillStyle = 'rgba(60, 40, 40, 0.18)';
   ctx.beginPath(); ctx.ellipse(x0, by - S * 0.04, S * 0.33, S * 0.09, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
-  let freshKey = v.t === 'b' ? (v.lid > 0 ? 'butter' : 'butter_open') : TYPES[v.t].key;
-  if (v.pend && !zombie) {
-    if (IMG['pending_' + freshKey]) freshKey = 'pending_' + freshKey;
-  }
+  const freshKey = freshSpriteKey(v);
   if (!zombie) {
-    drawSpriteAt(ctx, freshKey, x0, by, sc, 0, sx, sy);
+    const react = v.reactAt >= 0 && selected === i && v.infAt < 0 &&
+      !(v.bumpAt >= 0 && now - v.bumpAt < 420) &&
+      drawCupcakeReaction(ctx, freshKey, x0, by, sc, sx, sy, now - v.reactAt, reduceMotion);
+    if (!react) drawSpriteAt(ctx, freshKey, x0, by, sc, 0, sx, sy);
     // The tint shares the exact same pose; rotating a second copy made two
     // outlines shimmer against each other during the infection fade.
     if (v.infAt >= 0 && TINT[freshKey]) { const p = Math.min(1, (now - v.infAt) / 230); drawSpriteAt(ctx, freshKey, x0, by, sc, 0, sx, sy, false, p, TINT[freshKey]); }

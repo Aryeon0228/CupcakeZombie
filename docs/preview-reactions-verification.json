@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-20T06:35:50.377458+00:00",
+  "scope": "First-spread target outlines, directional dashes without preview spore badges; one-flavor reaction prototype",
+  "automated": {
+    "preview_vs_real_first_wave": 4003,
+    "stages": 200,
+    "solution_turns_through_input": 394,
+    "pointer_checks": 14,
+    "reaction_settles_ms": 460,
+    "reduced_motion_still": true,
+    "source_state_unmodified": true
+  },
+  "browser": {
+    "game_widths_css_px": [
+      320,
+      390
+    ],
+    "dense_stage_200_preview": true,
+    "stage_61_three_star_clear": true,
+    "muffin_click_reaction": true,
+    "rig_scrubber_and_frozen_pose": true
+  },
+  "limits": [
+    "Shared animation rig currently calibrated only for basic chocolate muffin.",
+    "Other flavor shoulder and eye anchors still need individual calibration.",
+    "iOS hardware not tested.",
+    "Preview shows the first immediate outward spread, not all subsequent chains or end-of-turn events."
+  ],
+  "artwork": "Existing PNG files unchanged; runtime masks separate original arm and eye pixels."
+}
