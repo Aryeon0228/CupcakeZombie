@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-20",
+  "issue": "Approved title logo existed in logo/ but the title still used generated text and a zombieB thumbnail.",
+  "fix": "Embed original PNG during build; remove old thumbnail assignment and CSS panel; retain localized accessible heading and tagline.",
+  "logo": {
+    "path": "logo/cupcake-zombie-logo.png",
+    "sha256": "bfbcf52d4dc628ee1fd0b9cd1185267764d46a3102df9128a4ca63e75cfaf912",
+    "dimensions": [
+      1000,
+      620
+    ],
+    "unchanged": true
+  },
+  "verification": {
+    "embeddedBytes": "Match approved PNG exactly",
+    "scripts": "All inline scripts parse",
+    "saveKey": "cupcake-zombie-v3 unchanged",
+    "viewports": [
+      {
+        "viewport": [
+          390,
+          844
+        ],
+        "renderedLogo": [
+          350,
+          217
+        ],
+        "loaded": true,
+        "buttonsVisible": true
+      },
+      {
+        "viewport": [
+          320,
+          568
+        ],
+        "renderedLogo": [
+          250,
+          155
+        ],
+        "loaded": true,
+        "buttonsVisible": true
+      }
+    ],
+    "progress": "Existing 3 stars and Continue stage 2 visible."
+  },
+  "build": {
+    "bytes": 7451778,
+    "characters": 7432954,
+    "sha256": "50ce8a7aca9cc51a24878ccfc3442cbdf3795611f1b6ffcb240106b9d101ed48",
+    "gitBlob": "72b067a93e6ecac7394ad21d4ece0a84dcddec17"
+  }
+}

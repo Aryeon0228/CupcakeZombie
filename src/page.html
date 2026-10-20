@@ -75,16 +75,11 @@ button { font: inherit; color: inherit; touch-action: manipulation; }
 
 /* ---- title ---- */
 .title-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 22px; padding: 24px 20px calc(20px + var(--sab)); }
-.logo-big { position: relative; align-self: center; width: min(330px, 92%); text-align: center;
-  background: var(--paper); border: 2.5px solid var(--ink); border-radius: 26px 20px 28px 18px; box-shadow: 4px 6px 0 var(--ink);
-  padding: 18px 18px 14px; transform: rotate(-1.5deg); }
-.logo-big::before { content: ''; position: absolute; left: 50%; top: -15px; width: 46px; height: 18px; transform: translateX(-50%) rotate(2deg);
-  background: rgba(240, 200, 120, .75); border: 1.5px solid rgba(74, 46, 39, .35); border-radius: 3px; }
-.logo-big img { position: absolute; right: -22px; top: -30px; width: 70px; height: auto; transform: rotate(12deg); animation: peek 3.4s ease-in-out infinite; transform-origin: 50% 100%; }
-.logo-big h1 { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 50px; line-height: 1.02; letter-spacing: .01em; color: var(--ink); }
-.logo-big h1 .z { color: var(--mold-deep); display: inline-block; transform: translateY(3px) rotate(3deg); }
-.logo-big p { margin: 8px 0 0; color: var(--ink-soft); font-size: 13.5px; text-wrap: balance; }
-@keyframes peek { 0%, 100% { transform: rotate(12deg); } 50% { transform: rotate(4deg) translateY(-3px); } }
+.logo-big { position: relative; align-self: center; flex: none; width: min(360px, 100%); text-align: center; }
+.logo-big img { display: block; width: 100%; height: auto; }
+/* The approved artwork contains the title; retain the localized heading for screen readers. */
+.logo-big h1 { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.logo-big p { max-width: 310px; margin: 6px auto 0; padding: 6px 10px; border-radius: 10px; background: rgba(255,249,242,.82); color: var(--ink-soft); font-size: 13.5px; text-wrap: balance; }
 /* chase: fresh cupcakes run, zombies lurch after them */
 .chase { position: relative; height: 96px; margin: 0 -20px; overflow: hidden; }
 .chase::after { content: ''; position: absolute; left: 0; right: 0; bottom: 6px; height: 10px; border-radius: 50%; background: radial-gradient(closest-side, rgba(74, 46, 39, .18), transparent); }
@@ -142,7 +137,7 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 .screen { z-index: 1; }
 #app { overflow: hidden; }
 #app.has-bg { background: #E3D6C2; }
-#app.has-bg .title-wrap { padding-top: max(26%, 120px); justify-content: flex-start; gap: 18px; }
+#app.has-bg .title-wrap { padding-top: clamp(44px, 9dvh, 80px); justify-content: flex-start; gap: 18px; }
 #app.has-bg .chapter { box-shadow: 3px 4px 0 var(--ink); }
 #app.has-bg #scr-map > .bar { background: rgba(255, 249, 242, 0.6); border-radius: 14px; backdrop-filter: blur(3px); }
 #scr-play > .bar, #scr-play > .board-wrap, #scr-play > .hintline, #scr-play > .hud { position: relative; z-index: 1; }
@@ -257,7 +252,18 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 @keyframes popin { from { transform: scale(.85); opacity: 0 } }
 @keyframes starpop { from { transform: scale(0) rotate(-40deg); } }
 @media (prefers-reduced-motion: reduce) { .overlay, .card, .bigstars span.on, .chase-track, .runner, .runner::after, .logo-big img, .bang, .pips .mold { animation: none; } .chase-track { transform: translateX(10%); } .btn, .sheet, .sheet-card { transition: none; } }
-@media (max-height: 700px) { .hintline { font-size: 12px; } .logo-big h1 { font-size: 40px; } .chase { height: 80px; } #app.has-bg .title-wrap { padding-top: 90px; } }
+@media (max-height: 700px) {
+  .hintline { font-size: 12px; }
+  .logo-big { width: min(260px, 100%); }
+  .logo-big p { font-size: 12px; }
+  .chase { height: 56px; flex: none; }
+  #app.has-bg .title-wrap { padding-top: 28px; gap: 12px; }
+}
+@media (max-height: 600px) {
+  .logo-big { width: min(250px, 100%); }
+  .chase { height: 48px; }
+  #app.has-bg .title-wrap { padding-top: 16px; gap: 10px; }
+}
 /*COLLECTION_CSS*/
 </style>
 
@@ -266,8 +272,8 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
   <section class="screen on" id="scr-title">
     <div class="title-wrap">
       <div class="logo-big">
-        <img id="logoImg" alt="">
         <h1 data-i18n="title.h1">컵케익 <span class="z">좀비</span></h1>
+        <img id="logoImg" src="/*TITLE_LOGO*/" width="1000" height="620" alt="" aria-hidden="true">
         <p data-i18n="title.tagline">내가 곰팡이가 되어 진열대를 상하게 만드는 퍼즐</p>
       </div>
       <div class="chase" id="chase" aria-hidden="true"><div class="chase-track" id="chaseTrack"></div></div>

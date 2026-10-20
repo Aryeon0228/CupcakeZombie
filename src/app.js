@@ -635,7 +635,6 @@ async function boot(data) {
   installCupcakeRigs();
   if (META.basic) UNIT = META.basic.w;
   buildTints();
-  $('logoImg').src = ASSETS.zombieB;
   renderShelf();
   drawBg();
   requestAnimationFrame(t => { now = t; requestAnimationFrame(frame); });

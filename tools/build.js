@@ -8,6 +8,7 @@ const rd = f => fs.readFileSync(path.join(root, 'src', f), 'utf8');
 const { LEVELS, CHAPTERS, DAILY } = require(path.join(root, 'src/levels.js'));
 let page = rd('page.html');
 const put = (k, v) => { page = page.replace(k, () => v); };
+put('/*TITLE_LOGO*/', 'data:image/png;base64,' + fs.readFileSync(path.join(root, 'logo/cupcake-zombie-logo.png')).toString('base64'));
 put('/*ASSETS*/null', JSON.stringify(assets));
 const scaleFile = path.join(root, 'assets/scale.json');
 put('/*SPRITE_K*/null', fs.existsSync(scaleFile) ? fs.readFileSync(scaleFile, 'utf8') : '{}');
