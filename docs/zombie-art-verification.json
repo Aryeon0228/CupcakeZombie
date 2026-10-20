@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-20",
+  "installed": 11,
+  "originalsPreserved": 7,
+  "assetManifest": "assets_extended/zombie-white-eyes-v1/manifest.json",
+  "checks": {
+    "approvedRuntimeSha256": "11/11 match",
+    "rgbaCanvas": "11/11 transparent 256x360",
+    "scale": "11/11 at 0.5",
+    "originalSha256": "7/7 unchanged",
+    "motion": "tools/test-cupcake-motion.cjs passed, including dedicated-facing and generic-fallback checks",
+    "collection": "tools/test-collection.cjs passed",
+    "browser": [
+      {
+        "viewport": [
+          390,
+          844
+        ],
+        "stage": 61,
+        "observed": "Clear completed with fresh basic and blueberry becoming flavor-specific white-eye zombies at the same foot points."
+      },
+      {
+        "viewport": [
+          390,
+          844
+        ],
+        "stage": 17,
+        "observed": "First hit removes butter lid; second hit infects and clears all 18 cupcakes. Butter reward card flips to the approved white-eye zombie with readable BUTTER lettering."
+      }
+    ]
+  },
+  "unchanged": [
+    "src/logic.js",
+    "src/levels.js",
+    "pending_lemon_yogurt.png",
+    "mint_choco.png",
+    "fresh artwork"
+  ],
+  "build": {
+    "bytes": 6872115,
+    "sha256": "2b1d51d69d8db8c16dc7e7e756e63daa8b806f2c980e10f079fb5b03a01e28b8",
+    "gitBlob": "b2d99f048f28fa6f257cb880468f6c4d30b43659"
+  }
+}

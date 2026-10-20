@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-20",
+  "scope": "Artist-supplied layered butter, closed lid; reaction lab with combined body, arm and eye motion",
+  "assets": {
+    "source_zip": "assets.zip",
+    "count": 4,
+    "dimensions": [
+      115,
+      146
+    ],
+    "all_rgba": true,
+    "original_png_hashes": "assets/rigs/butter/manifest.json",
+    "source_pngs_unmodified": true
+  },
+  "motion": {
+    "reaction_ms": 460,
+    "body_response_ms": 300,
+    "fixed_foot_anchor": true,
+    "normal_and_start_screenshot_pixels_equal": true,
+    "resting_eye_kept_in_body": true,
+    "larger_eye_uses_aligned_translucent_overlay": true
+  },
+  "checks": {
+    "real_first_wave_previews": 4003,
+    "solution_stages": 200,
+    "solution_turns": 394,
+    "input_checks": 14,
+    "motion_regression": "passed",
+    "lab_widths_css_px": [
+      320,
+      390
+    ],
+    "lab_scrub_and_slow_play": true,
+    "lab_flavor_switch_and_part_toggles": true,
+    "game_stage_16_selection_and_lid_pop": true
+  },
+  "limitations": [
+    "Open-lid butter still uses its existing sprite and body reaction.",
+    "Other unrigged flavors are unchanged.",
+    "Reduced-motion animation math verified; no iOS hardware test.",
+    "Browser instrumentation logged a MutationObserver observe-argument error also seen before this change; game UI remained usable."
+  ]
+}

@@ -632,6 +632,7 @@ async function boot(data) {
   LANG = LANGS.includes(save.lang) ? save.lang : detectLang();
   applyLang();
   await loadImages();
+  installCupcakeRigs();
   if (META.basic) UNIT = META.basic.w;
   buildTints();
   $('logoImg').src = ASSETS.zombieB;

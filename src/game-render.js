@@ -565,12 +565,17 @@ function freshSpriteKey(v) {
   if (v.pend && IMG['pending_' + key]) key = 'pending_' + key;
   return key;
 }
+function zombieFlip(v) {
+  // Flavor artwork keeps its authored facing (and readable BUTTER lettering).
+  // Only the original generic zombies still use their randomized facing.
+  return !IMG['zombie_' + TYPES[v.t].key] && !!v.flip;
+}
 function drawPreviewOutline(i, v, sc) {
   const zombie = isZombieShown(v);
   const key = zombie ? zombieKey(v) : freshSpriteKey(v), m = META[key], outline = previewOutlineArt(key);
   if (!outline || !m) return;
   const pose = cupcakePose(v);
-  ctx.save(); ctx.translate(cxOf(i), baseY(i)); ctx.scale(sc * (m.k || 1) * pose.sx * (zombie && v.flip ? -1 : 1), sc * (m.k || 1) * pose.sy);
+  ctx.save(); ctx.translate(cxOf(i), baseY(i)); ctx.scale(sc * (m.k || 1) * pose.sx * (zombie && zombieFlip(v) ? -1 : 1), sc * (m.k || 1) * pose.sy);
   ctx.drawImage(outline.art, -m.ax - outline.pad, -m.ay - outline.pad); ctx.restore();
 }
 function drawPreview(i, T, preview = previewOf(state, i)) {
@@ -606,6 +611,19 @@ function drawPreview(i, T, preview = previewOf(state, i)) {
 // pointer entries get one bounded response, with no repeating idle animation.
 function cupcakePose(v, time = now, reduced = reduceMotion) {
   if (reduced) return { sx: 1, sy: 1 };
+  // A fresh sprite finishes its infection fade at 230 ms. Give the newly
+  // revealed zombie its own single squash/stretch instead of inheriting only
+  // the tiny tail of the original hit. Deriving this from infAt avoids queued
+  // callbacks replaying after undo/restart or extending when a frame is late.
+  const revealAge = v.infAt >= 0 ? time - v.infAt - 230 : -1;
+  const laterHit = v.bumpAt > v.infAt + 230 && time >= v.bumpAt && time - v.bumpAt < 420;
+  if (revealAge >= 0 && revealAge < 380 && !laterHit) {
+    const q = revealAge / 380;
+    const k = q < 0.28
+      ? 0.10 * Math.sin(q / 0.28 * Math.PI) ** 2
+      : -0.12 * Math.sin((q - 0.28) / 0.72 * Math.PI) ** 2;
+    return { sx: 1 + k * 0.55, sy: 1 - k };
+  }
   const p = (time - v.bumpAt) / 420;
   let k = v.bumpAt >= 0 && p >= 0 && p < 1
     ? Math.min(0.12, v.bumpAmp) * Math.sin(p * Math.PI * 2) * (1 - p) ** 2
@@ -631,7 +649,7 @@ function drawCupcake(i, v, sc) {
     // The tint shares the exact same pose; rotating a second copy made two
     // outlines shimmer against each other during the infection fade.
     if (v.infAt >= 0 && TINT[freshKey]) { const p = Math.min(1, (now - v.infAt) / 230); drawSpriteAt(ctx, freshKey, x0, by, sc, 0, sx, sy, false, p, TINT[freshKey]); }
-  } else drawSpriteAt(ctx, zombieKey(v), x0, by, sc, 0, sx, sy, v.flip);
+  } else drawSpriteAt(ctx, zombieKey(v), x0, by, sc, 0, sx, sy, zombieFlip(v));
   if (v.wrap) { const fl = v.flashAt >= 0 ? Math.max(0, 1 - (now - v.flashAt) / 500) : 0; drawWrap(ctx, x0, by + 2, S * 0.86, 1, fl); }
 }
 

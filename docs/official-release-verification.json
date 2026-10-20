@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-20",
+  "destination": "https://studio-penumbra.com/cupcake-zombie/",
+  "sourceMain": "6401bc71e958c8232e9889279602e2376ed5d356",
+  "sourceAstra": "6b265ac4dae09e4c608a31c082ae2b8be2a57134",
+  "mergeBase": "4476117766f5a1ec4aecb21c6195f8f3331502d6",
+  "preserved": {
+    "logo": "All 5 existing logo files byte-identical; current title layout retained.",
+    "freshArt": "Claude-compressed blueberry and cinnamon roll PNGs byte-identical.",
+    "sound": "Claude immediate mute implementation retained.",
+    "progress": "Same cupcake-zombie-v3 key and existing save schema; separate review key not used.",
+    "rules": "200 stages and 120 daily puzzles unchanged."
+  },
+  "integrated": [
+    "Artist butter eye and arm rig",
+    "Single zombie reveal bounce",
+    "Approved thicker mold outline",
+    "Result sheet close control and wide actions",
+    "11 approved white-eye zombie sprites in game and cards"
+  ],
+  "validation": {
+    "motion": "passed",
+    "collection": "passed",
+    "input": "14 checks; all 200 solutions, 394 turns",
+    "preview": "4003 first-hop previews",
+    "embeddedArt": "11/11 approved SHA-256 hashes match",
+    "browser": "390x844 ordinary game: stage 1 clears with new zombies, earns card; reload shows Continue 2 and 3/600 stars.",
+    "publicWrapper": "No stage jump selector / review iframe"
+  },
+  "build": {
+    "bytes": 6514271,
+    "characters": 6495447,
+    "sha256": "30b6c15184eef1ab8712a15e1ac083b3680f573b2b8aeeb451429a80b8ac184b",
+    "gitBlob": "4051066c1f9fafc1013420165dc6258cbecb69fd"
+  }
+}

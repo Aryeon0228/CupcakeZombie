@@ -1,0 +1,74 @@
+{
+  "canvas": [
+    115,
+    146
+  ],
+  "source": "User-provided assets.zip, 2026-10-20",
+  "original_pngs_unchanged": true,
+  "files": {
+    "butter_eyes.png": {
+      "sha256": "1542b18689bb9d510b23a789f1301333a9211391baafa4989338ea3dba7b8e3d",
+      "size": [
+        115,
+        146
+      ]
+    },
+    "butter.png": {
+      "sha256": "5d5dfa4ebe9c0a31bf9fc20161181b41be3be6e0f68376d1b355dfb51c21aa46",
+      "size": [
+        115,
+        146
+      ]
+    },
+    "butter_Lhand.png": {
+      "sha256": "812d9350a0067a6f150401cea1b58f1bc08de8c7879731a618d49a8062be72e3",
+      "size": [
+        115,
+        146
+      ]
+    },
+    "butter_Rhand.png": {
+      "sha256": "cb3a1afafcdcfb93cd9225aff847b0ffa6305b500b3794e6929d1bf2ca80ced8",
+      "size": [
+        115,
+        146
+      ]
+    }
+  },
+  "body": "butter.png",
+  "body_retains_resting_eye": true,
+  "arms": [
+    {
+      "file": "butter_Rhand.png",
+      "screen_side": "left",
+      "pivot": [
+        12,
+        103
+      ]
+    },
+    {
+      "file": "butter_Lhand.png",
+      "screen_side": "right",
+      "pivot": [
+        100,
+        102
+      ]
+    }
+  ],
+  "surprised_eye": {
+    "file": "butter_eyes.png",
+    "crop": [
+      25,
+      56,
+      11,
+      15
+    ],
+    "draw_center": [
+      28,
+      64
+    ],
+    "behavior": "Fade the larger supplied eye over the aligned resting pupil; never draw a second pupil beside it."
+  },
+  "scope": "Closed-lid butter only. Open-lid butter and other flavors keep their existing art/motion.",
+  "authoring_next_time": "Keep the same transparent canvas for all layers. For replaceable or blinking eyes, remove the resting eye from the body and fill it with sponge color."
+}

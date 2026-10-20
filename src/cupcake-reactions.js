@@ -1,7 +1,5 @@
-// Runtime paper-cut rig. The PNG stays untouched; the existing hand-drawn
-// pixels are separated into a body, two shoulder-pivoted arms and two eyes.
-// Start with the original muffin. Other flavors need their own shoulder/eye
-// anchors before they can share this rig and its motion.
+// Paper-cut rigs share motion but keep each flavor's own artwork and anchors.
+// The muffin uses runtime cutouts. Butter uses the artist's untouched layers.
 const CUPCAKE_RIG_PROFILES = {
   basic: {
     size: [115, 118],
@@ -10,6 +8,18 @@ const CUPCAKE_RIG_PROFILES = {
       { pivot: [102, 75], side: -1, cut: [[103, 71], [99.5, 78], [96, 89], [115, 89], [115, 71]] }
     ],
     eyes: [{ x: 31, y: 30, rx: 6, ry: 8 }, { x: 79, y: 33, rx: 6, ry: 8 }]
+  },
+  butter: {
+    size: [115, 146],
+    body: 'rig_butter_body',
+    arms: [
+      { source: 'rig_butter_Rhand', pivot: [12, 103], side: 1 },
+      { source: 'rig_butter_Lhand', pivot: [100, 102], side: -1 }
+    ],
+    // Fade the supplied larger eye over the body's existing resting pupil.
+    // R/L filenames are the character's sides, not the viewer's sides.
+    eyes: [{ source: 'rig_butter_eyes', crop: [25, 56, 11, 15],
+      x: 28, y: 64, rx: 5.5, ry: 7.5, overlay: true }]
   }
 };
 const CUPCAKE_RIG_CACHE = {};
@@ -23,6 +33,21 @@ function prepareCupcakeRig(key) {
   if (CUPCAKE_RIG_CACHE[key]) return CUPCAKE_RIG_CACHE[key];
   const profile = CUPCAKE_RIG_PROFILES[key], im = IMG[key];
   if (!profile || !im || im.width !== profile.size[0] || im.height !== profile.size[1]) return null;
+  if (profile.body) {
+    const keys = [profile.body, ...profile.arms.map(a => a.source), ...profile.eyes.map(e => e.source)];
+    if (keys.some(k => !IMG[k] || IMG[k].width !== im.width || IMG[k].height !== im.height)) return null;
+    const body = IMG[profile.body];
+    const arms = profile.arms.map(a => ({ ...a, art: IMG[a.source] }));
+    const eyes = profile.eyes.map(eye => {
+      const art = rigCanvas(eye.crop[2], eye.crop[3]);
+      art.getContext('2d').drawImage(IMG[eye.source], ...eye.crop, 0, 0, art.width, art.height);
+      return { ...eye, art };
+    });
+    const rest = rigCanvas(im.width, im.height), g = rest.getContext('2d');
+    arms.forEach(a => g.drawImage(a.art, 0, 0));
+    g.drawImage(body, 0, 0);
+    return CUPCAKE_RIG_CACHE[key] = { body, arms, eyes, rest };
+  }
   const body = rigCanvas(im.width, im.height), b = body.getContext('2d');
   b.drawImage(im, 0, 0);
   const arms = profile.arms.map(a => {
@@ -43,7 +68,16 @@ function prepareCupcakeRig(key) {
     g.putImageData(pixels, 0, 0);
     return { ...eye, art };
   });
-  return CUPCAKE_RIG_CACHE[key] = { body, arms, eyes };
+  return CUPCAKE_RIG_CACHE[key] = { body, arms, eyes, rest: im };
+}
+function installCupcakeRigs() {
+  for (const [key, profile] of Object.entries(CUPCAKE_RIG_PROFILES)) {
+    if (!profile.body) continue;
+    const rig = prepareCupcakeRig(key);
+    // Share the resting composite with tints/outlines. Retain the original foot
+    // metadata so switching between normal and rig drawing never shifts it.
+    if (rig) IMG[key] = rig.rest;
+  }
 }
 function cupcakeReactionPose(age, reduced = false) {
   if (reduced || age < 0 || age >= 460) return { active: false, arms: 0, eyes: 1 };
@@ -59,17 +93,27 @@ function cupcakeReactionPose(age, reduced = false) {
 function drawCupcakeReaction(g, key, x, by, sc, sx, sy, age, reduced = false) {
   const pose = cupcakeReactionPose(age, reduced);
   if (!pose.active) return false;
+  return drawCupcakeRig(g, key, x, by, sc, sx, sy, pose);
+}
+function drawCupcakeRig(g, key, x, by, sc, sx, sy, pose) {
   const rig = prepareCupcakeRig(key), m = META[key];
   if (!rig || !m) return false;
   g.save(); g.translate(x, by); g.scale(sc * (m.k || 1) * sx, sc * (m.k || 1) * sy);
   g.translate(-m.ax, -m.ay);
+  if (pose.arms === 0 && pose.eyes === 1) {
+    g.drawImage(rig.rest, 0, 0); g.restore(); return true;
+  }
   for (const arm of rig.arms) {
     g.save(); g.translate(...arm.pivot); g.rotate(arm.side * pose.arms);
     g.drawImage(arm.art, -arm.pivot[0], -arm.pivot[1]); g.restore();
   }
   g.drawImage(rig.body, 0, 0);
   for (const eye of rig.eyes) {
-    g.save(); g.translate(eye.x, eye.y); g.scale(pose.eyes, 1 + (pose.eyes - 1) * 0.55);
+    g.save(); g.translate(eye.x, eye.y);
+    if (eye.overlay) {
+      g.globalAlpha *= Math.max(0, Math.min(1, (pose.eyes - 1) / 0.42));
+      g.scale(1 + (pose.eyes - 1) * 0.25, 1 + (pose.eyes - 1) * 0.25);
+    } else g.scale(pose.eyes, 1 + (pose.eyes - 1) * 0.55);
     g.drawImage(eye.art, -eye.rx, -eye.ry); g.restore();
   }
   g.restore();

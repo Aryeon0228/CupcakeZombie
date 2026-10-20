@@ -1,0 +1,172 @@
+{
+  "version": 1,
+  "date": "2026-10-20",
+  "eyeDirection": "Opaque warm-white empty centers, brown flattened oval contours, no pupils.",
+  "canvas": [
+    256,
+    360
+  ],
+  "footEdge": [
+    128,
+    340
+  ],
+  "displayScale": 0.5,
+  "installed": {
+    "zombie_basic": {
+      "file": "assets/zombie_basic.png",
+      "sha256": "68a2f4cab4f5929c84785c29ac12aa9fd84ccd7955ad91ed00683bbcfcb077e2",
+      "visibleBox": {
+        "left": 17,
+        "top": 127,
+        "width": 222,
+        "height": 213
+      }
+    },
+    "zombie_berry": {
+      "file": "assets/zombie_berry.png",
+      "sha256": "851560564bb11e7658fd240a0912d3dd746d548ba0756b94c8387dcde4f93753",
+      "visibleBox": {
+        "left": 17,
+        "top": 59,
+        "width": 222,
+        "height": 281
+      }
+    },
+    "zombie_sprinkle": {
+      "file": "assets/zombie_sprinkle.png",
+      "sha256": "db2d334f3675476cba6c8c90024ee94bd47c09c5a2c1119f691226a0ade9bac6",
+      "visibleBox": {
+        "left": 19,
+        "top": 49,
+        "width": 218,
+        "height": 291
+      }
+    },
+    "zombie_cherry": {
+      "file": "assets/zombie_cherry.png",
+      "sha256": "a0330662af3367c23ddbed3976fa1cff5575fd90ca768814fe51e0e366158bb2",
+      "visibleBox": {
+        "left": 18,
+        "top": 8,
+        "width": 220,
+        "height": 332
+      }
+    },
+    "zombie_cream": {
+      "file": "assets/zombie_cream.png",
+      "sha256": "8379a80e8c2a0c34b7d0c4eb6570cb1f49acaf9ab9d2e0d158d6c1bc2f01c64b",
+      "visibleBox": {
+        "left": 17,
+        "top": 52,
+        "width": 222,
+        "height": 288
+      }
+    },
+    "zombie_butter": {
+      "file": "assets/zombie_butter.png",
+      "sha256": "c705ad935375663edebe39b6fe1f8091a73f0120e266ca945c7ff519ce2b0a63",
+      "visibleBox": {
+        "left": 17,
+        "top": 102,
+        "width": 222,
+        "height": 238
+      }
+    },
+    "zombie_earl_grey": {
+      "file": "assets/zombie_earl_grey.png",
+      "sha256": "53dbc5081d7901e356bd1fbcdb186b6ed68f00b618e705c025df3a12413247e0",
+      "visibleBox": {
+        "left": 13,
+        "top": 25,
+        "width": 231,
+        "height": 315
+      }
+    },
+    "zombie_lemon_yogurt": {
+      "file": "assets/zombie_lemon_yogurt.png",
+      "sha256": "c9594ceb26acdb26e95e581a64bbe24fd4ad9925c5a118d719031b10b68c6ded",
+      "visibleBox": {
+        "left": 15,
+        "top": 8,
+        "width": 226,
+        "height": 332
+      }
+    },
+    "zombie_espresso": {
+      "file": "assets/zombie_espresso.png",
+      "sha256": "7b96c2aa7b2150d6693ee4164aeac8ee4b8aa285768292042f3ecc02c2fa1fe1",
+      "visibleBox": {
+        "left": 13,
+        "top": 18,
+        "width": 231,
+        "height": 322
+      }
+    },
+    "zombie_blueberry": {
+      "file": "assets/zombie_blueberry.png",
+      "sha256": "1469bdd2893423a39b828b8973dafd448c2fd32a22d0587ca1ac0e3bccff8ec8",
+      "visibleBox": {
+        "left": 13,
+        "top": 31,
+        "width": 230,
+        "height": 309
+      }
+    },
+    "zombie_cinnamon_roll": {
+      "file": "assets/zombie_cinnamon_roll.png",
+      "sha256": "7b4ba5d2eec42cf1dee138116a72513c12809d0015e2014866dd492e5227af4e",
+      "visibleBox": {
+        "left": 13,
+        "top": 53,
+        "width": 230,
+        "height": 287
+      }
+    }
+  },
+  "originals": [
+    {
+      "file": "originals/zombieA.png",
+      "sha256": "d3c4c29771209f9296b6e82e23fa7eb651026e6c30ca63e2dbd6e24fc4caa9b9",
+      "originalUnchanged": true
+    },
+    {
+      "file": "originals/zombieB.png",
+      "sha256": "a1ed403fff34f8bab6df5bfae358d91b9b9e80e257f2d90a57d79e7b9287de50",
+      "originalUnchanged": true
+    },
+    {
+      "file": "originals/zombie_blueberry.png",
+      "sha256": "8572eeeec8cab00ebb35a2d8a297d6fc295508ae8501fac79e9633857388f66a",
+      "originalUnchanged": true
+    },
+    {
+      "file": "originals/zombie_cinnamon_roll.png",
+      "sha256": "f5cb3c92e0d43844e374fd4551006edc2a4a024d66cb385802ace2ba4ad55d6b",
+      "originalUnchanged": true
+    },
+    {
+      "file": "originals/zombie_earl_grey.png",
+      "sha256": "bab5bbffd3c744da2d76b9b94693c27d2e2e1528936ea0c720c309e483210f28",
+      "originalUnchanged": true
+    },
+    {
+      "file": "originals/zombie_espresso.png",
+      "sha256": "026c020c5a3bbf136f603d58e7d332b3acdcb23d0c98e070da468ba2f35794bd",
+      "originalUnchanged": true
+    },
+    {
+      "file": "originals/zombie_lemon_yogurt.png",
+      "sha256": "591959b383faed6cb0eb7c915da91eff88ec41381f34722d0c29b05d0a4bf54c",
+      "originalUnchanged": true
+    }
+  ],
+  "preserved": [
+    "mint_choco wall rules",
+    "pending_lemon_yogurt",
+    "fresh sprites",
+    "zombieA and zombieB fallback",
+    "200 stages and 120 daily puzzles"
+  ],
+  "conceptOnly": "matcha",
+  "approvedSourcePack": "outputs/CupcakeZombie-zombie-white-eyes-v1.zip"
+}

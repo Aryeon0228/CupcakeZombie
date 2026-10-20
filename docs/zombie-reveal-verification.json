@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-20",
+  "change": "One fixed-foot squash/stretch after the zombie sprite is revealed",
+  "timing_ms_from_infection": {
+    "fresh_tint_end_and_zombie_reveal": 230,
+    "reveal_bounce_duration": 380,
+    "settled": 610
+  },
+  "checks": {
+    "motion": "Passed: idle is stationary; revealed zombie squeezes and stretches once; foot anchor remains fixed; later hits take priority; reduced motion stays unscaled; infection tint remains aligned",
+    "input": "Passed: 14 interaction checks and all 200 stage solutions / 394 turns",
+    "preview": "Passed: 4003 immediate propagation previews; existing 460ms arm/eye reaction unchanged",
+    "browser": "390x844 preview: stage 61 selected then fired through normal pointer input; fresh tint, blueberry reveal, adjacent muffin reveals and three-star completion observed",
+    "lab": "Shared production pose; normal / slow playback and scrub controls for 0-610ms; a separate demonstration of selection reactions is preserved"
+  },
+  "scope": "Visual pose only. No rule, spore count, solution, sprite-art or propagation timing changes.",
+  "limitations": ["No physical iOS-device test"]
+}

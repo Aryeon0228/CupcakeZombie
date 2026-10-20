@@ -1,0 +1,11 @@
+Tool: built-in image_gen
+Use: selected second pass
+Edit target: assets/mold_player.png
+
+Use case: precise-object-edit. Edit the attached transparent game sprite with very high fidelity.
+This is a SMALL line-weight retouch of the existing mold character, NOT a new illustration.
+Preserve the original pale sage colored-pencil coloring, soft scribbly texture, precise body proportions and silhouette, three spore antennae, round antenna tips, two tiny brown oval eyes, tiny w-shaped smile, rosy cheeks, shading and dapple patterns. Keep the same composition and transparent background.
+
+Only reinforce the original fine warm-brown contour very subtly, approximately 20% heavier than the attached original. It must still look like a delicately pencilled thin edge, NOT a thick chocolate-colored border. At a 1280px output canvas, the body contour should usually be only about 12–18px thick; antenna sides should be finer still, about 6–9px. Preserve fine fuzzy edge tufts and delicate antennae. Keep the brown muted and softly textured rather than making it darker or more saturated. Do not thicken the face.
+Avoid a wide uniform brown band, sticker borders, bold cartoon ink, broad dark outlines, glows, shadows, new objects, pose changes, or lettering.
+Single isolated character only. Genuinely transparent PNG alpha background with transparent gaps between the three antenna stalks; no fake checkerboard. Entire character visible, near-square canvas, small clear margin on every side.
