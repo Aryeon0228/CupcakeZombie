@@ -415,7 +415,14 @@ function drawIntroArt(c, kind) {
 
 // ---------- HUD ----------
 function renderHUD() {
-  $('pips').innerHTML = (ASSETS.mold_player ? `<img class="mold" id="moldImg" src="${ASSETS.mold_player}" alt="">` : '') + Array.from({ length: Math.max(def.spores, state.spores) }, (_, i) => sporeSVG(i >= state.spores)).join('');
+  const mold = $('moldImg');
+  if (ASSETS.mold_player && !mold.hasAttribute('src')) mold.src = ASSETS.mold_player;
+  mold.hidden = !ASSETS.mold_player;
+  // Keep the live region stable: announce a change in stock, not each HUD refresh.
+  for (const [id, text] of [['sporeLabel', t('hud.spores')], ['sporeCount', String(state.spores)], ['sporeUnit', t('hud.sporeUnit')]]) {
+    if ($(id).textContent !== text) $(id).textContent = text;
+  }
+  $('pips').classList.toggle('empty', state.spores === 0);
   const pending = state.customers.filter(c => !c.done && c.turn > state.turn);
   $('custInfo').textContent = pending.length ? t('hud.customers', { n: pending.length, s: plural(pending.length) }) : '';
   const st = currentStars();
@@ -491,7 +498,7 @@ function updateHint() {
   else if (busy) el.innerHTML = sents(t('hint.busy'));
   else if (result) el.innerHTML = '';
   else if (hintCell >= 0) el.innerHTML = sents(t('hint.hint'));
-  else el.innerHTML = sents(t('hint.default', { n: state.spores }));
+  else el.innerHTML = sents(t('hint.default'));
 }
 
 // ---------- input ----------
