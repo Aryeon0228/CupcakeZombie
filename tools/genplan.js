@@ -20,9 +20,9 @@ if (which === 'daily') {
   for (const ch of CH) {
     if (!chapters.includes(ch.no)) continue;
     ch.stages.forEach((st, i) => {
-      if (st.hand) return;
+      if (st.hand || st.grid) return;
       const file = path.join(outDir, `${ch.no}-${i + 1}.json`);
-      if (fs.existsSync(file)) return;
+      if (fs.existsSync(file) && JSON.parse(fs.readFileSync(file, 'utf8'))) return;
       const t0 = Date.now();
       const spec = { ...st, salt: ch.no * 100 + i + 1 };
       let res = G.search(spec, spec.tries || 5000, 3);
@@ -33,3 +33,4 @@ if (which === 'daily') {
     });
   }
 }
+

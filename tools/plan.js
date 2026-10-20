@@ -104,4 +104,6 @@ const CH = [
 ];
 // daily puzzles: medium, 2 spores, everything mixed, a few winners so it feels fair
 const DAILY = { ...T.all3, spores: 2, wraps: 1, deflectors: 1, customerTurns: [1], minCells: 17, maxCells: 24, minFirst: 1, maxFirst: 4, minWaves: 7, tries: 6000 };
+CH.push(...require('./plan-extra.js').CH);
 module.exports = { CH, DAILY };
+

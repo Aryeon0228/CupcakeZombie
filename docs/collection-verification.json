@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-20",
+  "scope": "Button spring feedback and cosmetic cupcake collection; no stage or puzzle rule changes",
+  "unit": {
+    "collection": "pass: unlock, upgrade, duplicate prevention, legacy recovery, wrapped/mint flavors, all 12 flavors, persistence, artwork",
+    "buttons": "pass: release/repress, drag/cancel/outside/blur, disabled/secondary input, keyboard, reduced motion, sound throttling",
+    "board": "14 checks; 200 solutions / 394 turns passed",
+    "motion": "resting sprites fixed; pointer settles at 300ms; hit at 420ms"
+  },
+  "browser": {
+    "surface": "Codex in-app browser, isolated review save",
+    "viewports": [
+      {
+        "outer": [
+          320,
+          656
+        ],
+        "game": [
+          320,
+          568
+        ]
+      },
+      {
+        "outer": [
+          390,
+          932
+        ],
+        "game": [
+          390,
+          844
+        ]
+      }
+    ],
+    "observed": [
+      "Existing stage 1 and 4 stars backfilled 3 owned flavors",
+      "Stage 61 cleared with hint: new blueberry gold card, 2 stars",
+      "Reload preserved 4 owned flavors and blueberry gold rating",
+      "Stage 51 clear unlocked cherry and mint; mint face images identical before/after flip",
+      "Stage 61 clear without hint upgraded blueberry to aurora, 3 stars",
+      "Pointer drag did not flip; keyboard Enter flipped; Escape removed modal open state",
+      "Collection back returned to prior result",
+      "English Mint Choco long rule fits 320px card",
+      "Language switch no longer reopens stale result after leaving gameplay",
+      "Restored Korean; collection shows 6/12 flavors"
+    ],
+    "screenshots": [
+      "media/cards-gold-320.png",
+      "media/cards-aurora-390.png",
+      "media/cards-zombie-390.png",
+      "media/cards-collection-390.png"
+    ]
+  },
+  "limitations": [
+    "iOS device, haptic/audio hardware feel and native build not tested",
+    "New feature did not repeat earlier whole-browser 200-stage run; all 200 solutions replayed through Node input tests",
+    "Card finishes are cosmetic highest-clear-star mapping, not XP or currency",
+    "Flavors without custom zombie art use existing shared zombie sprite",
+    "Prior daily clears cannot backfill flavors because old save lacks puzzle identity"
+  ]
+}

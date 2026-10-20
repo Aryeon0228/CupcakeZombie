@@ -10,6 +10,8 @@ const TYPES = {
   l: { key: 'lemon_yogurt', name: '레몬요거트',  name_en: 'Lemon Yogurt',       pattern: 'plus',  style: 'hop', delay: 1 },
   e: { key: 'espresso',     name: '에스프레소',  name_en: 'Espresso',           pattern: 'plus',  style: 'hop', strong: 1 },
   n: { key: 'mint_choco',   name: '민트초코',    name_en: 'Mint Choco',         pattern: 'none',  wall: 1 },
+  u: { key: 'blueberry',    name: '블루베리',    name_en: 'Blueberry',          pattern: 'diag2', style: 'hop' },
+  r: { key: 'cinnamon_roll',name: '시나몬롤',    name_en: 'Cinnamon Roll',      pattern: 'ring2', style: 'burst' },
 };
 const DIRS4 = [[-1, 0], [1, 0], [0, -1], [0, 1]];
 const DIAG4 = [[-1, -1], [-1, 1], [1, -1], [1, 1]];
@@ -66,6 +68,15 @@ function spreadsOf(s, idx, includeMisses) {
     if (inside(r + dr, c + dc) && isWall(s, (r + dr) * W + c + dc)) { add(r + dr, c + dc, 1); return; }
     add(r + dr, c + dc, 1); add(r + 2 * dr, c + 2 * dc, 2);
   });
+  else if (t.pattern === 'diag2') DIAG4.forEach(([dr, dc]) => {
+    if (inside(r + dr, c + dc) && isWall(s, (r + dr) * W + c + dc)) { add(r + dr, c + dc); return; }
+    add(r + dr, c + dc); add(r + 2 * dr, c + 2 * dc, 2);
+  });
+  else if (t.pattern === 'ring2') DIRS4.concat(DIAG4).forEach(([dr, dc]) => {
+    // The eight rays skip the adjacent cell, but a mint wall blocks that ray.
+    if (inside(r + dr, c + dc) && isWall(s, (r + dr) * W + c + dc)) { if (includeMisses) add(r + dr, c + dc); return; }
+    add(r + 2 * dr, c + 2 * dc, 2);
+  });
   else if (t.pattern === 'lines') DIRS4.forEach(d0 => {
     let d = d0, rr = r, cc = c;
     const path = [];
@@ -96,6 +107,8 @@ function patternOffsets(p) {
   if (p === 'diag') return DIAG4;
   if (p === 'all8') return DIRS4.concat(DIAG4);
   if (p === 'plus2') return DIRS4.concat(DIRS4.map(([a, b]) => [2 * a, 2 * b]));
+  if (p === 'diag2') return DIAG4.concat(DIAG4.map(([a, b]) => [2 * a, 2 * b]));
+  if (p === 'ring2') return DIRS4.concat(DIAG4).map(([a, b]) => [2 * a, 2 * b]);
   if (p === 'lines' || p === 'scent' || p === 'none') return p;
   return [];
 }
@@ -211,3 +224,4 @@ function playTurn(s, idx) {
 function stateKey(s) { return s.turn + '|' + s.cells.map(c => c ? (c.inf ? (c.wrap ? 'S' : 'I') : (c.pend ? 'P' : '') + (c.wrap ? 'W' : '') + c.lid) : '_').join(','); }
 
 if (typeof module !== 'undefined') module.exports = { TYPES, DIRS4, DIAG4, parseLevel, cloneState, spreadsOf, targetsOf, hitCell, cascade, fire, releasePending, hasPending, playTurn, freshCount, customerCheck, canTarget, patternOffsets, stateKey };
+

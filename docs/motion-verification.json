@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-20",
+  "issue": "Cupcake outlines shimmer at rest, and hint text changes move the whole board.",
+  "sourceVideo": "화면 기록 2026-10-20 오전 7.23.13.mov",
+  "fixes": [
+    "Resting fresh, zombie, chilled and wall sprites use a fixed pose and foot anchor.",
+    "Hit response compresses and settles within 420 ms.",
+    "Infection tint shares the same transform as the original sprite.",
+    "Hint area reserves three lines; long hints can scroll.",
+    "Board flex size no longer depends on the canvas intrinsic size; unchanged bitmap sizes are not reset."
+  ],
+  "verification": {
+    "unit": "tools/test-cupcake-motion.cjs passed",
+    "idleCaptureBefore": {
+      "samples": 8,
+      "distinctImages": 8
+    },
+    "idleCaptureAfter": {
+      "samples": 8,
+      "distinctImages": 1,
+      "hash": 2067814003
+    },
+    "hintBefore": {
+      "defaultY": 99.890625,
+      "selectedY": 108.1875,
+      "defaultHeight": 46.59375,
+      "selectedHeight": 30
+    },
+    "hintAfter": {
+      "defaultY": 92,
+      "selectedY": 92,
+      "defaultHeight": 62.390625,
+      "selectedHeight": 62.390625
+    },
+    "mobile": [
+      {
+        "width": 320,
+        "gameHeight": 568,
+        "board": [
+          273,
+          288
+        ],
+        "fits": true,
+        "selectionKeepsGeometry": true
+      },
+      {
+        "width": 390,
+        "gameHeight": 844,
+        "board": [
+          367,
+          386
+        ],
+        "fits": true,
+        "selectionKeepsGeometry": true
+      },
+      {
+        "width": 430,
+        "gameHeight": 932,
+        "board": [
+          406,
+          426
+        ],
+        "fits": true,
+        "selectionKeepsGeometry": true
+      }
+    ],
+    "livePlay": { "stage": 1, "result": "win", "stars": 3, "spoiled": 20 },
+    "scope": "Visuals and layout only. Puzzle rules, stage data, artwork and solutions unchanged."
+  }
+}

@@ -119,6 +119,10 @@ button { font: inherit; color: inherit; touch-action: manipulation; }
 .chap-head .small { margin-left: auto; white-space: nowrap; }
 .chap-head h3 { margin: 0; flex: 0 1 auto; white-space: nowrap; font-family: var(--f-display); font-weight: 400; font-size: 20px; }
 .stage-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px 8px; }
+.map-nav { display: flex; gap: 8px; align-items: center; padding: 8px 16px; background: var(--paper); }
+.map-nav select { min-width: 0; flex: 1; min-height: 44px; border: 2px solid var(--ink); border-radius: 12px; padding: 6px; color: var(--ink); background: var(--paper); font: inherit; font-size: 13px; }
+.map-nav .btn { min-height: 44px; font-size: 12px; padding: 6px 10px; }
+.stage-btn.next-stage { outline: 3px solid #70983e; outline-offset: 2px; }
 .stage-btn {
   aspect-ratio: 1; width: 100%; border: 2px solid var(--ink); border-radius: 50% 46% 52% 44% / 46% 50% 44% 52%;
   background: #fff; font-family: var(--f-display); cursor: pointer; display: grid; place-items: center; align-content: center; gap: 0; padding: 0;
@@ -145,18 +149,21 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 #scr-play.has-bg > .bar { background: rgba(255, 249, 242, 0.55); backdrop-filter: blur(3px); }
 #scr-play.has-bg > .hud { background: rgba(255, 249, 242, 0.84); backdrop-filter: blur(4px); }
 #scr-play.has-bg > .hintline { margin: 0 14px 4px; background: rgba(255, 249, 242, 0.7); border-radius: 12px; backdrop-filter: blur(3px); }
-.board-wrap { flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center; position: relative; padding: 4px 10px; }
-#board { display: block; touch-action: manipulation; border-radius: 12px; max-width: 100%; }
+.board-wrap { flex: 1 1 0; min-height: 0; display: flex; align-items: center; justify-content: center; position: relative; padding: 4px 10px; }
+#board { display: block; touch-action: none; border-radius: 12px; max-width: 100%; user-select: none; -webkit-user-select: none; }
 #board:focus-visible { outline: 3px dashed var(--mold-deep); outline-offset: 4px; }
 .sent { display: inline-block; }
-.hintline { text-wrap: balance; min-height: 40px; padding: 6px 18px; font-size: 13px; color: var(--ink-soft); text-align: center; line-height: 1.4; }
+/* Reserve three lines, including padding. Hover, selection and busy copy must
+   not resize the tray or change the cell underneath a stationary pointer. */
+.hintline { flex: 0 0 auto; height: calc(4.2em + 12px); min-height: calc(4.2em + 12px); overflow-y: auto; overscroll-behavior: contain; text-wrap: balance; padding: 6px 18px; font-size: 13px; color: var(--ink-soft); text-align: center; line-height: 1.4; }
 .hintline b { font-family: var(--f-display); font-weight: 400; color: var(--ink); margin-right: 6px; }
+.selection-tip { display: block; color: var(--mold-deep); font-size: 0.92em; }
 .hud {
   background: var(--paper); border-top: 2px solid var(--ink);
   padding: 10px 16px calc(12px + var(--sab)); display: grid; gap: 8px; position: relative;
 }
 .hud-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-.pips { display: flex; gap: 4px; align-items: center; min-height: 34px; }
+.pips { display: flex; gap: 4px; align-items: center; min-height: 34px; flex-shrink: 0; }
 .pips svg { width: 32px; height: 32px; display: block; }
 .pips .mold { width: 44px; height: auto; margin: -8px 2px -4px -4px; transform-origin: 50% 100%; }
 .pips .mold.puff { animation: puff .5s cubic-bezier(.3, 1.6, .5, 1); }
@@ -164,11 +171,11 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 .pips svg.used { opacity: .25; filter: grayscale(1); }
 .pips img.pip { width: 34px; height: auto; display: block; }
 .pips img.pip.used { opacity: .25; filter: grayscale(1); }
-.starline { display: flex; align-items: center; gap: 6px; }
+.starline { display: flex; align-items: center; gap: 6px; min-width: 0; }
 #starText { text-wrap: balance; }
 .starline .st { white-space: nowrap; flex-shrink: 0; font-family: var(--f-display); font-size: 20px; letter-spacing: 1px; line-height: 1; }
+@media (max-width: 360px) { .starline { flex-direction: column; align-items: flex-end; gap: 3px; } #starText { text-align: right; font-size: 10px; } .pips img.pip, .pips svg { width: 28px; } .pips .mold { width: 38px; } }
 .hud-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-.cta { position: absolute; left: 16px; right: 16px; top: -58px; min-height: 50px; font-size: 18px; animation: popin .25s cubic-bezier(.3, 1.6, .5, 1); }
 
 /* ---- sheets ---- */
 .sheet { position: fixed; inset: 0; z-index: 30; display: flex; align-items: flex-end; justify-content: center; background: rgba(74, 46, 39, .35); opacity: 0; transition: opacity .2s ease; }
@@ -235,8 +242,9 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 @keyframes fadein { from { opacity: 0 } }
 @keyframes popin { from { transform: scale(.85); opacity: 0 } }
 @keyframes starpop { from { transform: scale(0) rotate(-40deg); } }
-@media (prefers-reduced-motion: reduce) { .overlay, .card, .bigstars span.on, .cta, .chase-track, .runner, .runner::after, .logo-big img, .bang, .pips .mold { animation: none; } .chase-track { transform: translateX(10%); } .btn, .sheet, .sheet-card { transition: none; } }
-@media (max-height: 700px) { .hintline { min-height: 30px; font-size: 12px; } .logo-big h1 { font-size: 40px; } .chase { height: 80px; } #app.has-bg .title-wrap { padding-top: 90px; } }
+@media (prefers-reduced-motion: reduce) { .overlay, .card, .bigstars span.on, .chase-track, .runner, .runner::after, .logo-big img, .bang, .pips .mold { animation: none; } .chase-track { transform: translateX(10%); } .btn, .sheet, .sheet-card { transition: none; } }
+@media (max-height: 700px) { .hintline { font-size: 12px; } .logo-big h1 { font-size: 40px; } .chase { height: 80px; } #app.has-bg .title-wrap { padding-top: 90px; } }
+/*COLLECTION_CSS*/
 </style>
 
 <div id="app">
@@ -252,7 +260,7 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
       <div class="title-btns">
         <button class="btn go big" id="playBtn">시작하기</button>
         <button class="btn big" id="mapBtn"><span data-i18n="title.map">스테이지 고르기</span> <span class="small" id="titleStars"></span></button>
-        <button class="btn big" id="dailyBtn">오늘의 퍼즐</button>
+        <div class="title-secondary"><button class="btn" id="dailyBtn">오늘의 퍼즐</button><button class="btn" id="collectionBtn" data-i18n="collection.title">컵케익 도감</button></div>
         <div class="row-mini"><span class="small" id="streak"></span><button class="btn small" id="settingsBtn" data-i18n="title.settings">설정</button></div>
       </div>
       <div class="foot" data-i18n="title.foot">v3 플레이테스트 빌드</div>
@@ -260,8 +268,15 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
   </section>
 
   <section class="screen" id="scr-map">
-    <header class="bar"><button class="btn small" id="mapBack" data-i18n-aria="aria.home" aria-label="처음으로">←</button><h2 data-i18n="map.title">스테이지</h2><span class="small" id="mapStars"></span></header>
+    <header class="bar"><button class="btn small" id="mapBack" data-i18n-aria="aria.home" aria-label="처음으로">←</button><h2 data-i18n="map.title">스테이지</h2><button class="btn small" id="mapCollectionBtn" data-i18n="collection.short">도감</button><span class="small" id="mapStars"></span></header>
+    <nav class="map-nav" data-i18n-aria="map.navigation"><select id="chapterJump" data-i18n-aria="map.jump"></select><button class="btn small" id="mapContinue"></button></nav>
     <div class="scroll" id="chapterList"></div>
+  </section>
+
+  <section class="screen" id="scr-collection">
+    <header class="bar"><button class="btn small" id="collectionBack" data-i18n-aria="aria.back" aria-label="뒤로">←</button><h2 data-i18n="collection.title">컵케익 도감</h2></header>
+    <div class="collection-summary"><p data-i18n="collection.intro">스테이지를 깨고, 진열대의 친구들을 모아요.</p><strong id="collectionCount"></strong><progress id="collectionProgress" value="0" max="12" data-i18n-aria="collection.progress"></progress></div>
+    <div class="scroll"><div class="collection-grid" id="collectionGrid"></div><p class="small" data-i18n="collection.explain">그 맛이 나온 판의 최고 별: ★ 종이 · ★★ 금박 · ★★★ 오로라</p></div>
   </section>
 
   <section class="screen" id="scr-play">
@@ -275,7 +290,6 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
     </div>
     <div class="hintline" id="hintLine" aria-live="polite"></div>
     <div class="hud">
-      <button class="btn go cta" id="fireCta" hidden>포자 발사!</button>
       <div class="hud-row">
         <div class="pips" id="pips"></div>
         <div class="starline"><span class="st" id="starNow"></span><span class="small" id="starText"></span></div>
@@ -307,6 +321,7 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
     <h2 id="resTitle"></h2>
     <p id="resMsg"></p>
     <div class="row" id="resBtns"></div>
+    <div id="cardRewards" hidden></div>
     <button class="btn quiet" id="resultClose" data-i18n="res.view">판 보기</button>
   </div>
 </div>
@@ -345,6 +360,12 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
   </div>
 </div>
 
+<div class="sheet modal" id="cardSheet" hidden role="dialog" aria-modal="true" aria-labelledby="cardFrontLabel">
+  <div class="card-dialog"><div class="card-dialog-head"><span id="cardFrontLabel"></span><button class="btn small" id="cardClose" data-i18n="leg.close">닫기</button></div>
+    <div class="card-stage" id="cardStage"><div class="card-tilt" id="cardTilt"><button class="collector-card" id="cupcakeCard" aria-pressed="false"><span class="card-rotator" id="cardRotator"></span></button></div></div>
+    <p class="card-flip-hint" data-i18n="collection.flip">카드를 누르면 뒤집혀요</p>
+  </div>
+</div>
 <div class="toast" id="toast" hidden></div>
 
 <script>
@@ -357,5 +378,8 @@ const DAILY = /*DAILY*/null;
 const BG = /*BG*/null; // per chapter [{ src, w, h, band, wall, floor }] or null
 /*HEAD*/
 /*RENDER*/
+/*COLLECTION*/
+/*UI_INTERACTIONS*/
 /*APP*/
 </script>
+
