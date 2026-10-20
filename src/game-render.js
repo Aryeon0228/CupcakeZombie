@@ -63,7 +63,11 @@ function audio() {
   } catch (e) { return null; }
   return AC;
 }
-function syncSound() { if (AC && audioBus) audioBus.gain.setTargetAtTime(save.sound ? 0.7 : 0, AC.currentTime, 0.01); }
+function syncSound() {
+  if (!AC || !audioBus) return;
+  const g = audioBus.gain; g.cancelScheduledValues(AC.currentTime);
+  if (save.sound) g.setTargetAtTime(0.7, AC.currentTime, 0.01); else g.setValueAtTime(0, AC.currentTime); // muting is immediate
+}
 function tone(freq, dur = 0.16, type = 'triangle', vol = 0.12, slide = 0, delay = 0) {
   const a = audio(); if (!a) return;
   const t = a.currentTime + delay;
