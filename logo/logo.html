@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;background:transparent}
+  body{display:grid;place-items:center;min-height:100vh}
+  svg{width:1000px;height:auto;display:block}
+  .ko{font-family:'Jua',sans-serif}
+</style></head><body>
+<svg id="logo" viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <!-- wobbly hand-drawn edges -->
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <!-- crayon fill: streaky grain with paper showing through, plus wobbly edge -->
+    <filter id="crayon" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7" result="w"/>
+      <feDisplacementMap in="SourceGraphic" in2="w" scale="5" xChannelSelector="R" yChannelSelector="G" result="shape"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="3" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.6 2.15" result="grainA"/>
+      <feComposite in="shape" in2="grainA" operator="in" result="tex"/>
+      <feMerge><feMergeNode in="tex"/></feMerge>
+    </filter>
+    <filter id="crayonSoft" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="9" result="w"/>
+      <feDisplacementMap in="SourceGraphic" in2="w" scale="6" xChannelSelector="R" yChannelSelector="G" result="shape"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.9 0.12" numOctaves="2" seed="5" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.6 1.55" result="grainA"/>
+      <feComposite in="shape" in2="grainA" operator="in"/>
+    </filter>
+    <filter id="shadow" x="-10%" y="-10%" width="125%" height="125%">
+      <feOffset dx="7" dy="10"/><feGaussianBlur stdDeviation="2"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.29  0 0 0 0 0.18  0 0 0 0 0.15  0 0 0 0.35 0"/>
+    </filter>
+    <!-- diagonal crayon hatching used as highlights inside letters -->
+    <pattern id="hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)">
+      <rect width="9" height="9" fill="none"/><rect width="9" height="2.2" fill="#ffffff" opacity=".55"/>
+    </pattern>
+    <path id="plate" d="M118 120 C130 70 210 58 300 66 C380 40 470 52 560 58 C660 40 790 50 840 92 C900 110 905 170 880 214 C910 262 920 330 878 372 C900 430 880 500 800 510 C700 540 560 532 470 534 C360 552 230 548 168 520 C96 500 84 430 110 380 C70 330 72 250 112 210 C92 172 98 140 118 120 Z"/>
+    <pattern id="hatchPink" width="11" height="11" patternUnits="userSpaceOnUse" patternTransform="rotate(-32)">
+      <rect width="11" height="2.6" y="1" fill="#d9658c" opacity=".55"/><rect width="11" height="1.4" y="6.5" fill="#d9658c" opacity=".35"/></pattern>
+    <pattern id="hatchGreen" width="11" height="11" patternUnits="userSpaceOnUse" patternTransform="rotate(-32)">
+      <rect width="11" height="2.6" y="1" fill="#6f9322" opacity=".6"/><rect width="11" height="1.4" y="6.5" fill="#6f9322" opacity=".4"/></pattern>
+    <pattern id="hatchLight" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(-32)">
+      <rect width="10" height="2.4" fill="#fff" opacity=".75"/></pattern>
+    <linearGradient id="topFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".45" stop-color="#fff"/><stop offset=".62" stop-color="#000"/></linearGradient>
+    <mask id="maskTop1" maskUnits="userSpaceOnUse" x="0" y="80" width="1000" height="220"><rect x="0" y="80" width="1000" height="220" fill="url(#topFade)"/></mask>
+    <mask id="maskTop2" maskUnits="userSpaceOnUse" x="0" y="290" width="1000" height="220"><rect x="0" y="290" width="1000" height="220" fill="url(#topFade)"/></mask>
+    <pattern id="specks" width="46" height="38" patternUnits="userSpaceOnUse">
+      <circle cx="8" cy="9" r="5" fill="#557318" opacity=".85"/><circle cx="30" cy="25" r="3.4" fill="#557318" opacity=".75"/><circle cx="39" cy="6" r="2.2" fill="#e9f5b8" opacity=".9"/>
+    </pattern>
+  </defs>
+
+  <!-- cut-paper backing: shadow, paper, crayon outline, dashed "stitch" -->
+  <g id="backing">
+    <use href="#plate" fill="#4a2e27" opacity=".28" transform="translate(9 12)" filter="url(#rough)"/>
+    <use href="#plate" fill="#fff8ea" filter="url(#rough)"/>
+    <use href="#plate" fill="#fbe7c8" filter="url(#crayonSoft)" opacity=".7"/>
+    <use href="#plate" fill="none" stroke="#5a3428" stroke-width="7" stroke-linejoin="round" filter="url(#crayon)"/>
+    <path d="M140 132 C152 92 220 82 302 90 C382 66 470 78 560 82 C658 66 780 74 822 110 C874 126 878 176 856 214 C884 262 892 328 854 362 C874 420 856 480 790 488 C696 514 560 508 470 510 C362 526 236 522 176 498 C114 480 106 420 130 378 C96 330 98 254 134 214 C116 176 122 146 140 132 Z" fill="none" stroke="#c89a6a" stroke-width="4" stroke-dasharray="14 11" stroke-linecap="round" filter="url(#rough)"/>
+  </g>
+
+  <!-- line 1: 컵케익 (pink frosting crayon) -->
+  <g class="ko" font-size="190" text-anchor="middle">
+    <text x="496" y="262" fill="none" stroke="#fffaf0" stroke-width="40" stroke-linejoin="round" filter="url(#rough)"><tspan rotate="-6" dy="0">컵</tspan><tspan rotate="4" dy="-14">케</tspan><tspan rotate="-3" dy="18">익</tspan></text>
+    <text x="496" y="262" fill="none" stroke="#4a2a22" stroke-width="22" stroke-linejoin="round" filter="url(#rough)"><tspan rotate="-6" dy="0">컵</tspan><tspan rotate="4" dy="-14">케</tspan><tspan rotate="-3" dy="18">익</tspan></text>
+    <text x="496" y="262" fill="#f7b1c6" filter="url(#crayon)"><tspan rotate="-6" dy="0">컵</tspan><tspan rotate="4" dy="-14">케</tspan><tspan rotate="-3" dy="18">익</tspan></text>
+    <text x="496" y="262" fill="url(#hatchPink)" filter="url(#rough)"><tspan rotate="-6" dy="0">컵</tspan><tspan rotate="4" dy="-14">케</tspan><tspan rotate="-3" dy="18">익</tspan></text>
+    <text x="496" y="262" fill="url(#hatchLight)" filter="url(#rough)" mask="url(#maskTop1)" opacity=".7"><tspan rotate="-6" dy="0">컵</tspan><tspan rotate="4" dy="-14">케</tspan><tspan rotate="-3" dy="18">익</tspan></text>
+  </g>
+  <!-- line 2: 좀비 (mold green crayon with mold specks) -->
+  <g class="ko" font-size="210" text-anchor="middle">
+    <text x="470" y="468" fill="none" stroke="#fffaf0" stroke-width="40" stroke-linejoin="round" filter="url(#rough)"><tspan rotate="5" dy="0">좀</tspan><tspan rotate="-5" dy="-12">비</tspan></text>
+    <text x="470" y="468" fill="none" stroke="#4a2a22" stroke-width="22" stroke-linejoin="round" filter="url(#rough)"><tspan rotate="5" dy="0">좀</tspan><tspan rotate="-5" dy="-12">비</tspan></text>
+    <text x="470" y="468" fill="#b5d65a" filter="url(#crayon)"><tspan rotate="5" dy="0">좀</tspan><tspan rotate="-5" dy="-12">비</tspan></text>
+    <text x="470" y="468" fill="url(#specks)" filter="url(#crayonSoft)"><tspan rotate="5" dy="0">좀</tspan><tspan rotate="-5" dy="-12">비</tspan></text>
+    <text x="470" y="468" fill="url(#hatchGreen)" filter="url(#rough)"><tspan rotate="5" dy="0">좀</tspan><tspan rotate="-5" dy="-12">비</tspan></text>
+    <text x="470" y="468" fill="url(#hatchLight)" filter="url(#rough)" mask="url(#maskTop2)" opacity=".55"><tspan rotate="5" dy="0">좀</tspan><tspan rotate="-5" dy="-12">비</tspan></text>
+  </g>
+
+  <g id="sprinkles" filter="url(#crayon)"></g>
+  <!-- chase inside the plate: the strawberry cupcake runs left, a spore bounds after it, the zombie lurches in from the right -->
+  <g id="lines" stroke="#8a6a58" stroke-width="4" stroke-linecap="round" fill="none" filter="url(#rough)">
+    <path d="M250 372 h22"/><path d="M254 388 h16"/>
+    <path d="M306 448 h12"/><path d="M304 464 h10"/>
+  </g>
+  <image id="fresh" x="108" y="336" width="124" height="158" transform="rotate(-9 170 415)"/>
+  <image id="spore" x="230" y="428" width="74" height="65" transform="rotate(-14 267 460)"/>
+  <image id="zombie" x="688" y="300" width="142" height="193" transform="rotate(6 759 400)"/>
+  <!-- English ribbon -->
+  <g transform="translate(500 560) rotate(-2)">
+    <path d="M-210 -30 L210 -30 L196 0 L210 30 L-210 30 L-196 0 Z" fill="#f6d27a" filter="url(#rough)"/>
+    <path d="M-210 -30 L210 -30 L196 0 L210 30 L-210 30 L-196 0 Z" fill="none" stroke="#5a3428" stroke-width="5" stroke-linejoin="round" filter="url(#crayon)"/>
+    <text x="0" y="13" text-anchor="middle" font-family="Jua, sans-serif" font-size="38" letter-spacing="6" fill="#5a3428" filter="url(#crayonSoft)">CUPCAKE ZOMBIE</text>
+  </g>
+</svg>
+<script>
+const S = __SPRITES__;
+document.getElementById('spore').setAttribute('href', S.spore_round);
+document.getElementById('zombie').setAttribute('href', S.zombieB);
+document.getElementById('fresh').setAttribute('href', S.berry);
+document.fonts.load('190px Jua').then(() => document.fonts.ready).then(() => {
+
+  // sprinkles scattered on the empty paper
+  const NS = 'http://www.w3.org/2000/svg', g = document.getElementById('sprinkles');
+  const cols = ['#f29bb2', '#86d3c4', '#f6cf6a', '#b9a3e3', '#f2a36b'];
+  [[190,150,20],[232,232,-30],[790,150,40],[848,232,-15],[760,95,70],[318,520,15],[690,522,-40],[160,262,-60],[870,300,30]].forEach(([x,y,r],i)=>{
+    const e = document.createElementNS(NS,'rect'); e.setAttribute('x',x-12); e.setAttribute('y',y-4); e.setAttribute('width',24); e.setAttribute('height',8); e.setAttribute('rx',4);
+    e.setAttribute('fill',cols[i%cols.length]); e.setAttribute('stroke','#5a3428'); e.setAttribute('stroke-width',2.5); e.setAttribute('transform',`rotate(${r} ${x} ${y})`); g.appendChild(e);
+  });
+  document.body.dataset.ready = 1;
+});
+</script>
+</body></html>
