@@ -1,0 +1,15 @@
+{
+  "approved_variant": "mold-player-outline-v2",
+  "master": "assets_extended/mold-outline-v2/master.png",
+  "runtime": "assets/mold_player.png",
+  "master_sha256": "7ec48e1164a8e2e89a9baf3c5f00eb34575c088f5fdaed26d50abb9765fcfda7",
+  "runtime_sha256": "deffce82009b5286864fac9c35398f96091be97ffa35c2f930a702ae32f1c56b",
+  "canvas": [
+    240,
+    237
+  ],
+  "has_alpha": true,
+  "bytes": 97195,
+  "preparation": "Aspect-preserving resize, transparent contain fit, no redrawing or recoloring",
+  "consumer": "Existing moldImg HUD artwork and its puff animation"
+}
