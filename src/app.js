@@ -44,6 +44,7 @@ function showScreen(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === 'scr-' + name));
   requestAnimationFrame(drawBg);
   if (name === 'map') renderMap();
+  if (name === 'collection') renderCollection();
   if (name === 'title') renderTitle();
   if (name === 'play') requestAnimationFrame(layout);
 }
@@ -140,7 +141,8 @@ function setLang(l) {
   applyLang();
   if (screen === 'title') renderTitle();
   if (screen === 'map') renderMap();
-  if (state) { renderHUD(); renderLegend(); updateHint(); if (introOpen) showIntro(); if (result) showResult(result, currentStars()); }
+  if (screen === 'collection') { renderCollection(); if (!$('cardSheet').hidden && cardType) showCupcakeCard(cardType); }
+  if (state) { renderHUD(); renderLegend(); updateHint(); if (introOpen) showIntro(); if (result && screen === 'play') showResult(result, currentStars()); }
   $('noAdsBtn').textContent = save.noAds ? t('set.noAdsDone') : t('set.noAds', { price: Store.price });
   $('hintCount').textContent = t('set.hints', { n: save.hints });
 }
@@ -161,6 +163,7 @@ function rebuildVis() {
 }
 function loadLevel(d, opts = {}) {
   def = d;
+  lastCardRewards = []; $('cardRewards').hidden = true; closeSheet('cardSheet');
   state = parseLevel(def);
   undoStack = [];
   if (!opts.keepMistakes) { mistakes = 0; usedHint = false; boosted = false; }
@@ -245,6 +248,7 @@ function finish(res) {
   renderHUD(); updateHint();
   if (res === 'win') {
     const stars = currentStars();
+    lastCardRewards = addCollectionClear(save.collection, def, stars);
     if (mode === 'stage') { save.stars[li] = Math.max(starsOf(li), stars); save.clears++; }
     else {
       const k = dateKey(); save.daily[k] = Math.max(save.daily[k] || 0, stars);
@@ -328,6 +332,7 @@ function drawHintMarker(T) {
 // ---------- result sheet ----------
 async function showResult(kind, stars) {
   result = kind;
+  if (kind === 'win') renderCardRewards(); else $('cardRewards').hidden = true;
   const sh = $('resultSheet');
   sh.classList.toggle('win', kind === 'win'); sh.classList.toggle('lose', kind !== 'win');
   const total = state.cells.filter(Boolean).length;
@@ -622,6 +627,7 @@ function renderShelf() {
 
 // ---------- boot ----------
 async function boot(data) {
+  save.collection = recoverCollection(save, LEVELS); writeSave(save);
   LANG = LANGS.includes(save.lang) ? save.lang : detectLang();
   applyLang();
   await loadImages();

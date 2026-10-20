@@ -244,6 +244,7 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 @keyframes starpop { from { transform: scale(0) rotate(-40deg); } }
 @media (prefers-reduced-motion: reduce) { .overlay, .card, .bigstars span.on, .chase-track, .runner, .runner::after, .logo-big img, .bang, .pips .mold { animation: none; } .chase-track { transform: translateX(10%); } .btn, .sheet, .sheet-card { transition: none; } }
 @media (max-height: 700px) { .hintline { font-size: 12px; } .logo-big h1 { font-size: 40px; } .chase { height: 80px; } #app.has-bg .title-wrap { padding-top: 90px; } }
+/*COLLECTION_CSS*/
 </style>
 
 <div id="app">
@@ -259,7 +260,7 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
       <div class="title-btns">
         <button class="btn go big" id="playBtn">시작하기</button>
         <button class="btn big" id="mapBtn"><span data-i18n="title.map">스테이지 고르기</span> <span class="small" id="titleStars"></span></button>
-        <button class="btn big" id="dailyBtn">오늘의 퍼즐</button>
+        <div class="title-secondary"><button class="btn" id="dailyBtn">오늘의 퍼즐</button><button class="btn" id="collectionBtn" data-i18n="collection.title">컵케익 도감</button></div>
         <div class="row-mini"><span class="small" id="streak"></span><button class="btn small" id="settingsBtn" data-i18n="title.settings">설정</button></div>
       </div>
       <div class="foot" data-i18n="title.foot">v3 플레이테스트 빌드</div>
@@ -267,9 +268,15 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
   </section>
 
   <section class="screen" id="scr-map">
-    <header class="bar"><button class="btn small" id="mapBack" data-i18n-aria="aria.home" aria-label="처음으로">←</button><h2 data-i18n="map.title">스테이지</h2><span class="small" id="mapStars"></span></header>
+    <header class="bar"><button class="btn small" id="mapBack" data-i18n-aria="aria.home" aria-label="처음으로">←</button><h2 data-i18n="map.title">스테이지</h2><button class="btn small" id="mapCollectionBtn" data-i18n="collection.short">도감</button><span class="small" id="mapStars"></span></header>
     <nav class="map-nav" data-i18n-aria="map.navigation"><select id="chapterJump" data-i18n-aria="map.jump"></select><button class="btn small" id="mapContinue"></button></nav>
     <div class="scroll" id="chapterList"></div>
+  </section>
+
+  <section class="screen" id="scr-collection">
+    <header class="bar"><button class="btn small" id="collectionBack" data-i18n-aria="aria.back" aria-label="뒤로">←</button><h2 data-i18n="collection.title">컵케익 도감</h2></header>
+    <div class="collection-summary"><p data-i18n="collection.intro">스테이지를 깨고, 진열대의 친구들을 모아요.</p><strong id="collectionCount"></strong><progress id="collectionProgress" value="0" max="12" data-i18n-aria="collection.progress"></progress></div>
+    <div class="scroll"><div class="collection-grid" id="collectionGrid"></div><p class="small" data-i18n="collection.explain">그 맛이 나온 판의 최고 별: ★ 종이 · ★★ 금박 · ★★★ 오로라</p></div>
   </section>
 
   <section class="screen" id="scr-play">
@@ -314,6 +321,7 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
     <h2 id="resTitle"></h2>
     <p id="resMsg"></p>
     <div class="row" id="resBtns"></div>
+    <div id="cardRewards" hidden></div>
     <button class="btn quiet" id="resultClose" data-i18n="res.view">판 보기</button>
   </div>
 </div>
@@ -352,6 +360,12 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
   </div>
 </div>
 
+<div class="sheet modal" id="cardSheet" hidden role="dialog" aria-modal="true" aria-labelledby="cardFrontLabel">
+  <div class="card-dialog"><div class="card-dialog-head"><span id="cardFrontLabel"></span><button class="btn small" id="cardClose" data-i18n="leg.close">닫기</button></div>
+    <div class="card-stage" id="cardStage"><div class="card-tilt" id="cardTilt"><button class="collector-card" id="cupcakeCard" aria-pressed="false"><span class="card-rotator" id="cardRotator"></span></button></div></div>
+    <p class="card-flip-hint" data-i18n="collection.flip">카드를 누르면 뒤집혀요</p>
+  </div>
+</div>
 <div class="toast" id="toast" hidden></div>
 
 <script>
@@ -364,6 +378,8 @@ const DAILY = /*DAILY*/null;
 const BG = /*BG*/null; // per chapter [{ src, w, h, band, wall, floor }] or null
 /*HEAD*/
 /*RENDER*/
+/*COLLECTION*/
+/*UI_INTERACTIONS*/
 /*APP*/
 </script>
 
