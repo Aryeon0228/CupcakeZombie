@@ -78,6 +78,7 @@ function syncSound() {
 }
 function buttonSound() { return playUISound('button'); }
 function cupcakeSound() { return playUISound('meow'); }
+const lastVoice = {};
 async function playUISound(key, pitch = 1) {
   const a = audio(); if (!a) return;
   const version = ++soundVersions[key];
@@ -91,9 +92,14 @@ async function playUISound(key, pitch = 1) {
     const source = a.createBufferSource();
     source.buffer = buffer;
     source.playbackRate.value = pitch;
-    source.connect(audioBus);
-    source.onended = () => source.disconnect();
-    source.start(a.currentTime + 0.005);
+    const gain = a.createGain();
+    source.connect(gain).connect(audioBus);
+    source.onended = () => { source.disconnect(); gain.disconnect(); if (lastVoice[key] && lastVoice[key].source === source) lastVoice[key] = null; };
+    // A new meow cuts the one still ringing (25ms fade) so quick taps and drags never stack up.
+    const prev = lastVoice[key], t0 = a.currentTime + 0.005;
+    if (prev && key === 'meow') { try { prev.gain.gain.setTargetAtTime(0, t0, 0.008); prev.source.stop(t0 + 0.05); } catch (e) {} }
+    lastVoice[key] = { source, gain };
+    source.start(t0);
   } catch (e) { /* Audio availability must never block navigation. */ }
 }
 
