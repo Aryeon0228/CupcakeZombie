@@ -215,6 +215,20 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 .bigstars { display: flex; gap: 6px; font-family: var(--f-display); font-size: 44px; line-height: 1; justify-content: center; }
 .bigstars span { color: var(--paper-edge); -webkit-text-stroke: 2px var(--ink); display: inline-block; }
 .bigstars span.on { color: var(--star); animation: starpop .45s cubic-bezier(.3, 1.8, .5, 1) both; }
+.res-chapter { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 2px 0 4px; padding: 8px 12px; border: 2px dashed var(--ink); border-radius: 14px; background: var(--mold-soft); font-size: 13px; }
+.res-chapter > span { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.res-chapter img { width: 34px; height: 38px; object-fit: contain; object-position: bottom; flex: none; }
+.res-chapter b { display: block; font-family: var(--f-display); font-weight: 400; font-size: 15px; line-height: 1.15; }
+.res-chapter small { display: block; font-size: 11px; color: var(--ink-soft); line-height: 1.2; }
+.res-chapter .rc-arrow { color: var(--mold-deep); font-family: var(--f-display); font-size: 20px; }
+.res-chapter .rc-next { opacity: .8; }
+/* collected cards flip in one after another */
+.reward-card { animation: reward-flip .62s cubic-bezier(.2, .8, .25, 1) both; }
+.reward-card:nth-child(2) { animation-delay: .14s; } .reward-card:nth-child(3) { animation-delay: .28s; }
+@keyframes reward-flip { 0% { transform: perspective(500px) rotateY(-100deg) scale(.86); opacity: 0; } 55% { transform: perspective(500px) rotateY(12deg) scale(1.03); opacity: 1; } 100% { transform: none; opacity: 1; } }
+.reward-card small { animation: reward-pop .4s .5s cubic-bezier(.3, 1.8, .5, 1) both; }
+@keyframes reward-pop { 0% { transform: scale(.4); opacity: 0; } 100% { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .reward-card, .reward-card small { animation: none; } }
 .bigstars span:nth-child(2).on { animation-delay: .15s; }
 .bigstars span:nth-child(3).on { animation-delay: .3s; }
 .setting { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; }
@@ -346,6 +360,7 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
     <div class="eyebrow" id="resEyebrow"></div>
     <div class="bigstars" id="resStars" hidden><span>★</span><span>★</span><span>★</span></div>
     <h2 id="resTitle"></h2>
+    <div class="res-chapter" id="resChapter" hidden></div>
     <p id="resMsg"></p>
     <div class="row" id="resBtns"></div>
     <div id="cardRewards" hidden></div>

@@ -190,7 +190,7 @@ function rebuildVis() {
     zv: ((i * 7 + li * 3) % 3 === 0) ? 'zombieA' : 'zombieB',
     flip: ((i * 5 + li) % 4) === 1,
     phase: (i * 1.37) % (Math.PI * 2),
-    infAt: -1, bumpAt: -1, bumpAmp: 0, peekAt: -1, reactAt: -1, flashAt: -1, gone: false,
+    infAt: -1, bumpAt: -1, bumpAmp: 0, hopAt: -1, hopAmp: 0, peekAt: -1, reactAt: -1, flashAt: -1, gone: false,
   });
 }
 function loadLevel(d, opts = {}) {
@@ -275,6 +275,18 @@ function playTicks(n, sim, done) {
   at(end + 450, () => playTicks(n - 1, sim, done));
 }
 
+// The shelf has gone bad: zombies hop in a wave across the tray, sprinkles rain down, a stamp slams on.
+function chapterDone() { return mode === 'stage' && li % 10 === 9 && li < LEVELS.length - 1; }
+function celebrate(stars) {
+  const last = mode === 'stage' && li === LEVELS.length - 1;
+  const text = last ? t('res.bakery') : chapterDone() ? t('res.chapterStamp', { n: Math.floor(li / 10) + 1 }) : t('res.wiped');
+  if (reduceMotion) { stamp(text, '#5B7A21', 900); return; }
+  for (let i = 0; i < vis.length; i++) if (vis[i]) hop(i, (i % state.W) * 55 + Math.floor(i / state.W) * 25, 0.34);
+  at(260, () => stamp(text, '#5B7A21', 1400));
+  at(380, () => confetti(stars === 3 ? 52 : 36));
+  at(900, () => { for (let i = 0; i < vis.length; i++) if (vis[i]) hop(i, (state.W - 1 - i % state.W) * 45, 0.2); });
+  at(950, () => tone(note(9), 0.12, 'sine', 0.04));
+}
 function finish(res) {
   busy = false;
   renderHUD(); updateHint();
@@ -290,8 +302,8 @@ function finish(res) {
     writeSave(save);
     haptic('success');
     [0, 4, 7, 12].forEach((s, i) => tone(note(s), 0.32, 'triangle', 0.09, 1, i * 0.09));
-    for (let i = 0; i < vis.length; i++) if (vis[i]) at(i * 18, () => bump(i, 0.16));
-    at(600, () => showResult('win', stars));
+    celebrate(stars);
+    at(reduceMotion ? 600 : 1500, () => showResult('win', stars));
   } else if (res === 'lost') {
     tone(330, 0.3, 'triangle', 0.08, 0.7); tone(247, 0.4, 'triangle', 0.08, 0.7, 0.18);
     showResult('lost');
@@ -365,6 +377,7 @@ function drawHintMarker(T) {
 async function showResult(kind, stars) {
   result = kind;
   if (kind === 'win') renderCardRewards(); else $('cardRewards').hidden = true;
+  $('resChapter').hidden = !(kind === 'win' && chapterDone());
   const sh = $('resultSheet');
   sh.classList.toggle('win', kind === 'win'); sh.classList.toggle('lose', kind !== 'win');
   const total = state.cells.filter(Boolean).length;
@@ -381,7 +394,14 @@ async function showResult(kind, stars) {
       mk(t('res.retry'), '', () => loadLevel(def, { intro: false }));
     } else {
       $('resEyebrow').textContent = t('res.stageClear', { n: li + 1 });
-      $('resTitle').textContent = li === LEVELS.length - 1 ? t('res.bakery') : t('res.wiped');
+      $('resTitle').textContent = li === LEVELS.length - 1 ? t('res.bakery') : chapterDone() ? t('res.chapterDone', { n: Math.floor(li / 10) + 1 }) : t('res.wiped');
+      if (chapterDone()) {
+        const ch = CHAPTERS[Math.floor(li / 10)], nx = CHAPTERS[Math.floor(li / 10) + 1];
+        const got = LEVELS.slice(ch.from, ch.to + 1).reduce((a, _, k) => a + starsOf(ch.from + k), 0);
+        const face = shelfArt(TYPES[chapterFlavor(ch)].key, 'fresh'), nface = nx ? shelfArt(TYPES[chapterFlavor(nx)].key, 'fresh') : '';
+        $('resChapter').innerHTML = `<span class="rc-done"><img src="${face}" alt=""><span><b>${tl(ch, 'name')}</b><small>★ ${got} / ${(ch.to - ch.from + 1) * 3}</small></span></span>` +
+          (nx ? `<span class="rc-arrow">→</span><span class="rc-next"><img src="${nface}" alt=""><span><small>${t('res.chapterNext', { n: nx.no })}</small><b>${tl(nx, 'name')}</b></span></span>` : '');
+      }
       setText($('resMsg'), stars === 3 ? t('res.msg3', { n: total }) : boosted ? t('res.msgBoost') : usedHint ? t('res.msgHint') : t('res.msgUndo', { n: total }));
       if (li < LEVELS.length - 1) mk(t('res.next'), 'go', async () => { await maybeInterstitial(); startStage(li + 1); });
       else mk(t('res.list'), 'go', () => showScreen('map'));

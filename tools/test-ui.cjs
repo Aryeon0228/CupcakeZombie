@@ -62,7 +62,7 @@ const root = path.resolve(__dirname,'..'), solutions = require('./solutions.json
     let ticks=0;while(busy&&ticks++<1800)frame(now+50);
     if(busy)throw Error('Stuck '+(i+1));
    }
-   for(let k=0;k<20;k++)frame(now+50);
+   for(let k=0;k<40;k++)frame(now+50); // the win celebration runs 1.5s before the result sheet
    return {stage:i+1,result,stars:starsOf(i),fresh:freshCount(state)};
   },{i,seq:solutions[i]});
   assert.equal(r.result,'win');assert.equal(r.stars,3);assert.equal(r.fresh,0);runs.push(r);

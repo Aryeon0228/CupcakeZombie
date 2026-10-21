@@ -331,6 +331,17 @@ function stink(i) {
 }
 function floatText(x, y, str, col = '#4A2E27', size = 0.32, life = 900) { texts.push({ x, y, str, col, size, born: now, life }); }
 function bump(i, amp = 0.18) { if (vis[i]) { vis[i].bumpAt = now; vis[i].bumpAmp = amp; } }
+// Sprinkle confetti raining over the whole tray.
+function confetti(n = 44) {
+  if (reduceMotion || !state) return;
+  const { x, y, w } = trayRect();
+  const cols = ['#F48FB1', '#FFE082', '#81D4FA', '#A5D6A7', '#FFFFFF', '#CE93D8', '#FF8A65'];
+  for (let k = 0; k < n; k++) {
+    particles.push({ kind: 'stick', x: rand(x, x + w), y: y - rand(S * 0.3, S * 2.2), vx: rand(-30, 30), vy: rand(10, 60), rot: rand(0, 6), vr: rand(-9, 9), r: S * rand(0.045, 0.065), born: now + rand(0, 260), life: rand(1500, 2300), grav: 380, drag: 0.6, col: cols[k % cols.length] });
+  }
+}
+// Rubber stamp slammed onto the board: scales down with a thump, holds, then fades.
+function stamp(str, col = '#5B7A21', life = 1500) { texts.push({ x: CW / 2, y: padTop + state.H * S * 0.42, str, col, size: 0.46, born: now, life, stamp: true }); }
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
 
@@ -673,12 +684,25 @@ function cupcakePose(v, time = now, reduced = reduceMotion) {
   }
   return { sx: 1 + k * 0.55, sy: 1 - k };
 }
+// Celebration hop: the whole cupcake leaves the well (feet off the ground), squashing on take-off and landing.
+const HOP = 560;
+function hop(i, delay = 0, amp = 0.32) { if (vis[i]) { vis[i].hopAt = now + delay; vis[i].hopAmp = amp; } }
+function hopPose(v) {
+  const p = v.hopAt >= 0 ? (now - v.hopAt) / HOP : -1;
+  if (reduceMotion || !(p >= 0 && p < 1)) return { dy: 0, sx: 1, sy: 1, air: 0 };
+  const air = Math.sin(p * Math.PI);
+  let sx = 1, sy = 1;
+  if (p < 0.12) { const q = Math.sin(p / 0.12 * Math.PI); sy = 1 - 0.14 * q; sx = 1 + 0.1 * q; }
+  else if (p > 0.84) { const q = Math.sin((p - 0.84) / 0.16 * Math.PI); sy = 1 - 0.17 * q; sx = 1 + 0.12 * q; }
+  else { sy = 1 + 0.1 * air; sx = 1 - 0.07 * air; }
+  return { dy: -S * (v.hopAmp || 0.32) * air, sx, sy, air };
+}
 function drawCupcake(i, v, sc) {
-  const x0 = cxOf(i), by = baseY(i);
+  const x0 = cxOf(i), hp = hopPose(v), by = baseY(i) + hp.dy;
   const zombie = isZombieShown(v);
-  const { sx, sy } = cupcakePose(v);
-  ctx.save(); ctx.fillStyle = 'rgba(60, 40, 40, 0.18)';
-  ctx.beginPath(); ctx.ellipse(x0, by - S * 0.04, S * 0.33, S * 0.09, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  const pose = cupcakePose(v), sx = pose.sx * hp.sx, sy = pose.sy * hp.sy;
+  ctx.save(); ctx.fillStyle = `rgba(60, 40, 40, ${0.18 * (1 - hp.air * 0.5)})`;
+  ctx.beginPath(); ctx.ellipse(x0, baseY(i) - S * 0.04, S * 0.33 * (1 - hp.air * 0.3), S * 0.09 * (1 - hp.air * 0.3), 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
   const freshKey = freshSpriteKey(v);
   if (!zombie) {
     const react = v.reactAt >= 0 && selected === i && !busy && !result && !introOpen && v.infAt < 0 &&
@@ -839,10 +863,28 @@ function drawArm(sc) {
   drawHand(ctx, x, y, S * 0.24, arm.fresh && e > 430);
 }
 
+function drawStamp(t, age) {
+  const inT = Math.min(1, age * t.life / 200); // 200ms slam
+  const sc = reduceMotion ? 1 : 1.9 - 0.9 * (1 - Math.pow(1 - inT, 3)) + (inT >= 1 ? 0 : 0) ;
+  const settle = reduceMotion || inT < 1 ? 1 : 1 + 0.04 * Math.sin(Math.min(1, (age * t.life - 200) / 180) * Math.PI);
+  ctx.save();
+  ctx.globalAlpha = (age > 0.78 ? 1 - (age - 0.78) / 0.22 : 1) * (reduceMotion ? 1 : Math.min(1, inT * 1.5));
+  ctx.translate(t.x, t.y); ctx.rotate(-0.12); ctx.scale(sc * settle, sc * settle);
+  const px = Math.round(S * t.size);
+  ctx.font = `${px}px Jua, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+  const w = ctx.measureText(t.str).width + px * 0.9, h = px * 1.5;
+  ctx.fillStyle = 'rgba(255, 249, 242, 0.92)'; ctx.strokeStyle = t.col; ctx.lineWidth = Math.max(3, px * 0.09);
+  roundRect(ctx, -w / 2, -h / 2, w, h, px * 0.3); ctx.fill(); ctx.stroke();
+  ctx.setLineDash([px * 0.18, px * 0.12]); ctx.lineWidth = Math.max(1.5, px * 0.04);
+  roundRect(ctx, -w / 2 + px * 0.16, -h / 2 + px * 0.16, w - px * 0.32, h - px * 0.32, px * 0.22); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = t.col; ctx.fillText(t.str, 0, px * 0.04);
+  ctx.restore();
+}
 function drawTexts() {
   texts = texts.filter(t => now < t.born + t.life);
   for (const t of texts) {
     const age = (now - t.born) / t.life;
+    if (t.stamp) { drawStamp(t, age); continue; }
     const pop = age < 0.15 ? 0.6 + age / 0.15 * 0.5 : 1.1 - Math.min(0.1, (age - 0.15));
     ctx.save();
     ctx.globalAlpha = age > 0.7 ? 1 - (age - 0.7) / 0.3 : 1;
