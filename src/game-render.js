@@ -77,7 +77,7 @@ function syncSound() {
   if (save.sound) g.setTargetAtTime(0.7, AC.currentTime, 0.01); else g.setValueAtTime(0, AC.currentTime); // muting is immediate
 }
 function buttonSound() { return playUISound('button'); }
-function cupcakeSound(index) { return playUISound('meow', [1, 1.04, .97, 1.02, .99][index % 5]); }
+function cupcakeSound() { return playUISound('meow'); }
 async function playUISound(key, pitch = 1) {
   const a = audio(); if (!a) return;
   const version = ++soundVersions[key];
@@ -385,6 +385,7 @@ function applyHit(h) {
   if (h.direct) {
     if (!reduceMotion) sporeDust(x, sporeContactY(h.idx), 7, 0.55);
     tone(360, 0.085, 'sine', 0.065, 0.55); noise(0.045, 650, 0.07);
+    cupcakeSound(); // the cupcake you shot squeaks once; chain hits keep the rising melody
   }
   if (h.torn) { v.wrap = false; wrapShreds(h.idx); tone(900, 0.08, 'square', 0.03, 0.4); }
   if (h.kind === 'pending') {

@@ -126,6 +126,7 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 #scr-play.has-bg > .bar { background: rgba(255, 249, 242, 0.55); backdrop-filter: blur(3px); }
 #scr-play.has-bg > .hud { background: rgba(255, 249, 242, 0.84); backdrop-filter: blur(4px); }
 #scr-play.has-bg > .hintline { margin: 0 14px 4px; background: rgba(255, 249, 242, 0.7); border-radius: 12px; backdrop-filter: blur(3px); }
+#scr-play.has-bg > .hintline:empty { background: transparent; backdrop-filter: none; }
 .board-wrap { flex: 1 1 0; min-height: 0; display: flex; align-items: center; justify-content: center; position: relative; padding: 4px 10px; }
 #board { display: block; touch-action: none; border-radius: 12px; max-width: 100%; user-select: none; -webkit-user-select: none; }
 #board:focus-visible { outline: 3px dashed var(--mold-deep); outline-offset: 4px; }
@@ -155,8 +156,13 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 .starline .st { white-space: nowrap; flex-shrink: 0; font-family: var(--f-display); font-size: 20px; letter-spacing: 1px; line-height: 1; }
 @media (max-width: 360px) { .starline { flex-direction: column; align-items: flex-end; gap: 3px; } #starText { text-align: right; font-size: 10px; } .pips .mold { width: 38px; } }
 .hud-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.hud-btn { display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; }
+.hud-btn .bi { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+#hintBtn .bi { color: #c8901c; }
+@media (max-width: 360px) { .hud-btn { gap: 4px; font-size: 14px; } .hud-btn .bi { width: 17px; height: 17px; } }
 
 /* ---- sheets ---- */
+[hidden] { display: none !important; }
 .sheet { position: fixed; inset: 0; z-index: 30; display: flex; align-items: flex-end; justify-content: center; background: rgba(74, 46, 39, .35); opacity: 0; transition: opacity .2s ease; }
 .sheet.open { opacity: 1; }
 .sheet.modal { align-items: center; padding: 16px; }
@@ -302,9 +308,9 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
       </div>
       <div class="small" id="custInfo"></div>
       <div class="hud-btns">
-        <button class="btn" id="undoBtn" data-i18n="play.undo">되돌리기</button>
-        <button class="btn" id="resetBtn" data-i18n="play.retry">다시</button>
-        <button class="btn" id="hintBtn">힌트</button>
+        <button class="btn hud-btn" id="undoBtn"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7 4 11.5 9 16"/><path d="M4.5 11.5H14a5 5 0 0 1 0 10h-3"/></svg><span data-i18n="play.undo">한 수 무르기</span></button>
+        <button class="btn hud-btn" id="resetBtn"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 12a7.5 7.5 0 1 1-2.4-5.5"/><path d="M17.8 2.8v4.4h-4.4"/></svg><span data-i18n="play.retry">처음부터</span></button>
+        <button class="btn hud-btn" id="hintBtn"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17.5h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg><span id="hintLabel">힌트</span></button>
       </div>
     </div>
   </section>

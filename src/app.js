@@ -427,9 +427,10 @@ function renderHUD() {
   $('custInfo').textContent = pending.length ? t('hud.customers', { n: pending.length, s: plural(pending.length) }) : '';
   const st = currentStars();
   $('starNow').innerHTML = starsHTML(st);
-  $('starText').textContent = mistakes === 0 && !usedHint && !boosted ? t('hud.stars3') : t('hud.starsNow', { n: st, s: plural(st) });
+  // the star rule is explained once, on the very first stage; afterwards the stars speak for themselves
+  $('starText').textContent = tutorialStage() ? (mistakes === 0 && !usedHint && !boosted ? t('hud.stars3') : t('hud.starsNow', { n: st, s: plural(st) })) : '';
   $('undoBtn').disabled = busy || !undoStack.length;
-  $('hintBtn').innerHTML = save.hints > 0 ? `${t('play.hint')} <span class="k">${save.hints}</span>` : `${t('play.hint')} ${AD_ICON}`;
+  $('hintLabel').innerHTML = save.hints > 0 ? `${t('play.hint')} <span class="k">${save.hints}</span>` : `${t('play.hint')} ${AD_ICON}`;
   const ch = mode === 'stage' ? CHAPTERS.find(c => li >= c.from && li <= c.to) : null;
   $('stageLabel').textContent = mode === 'daily' ? localeDate(new Date()) : t('play.stageLabel', { ch: ch ? ch.no : '', n: li + 1 });
   $('stageName').textContent = levelName(def);
@@ -482,6 +483,7 @@ function renderLegend() {
 const esc = x => String(x).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
 const sents = h => String(h).split(/(?<=[.!?])\s+(?=[^\s])/).map(p => `<span class="sent">${p}</span>`).join(' ');
 function setText(el, text) { el.innerHTML = sents(esc(text)); }
+function tutorialStage() { return mode === 'stage' && li === 0; }
 function updateHint() {
   const i = hover >= 0 ? hover : selected >= 0 ? selected : (cursorShown ? cursor : -1);
   const el = $('hintLine');
@@ -498,7 +500,7 @@ function updateHint() {
   else if (busy) el.innerHTML = sents(t('hint.busy'));
   else if (result) el.innerHTML = '';
   else if (hintCell >= 0) el.innerHTML = sents(t('hint.hint'));
-  else el.innerHTML = sents(t('hint.default'));
+  else el.innerHTML = tutorialStage() ? sents(t('hint.default')) : '';
 }
 
 // ---------- input ----------
