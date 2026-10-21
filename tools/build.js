@@ -1,14 +1,23 @@
 const fs = require('fs'), path = require('path');
 const root = path.join(__dirname, '..');
 const assets = {};
-for (const f of fs.readdirSync(path.join(root, 'assets')).sort()) if (/\.png$/i.test(f)) assets[f.replace(/\.png$/i, '')] = 'data:image/png;base64,' + fs.readFileSync(path.join(root, 'assets', f)).toString('base64');
+// Art ships as WebP (tools/compress-assets.py writes assets/webp/ twins); a twin older than its source is ignored so retouched PNGs are never shadowed.
+let stale = [];
+function art(src) {
+  const twin = path.join(root, 'assets/webp', path.basename(src).replace(/\.(png|jpg)$/i, '.webp'));
+  if (fs.existsSync(twin) && fs.statSync(twin).mtimeMs >= fs.statSync(src).mtimeMs) return { mime: 'image/webp', buf: fs.readFileSync(twin) };
+  if (fs.existsSync(twin)) stale.push(path.basename(src));
+  return { mime: /\.png$/i.test(src) ? 'image/png' : 'image/jpeg', buf: fs.readFileSync(src) };
+}
+const dataURL = src => { const a = art(src); return `data:${a.mime};base64,` + a.buf.toString('base64'); };
+for (const f of fs.readdirSync(path.join(root, 'assets')).sort()) if (/\.png$/i.test(f)) assets[f.replace(/\.png$/i, '')] = dataURL(path.join(root, 'assets', f));
 const { loadRigAssets } = require('./rig-assets.cjs');
 Object.assign(assets, loadRigAssets(root));
 const rd = f => fs.readFileSync(path.join(root, 'src', f), 'utf8');
 const { LEVELS, CHAPTERS, DAILY } = require(path.join(root, 'src/levels.js'));
 let page = rd('page.html');
 const put = (k, v) => { page = page.replace(k, () => v); };
-put('/*TITLE_LOGO*/', 'data:image/png;base64,' + fs.readFileSync(path.join(root, 'logo/cupcake-zombie-logo.png')).toString('base64'));
+put('/*TITLE_LOGO*/', (() => { const twin = path.join(root, 'assets/webp/logo.webp'), src = path.join(root, 'logo/cupcake-zombie-logo.png'); return fs.existsSync(twin) && fs.statSync(twin).mtimeMs >= fs.statSync(src).mtimeMs ? 'data:image/webp;base64,' + fs.readFileSync(twin).toString('base64') : 'data:image/png;base64,' + fs.readFileSync(src).toString('base64'); })());
 put('/*ASSETS*/null', JSON.stringify(assets));
 put('/*SOUNDS*/null', JSON.stringify({ button: fs.readFileSync(path.join(root, 'assets/audio/ui-click.wav')).toString('base64'), meow: fs.readFileSync(path.join(root, 'assets/audio/cupcake-nya.wav')).toString('base64') }));
 const scaleFile = path.join(root, 'assets/scale.json');
@@ -28,7 +37,7 @@ if (fs.existsSync(bgDir) && !process.env.NO_BG) {
     const buf = fs.readFileSync(f);
     let i = 2, w = 0, h = 0;
     while (i < buf.length) { if (buf[i] !== 0xFF) { i++; continue; } const m = buf[i + 1]; if (m >= 0xC0 && m <= 0xC3) { h = buf.readUInt16BE(i + 5); w = buf.readUInt16BE(i + 7); break; } i += 2 + buf.readUInt16BE(i + 2); }
-    return { src: 'data:image/jpeg;base64,' + buf.toString('base64'), w, h, ...meta[stem] };
+    return { src: dataURL(f), w, h, ...meta[stem] };
   };
   const base = load('bg');
   const per = [1, 2, 3, 4].map(n => load('bg_ch' + n));
@@ -57,5 +66,6 @@ if (fs.existsSync(capDir)) {
   const capPage = standalone.replace('<script>\nconst ASSETS', () => vendor + '\n<script>\nconst ASSETS');
   fs.writeFileSync(path.join(capDir, 'index.html'), capPage);
 }
+if (stale.length) console.log('stale webp twins ignored (run python3 tools/compress-assets.py):', stale.join(' '));
 console.log('built', (page.length / 1024).toFixed(0) + 'KB', LEVELS.length, 'levels', DAILY.length, 'daily');
 
