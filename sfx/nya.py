@@ -77,7 +77,23 @@ def thin(**kw):
                 f1w=0.35, hp=650, size=1.7, nasal_end=0.08, glide_end=0.22)
     base.update(kw); return nya(**base)
 
+def round_(**kw):
+    # #3 made rounder: lower pitch, almost no edge above ~3 kHz, warm air instead of hiss
+    base = dict(rolloff=2.3, cut=3200, bw=1.8, breath=0.0, air=0.0, vib=0.018, vib_hz=6, trem=0.2, trem_hz=6,
+                f1w=0.8, hp=380, size=1.25, nasal_end=0.1, glide_end=0.26, dur=0.42)
+    base.update(kw); return nya(**base)
+
 if __name__ == '__main__':
+    if len(sys.argv) > 2 and sys.argv[2] == 'round':
+        out = sys.argv[1]; os.makedirs(out, exist_ok=True)
+        V = {
+            'nya_round_1': round_(f0=((0, 720), (0.25, 960), (0.6, 920), (1, 700)), seed=31),
+            'nya_round_2': round_(f0=((0, 640), (0.25, 860), (0.6, 820), (1, 620)), seed=32, cut=2800, rolloff=2.6),
+            'nya_round_3': round_(f0=((0, 800), (0.25, 1050), (0.6, 1000), (1, 780)), seed=33, cut=3000, size=1.35),
+            'nya_round_4': round_(f0=((0, 700), (0.3, 920), (0.65, 880), (1, 660)), seed=34, cut=2600, rolloff=2.8, f1w=1.0, trem=0.12, dur=0.36),
+        }
+        for k, y in V.items(): save(os.path.join(out, k + '.wav'), y, gain=0.75)
+        print('ok'); sys.exit()
     if len(sys.argv) > 2 and sys.argv[2] == 'thin':
         out = sys.argv[1]; os.makedirs(out, exist_ok=True)
         V = {
