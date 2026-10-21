@@ -81,6 +81,33 @@ $('dailyBtn').onclick = () => startDaily();
 $('settingsBtn').onclick = () => openSettings();
 
 // ---------- map ----------
+// ---------- stage map: every chapter is a shelf, every stage a cupcake on it ----------
+// A locked stage sits under a glass cloche, the next stage has a spore hovering over it, and a cleared stage has gone bad.
+const shelfArtCache = {};
+function shelfArt(key, mode) {
+  const id = key + '|' + mode;
+  if (shelfArtCache[id]) return shelfArtCache[id];
+  if (!IMG[key] || !META[key]) return '';
+  const dpr = Math.min(3, window.devicePixelRatio || 1), W = 66, H = 74;
+  const c = document.createElement('canvas'); c.width = W * dpr; c.height = H * dpr;
+  const g = c.getContext('2d'); g.scale(dpr, dpr);
+  drawSpriteAt(g, key, W / 2, H - 3, 46 / UNIT);
+  if (mode === 'locked') { g.globalCompositeOperation = 'source-atop'; g.fillStyle = '#d6cabd'; g.fillRect(0, 0, W, H); }
+  return (shelfArtCache[id] = c.toDataURL());
+}
+// The cupcake that stands for a stage: the flavor it introduces, else its most common flavor (plain muffins count half).
+function stageFlavor(i) {
+  const def = LEVELS[i];
+  if (def.intro && def.intro.kind === 'type' && TYPES[def.intro.t] && !TYPES[def.intro.t].wall) return def.intro.t;
+  const n = {};
+  for (const row of def.grid) for (const ch of row) { const t = ch.toLowerCase(); if (TYPES[t] && !TYPES[t].wall) n[t] = (n[t] || 0) + (t === 'o' ? 0.5 : 1); }
+  return Object.keys(n).sort((a, b) => n[b] - n[a])[0] || 'o';
+}
+function chapterFlavor(ch) {
+  for (let i = ch.from; i <= ch.to; i++) { const d = LEVELS[i]; if (d.intro && d.intro.kind === 'type' && !TYPES[d.intro.t].wall) return d.intro.t; }
+  const n = {}; for (let i = ch.from; i <= ch.to; i++) { const f = stageFlavor(i); n[f] = (n[f] || 0) + 1; }
+  return Object.keys(n).sort((a, b) => n[b] - n[a])[0];
+}
 function renderMap() {
   $('mapStars').textContent = `★ ${totalStars()} / ${LEVELS.length * 3}`;
   const box = $('chapterList'); box.innerHTML = '';
@@ -89,23 +116,28 @@ function renderMap() {
   $('mapContinue').textContent = t('title.continue', { n: next + 1 });
   for (const ch of CHAPTERS) {
     const got = LEVELS.slice(ch.from, ch.to + 1).reduce((a, _, k) => a + starsOf(ch.from + k), 0);
-    const wrap = document.createElement('section'); wrap.className = 'chapter'; wrap.id = 'chapter-' + ch.no;
+    const wrap = document.createElement('section'); wrap.className = 'chapter shelf'; wrap.id = 'chapter-' + ch.no;
     const option = document.createElement('option'); option.value = ch.no;
     option.textContent = `${t('map.chapter', { n: ch.no })} · ${tl(ch, 'name')}`;
     jump.appendChild(option);
-    wrap.innerHTML = `<div class="chap-head"><span class="eyebrow">${t('map.chapter', { n: ch.no })}</span><h3>${tl(ch, 'name')}</h3><span class="small">★ ${got} / ${(ch.to - ch.from + 1) * 3}</span></div>`;
-    const grid = document.createElement('div'); grid.className = 'stage-grid';
-    for (let i = ch.from; i <= ch.to; i++) {
-      const b = document.createElement('button');
-      const st = starsOf(i), open = unlocked(i);
-      b.className = 'stage-btn' + (st ? ' done' : '') + (open ? '' : ' locked');
-      if (i === next) { b.classList.add('next-stage'); b.setAttribute('aria-current', 'step'); }
-      b.innerHTML = open ? `<span class="n">${i + 1}</span>${st ? `<span class="st">${starsHTML(st)}</span>` : ''}` : `<span class="n">${i + 1}</span><span class="lock">${LOCK}</span>`;
-      b.setAttribute('aria-label', t('map.ariaStage', { n: i + 1, name: tl(LEVELS[i], 'name') }) + (open ? (st ? t('map.ariaStars', { n: st }) : '') : t('map.ariaLocked')));
-      b.onclick = () => { if (open) startStage(i); else { haptic(); toast(t('map.locked')); } };
-      grid.appendChild(b);
+    const face = shelfArt(TYPES[chapterFlavor(ch)].key, 'fresh');
+    wrap.innerHTML = `<div class="chap-head">${face ? `<img class="chap-face" src="${face}" alt="">` : ''}<div class="chap-text"><span class="eyebrow">${t('map.chapter', { n: ch.no })}</span><h3>${tl(ch, 'name')}</h3></div><span class="small">★ ${got} / ${(ch.to - ch.from + 1) * 3}</span></div>`;
+    for (let row = ch.from; row <= ch.to; row += 5) {
+      const plank = document.createElement('div'); plank.className = 'plank';
+      for (let i = row; i < Math.min(row + 5, ch.to + 1); i++) {
+        const b = document.createElement('button');
+        const st = starsOf(i), open = unlocked(i), ty = TYPES[stageFlavor(i)];
+        b.className = 'stage-btn' + (st ? ' done' : '') + (open ? '' : ' locked');
+        if (i === next) { b.classList.add('next-stage'); b.setAttribute('aria-current', 'step'); }
+        const art = st ? shelfArt(IMG['zombie_' + ty.key] ? 'zombie_' + ty.key : 'zombieB', 'zombie') : shelfArt(ty.key, open ? 'fresh' : 'locked');
+        b.innerHTML = `<span class="art">${i === next && typeof ASSETS !== 'undefined' && ASSETS.spore_round ? `<img class="spore" src="${ASSETS.spore_round}" alt="">` : ''}<img class="cake" src="${art}" alt="">${open ? '' : '<span class="cloche"></span>'}${st ? `<span class="st">${starsHTML(st)}</span>` : ''}</span><span class="n">${i + 1}</span>`;
+        b.setAttribute('aria-label', t('map.ariaStage', { n: i + 1, name: tl(LEVELS[i], 'name') }) + (open ? (st ? t('map.ariaStars', { n: st }) : '') : t('map.ariaLocked')));
+        b.onclick = () => { if (open) startStage(i); else { haptic(); toast(t('map.locked')); } };
+        plank.appendChild(b);
+      }
+      wrap.appendChild(plank);
     }
-    wrap.appendChild(grid); box.appendChild(wrap);
+    box.appendChild(wrap);
   }
   jump.value = CHAPTERS.find(ch => next >= ch.from && next <= ch.to).no;
   requestAnimationFrame(() => jumpToChapter(jump.value));
