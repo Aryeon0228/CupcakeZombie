@@ -1,0 +1,1 @@
+{"grid":["...x.cs","..o.oo.","xro.osm",".el.xcx","er.l..x","g.essgs","x....lc"],"customers":[{"r":2,"c":6,"turn":2},{"r":1,"c":2,"turn":2,"kind":"order","cells":[[1,2],[1,4],[1,5]],"vertical":false},{"r":2,"c":0,"turn":1,"kind":"picky"}],"spores":3,"a":{"first":2,"total":30,"waves":10,"greedy":false,"surv":null,"n":30}}

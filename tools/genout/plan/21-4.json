@@ -1,0 +1,1 @@
+{"grid":["c.x.x.","c....x","xm...o","oxooos","ox..mc","ou..ux"],"customers":[{"r":0,"c":2,"turn":1},{"r":5,"c":0,"turn":1,"kind":"kid","cells":[[5,0],[5,1]]}],"spores":2,"a":{"first":2,"total":22,"waves":12,"greedy":true,"surv":null,"n":22}}

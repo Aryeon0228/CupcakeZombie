@@ -190,14 +190,24 @@ function releasePending(s) {
 
 function freshCount(s) { return s.cells.filter(c => c && !c.inf && !c.wall).length; }
 
-// After a turn: customers due this turn take their cupcake (a chilled lemon still counts as fresh)
+// Every cell a customer reaches for: one cupcake, or several for a kid (two side by side) and a delivery order (a whole line).
+function customerCells(s, k) { return (k.cells || [[k.r, k.c]]).map(([r, c]) => r * s.W + c); }
+// After a turn: customers due this turn take their cupcake (a chilled lemon still counts as fresh).
+// kinds: undefined = buys the cupcake if it is fresh; 'kid' / 'order' = buys all of their cells, lost if any is fresh;
+// 'picky' = buys only when the cupcake AND every neighbouring cupcake are fresh — one spoiled neighbour and they walk away (refused).
 function customerCheck(s) {
   const due = s.customers.filter(k => k.turn === s.turn && !k.done);
   const result = [];
   for (const k of due) {
-    const cell = s.cells[k.r * s.W + k.c];
     k.done = true;
-    result.push({ k, fresh: !!cell && !cell.inf });
+    const idxs = customerCells(s, k);
+    const freshIdx = idxs.filter(i => s.cells[i] && !s.cells[i].inf);
+    if (k.kind === 'picky') {
+      const i = idxs[0], r = Math.floor(i / s.W), c = i % s.W;
+      const nearSpoiled = DIRS4.some(([dr, dc]) => { const rr = r + dr, cc = c + dc; if (rr < 0 || rr >= s.H || cc < 0 || cc >= s.W) return false; const n = s.cells[rr * s.W + cc]; return !!(n && n.inf); });
+      const fresh = freshIdx.length > 0;
+      result.push({ k, fresh: fresh && !nearSpoiled, refused: fresh && nearSpoiled, taken: fresh && !nearSpoiled ? [i] : [] });
+    } else result.push({ k, fresh: freshIdx.length > 0, taken: freshIdx });
   }
   return result;
 }
@@ -223,5 +233,5 @@ function playTurn(s, idx) {
 // state key for solvers
 function stateKey(s) { return s.turn + '|' + s.cells.map(c => c ? (c.inf ? (c.wrap ? 'S' : 'I') : (c.pend ? 'P' : '') + (c.wrap ? 'W' : '') + c.lid) : '_').join(','); }
 
-if (typeof module !== 'undefined') module.exports = { TYPES, DIRS4, DIAG4, parseLevel, cloneState, spreadsOf, targetsOf, hitCell, cascade, fire, releasePending, hasPending, playTurn, freshCount, customerCheck, canTarget, patternOffsets, stateKey };
+if (typeof module !== 'undefined') module.exports = { TYPES, DIRS4, DIAG4, parseLevel, cloneState, spreadsOf, targetsOf, hitCell, cascade, fire, releasePending, hasPending, playTurn, freshCount, customerCheck, customerCells, canTarget, patternOffsets, stateKey };
 

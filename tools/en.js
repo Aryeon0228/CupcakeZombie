@@ -85,4 +85,7 @@ const extra = require('./plan-extra.js');
 Object.assign(module.exports.chapters, extra.EN.chapters);
 Object.assign(module.exports.stages, extra.EN.stages);
 Object.assign(module.exports.intros, extra.EN.intros);
-
+const custom = require('./plan-customers.js');
+Object.assign(module.exports.chapters, custom.EN.chapters);
+Object.assign(module.exports.stages, custom.EN.stages);
+Object.assign(module.exports.intros, custom.EN.intros);

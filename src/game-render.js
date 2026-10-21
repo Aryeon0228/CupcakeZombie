@@ -240,18 +240,26 @@ function drawWrap(g, x, by, w, alpha = 1, flash = 0) {
   g.beginPath(); g.arc(x, ty, w * 0.04, 0, Math.PI * 2); g.fill(); g.stroke();
   g.restore();
 }
-function drawTag(g, x, y, r, n, pulse) {
+// Customer kinds: colour of the tag, the highlight under the cupcake and the sleeve of the arm.
+const CUST_STYLE = {
+  normal: { tag: '#DB4B58', glow: 'rgba(219, 75, 88, 0.25)', sleeve: '#9CC3E6', hand: 1 },
+  kid:    { tag: '#F2A33A', glow: 'rgba(242, 163, 58, 0.3)',  sleeve: '#F6D56A', hand: 0.8 },
+  order:  { tag: '#5B8E3E', glow: 'rgba(91, 142, 62, 0.22)',  sleeve: '#8FBF7A', hand: 1 },
+  picky:  { tag: '#8E5EA8', glow: 'rgba(142, 94, 168, 0.25)', sleeve: '#C9A7E0', hand: 1 },
+};
+const custStyle = k => CUST_STYLE[k && k.kind] || CUST_STYLE.normal;
+function drawTag(g, x, y, r, n, pulse, col = '#DB4B58') {
   g.save(); g.translate(x, y);
   const s = 1 + pulse * 0.12; g.scale(s, s);
-  g.fillStyle = '#DB4B58'; g.strokeStyle = '#4A2E27'; g.lineWidth = 2;
+  g.fillStyle = col; g.strokeStyle = '#4A2E27'; g.lineWidth = 2;
   g.beginPath(); g.arc(0, 0, r, 0, Math.PI * 2); g.fill(); g.stroke();
   g.fillStyle = '#FFF9F2'; g.font = `${Math.round(r * 1.25)}px Jua, sans-serif`;
   g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(String(n), 0, r * 0.08);
   g.restore();
 }
-function drawHand(g, x, y, r, grab) {
+function drawHand(g, x, y, r, grab, skin = '#F7CFAE') {
   g.save(); g.translate(x, y);
-  g.fillStyle = '#F7CFAE'; g.strokeStyle = '#4A2E27'; g.lineWidth = Math.max(1.5, r * 0.09);
+  g.fillStyle = skin; g.strokeStyle = '#4A2E27'; g.lineWidth = Math.max(1.5, r * 0.09);
   const fw = r * 0.34, spread = grab ? 0.55 : 1;
   for (let k = 0; k < 4; k++) { const fx = (-1.5 + k) * fw * 1.05 * spread; roundRect(g, fx - fw / 2, -r * 0.05, fw, r * (k === 1 || k === 2 ? 1.1 : 0.95), fw / 2); g.fill(); g.stroke(); }
   g.beginPath(); g.ellipse(0, -r * 0.2, r * 0.75, r * 0.62, 0, 0, Math.PI * 2); g.fill(); g.stroke();
@@ -437,13 +445,20 @@ function applyHit(h) {
 
 function customerPhase(list, k, done) {
   if (k >= list.length) { done(); return; }
-  const c = list[k];
-  const idx = c.k.r * state.W + c.k.c;
-  arm = { idx, t0: now, fresh: c.fresh };
+  const c = list[k], cells = customerCells(state, c.k);
+  // the hand goes for the fresh one it will take; otherwise the middle of what it ordered
+  const idx = c.fresh && c.taken && c.taken.length ? c.taken[0] : cells[Math.floor((cells.length - 1) / 2)];
+  arm = { idx, t0: now, fresh: c.fresh, kind: c.k.kind, refused: !!c.refused };
   const DUR = c.fresh ? 1250 : 1100;
   at(430, () => {
     if (c.fresh) { vis[idx] && (vis[idx].gone = true); floatText(cxOf(idx), cyOf(idx) - S * 0.95, pick(t('yum')), '#7C5D51', 0.3, 1000); tone(392, 0.12, 'triangle', 0.08); tone(523, 0.18, 'triangle', 0.08, 1, 0.1); }
-    else { floatText(cxOf(idx), cyOf(idx) - S * 0.95, pick(t('yuck')), '#DB4B58', 0.36, 1100); tone(220, 0.35, 'sawtooth', 0.04, 0.6); bump(idx, 0.2); }
+    else if (c.refused) { floatText(cxOf(idx), cyOf(idx) - S * 0.95, pick(t('pickyNo')), '#8E5EA8', 0.3, 1100); tone(330, 0.14, 'triangle', 0.05, 0.8); tone(262, 0.2, 'triangle', 0.05, 0.9, 0.14); }
+    else {
+      const big = cells.length > 1;
+      floatText(cxOf(idx), cyOf(idx) - S * 0.95, pick(t(big ? 'yuckBig' : 'yuck')), custStyle(c.k).tag, big ? 0.42 : 0.36, 1100);
+      tone(220, 0.35, 'sawtooth', 0.04, 0.6); if (big) tone(165, 0.4, 'sawtooth', 0.035, 0.6, 0.08);
+      cells.forEach((i, n) => at(n * 40, () => bump(i, 0.2)));
+    }
   });
   at(DUR, () => { arm = null; c.k.pending = false; customerPhase(list, k + 1, done); });
 }
@@ -527,7 +542,7 @@ function draw(dt) {
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   ctx.clearRect(0, 0, CW, CH);
   drawTray();
-  const sc = spriteScale(), T = now / 1000, W = state.W;
+  const sc = spriteScale(), T = now / 1000, W = state.W, H = state.H;
 
   // spatulas
   state.tiles.forEach((tk, i) => {
@@ -549,10 +564,24 @@ function draw(dt) {
   if (preview) drawPreview(focusIdx, T, preview);
   for (const k of state.customers) {
     if (k.done && !k.pending) continue;
-    const i = k.r * W + k.c;
-    if (!state.cells[i] || (state.cells[i].inf && !k.pending) || (vis[i] && vis[i].gone)) continue;
-    ctx.save(); ctx.fillStyle = 'rgba(219, 75, 88, 0.25)';
-    ctx.beginPath(); ctx.ellipse(cxOf(i), wellY(i), S * 0.44, S * 0.3, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+    const st = custStyle(k), cells = customerCells(state, k);
+    ctx.save();
+    if (k.kind === 'order' && cells.length > 1) { // the delivery box: a dashed outline around the whole line
+      const xs = cells.map(i => cxOf(i)), ys = cells.map(i => wellY(i));
+      ctx.strokeStyle = st.tag; ctx.lineWidth = 2.5; ctx.setLineDash([S * 0.12, S * 0.08]); ctx.lineDashOffset = -T * 20;
+      roundRect(ctx, Math.min(...xs) - S * 0.48, Math.min(...ys) - S * 0.95, Math.max(...xs) - Math.min(...xs) + S * 0.96, Math.max(...ys) - Math.min(...ys) + S * 1.3, S * 0.18); ctx.stroke(); ctx.setLineDash([]);
+    }
+    if (k.kind === 'picky') { // the neighbours it inspects
+      const r0 = k.r, c0 = k.c;
+      for (const [dr, dc] of DIRS4) { const r = r0 + dr, c = c0 + dc; if (r < 0 || r >= H || c < 0 || c >= W) continue; const j = r * W + c; if (!state.cells[j] || state.cells[j].wall) continue;
+        ctx.strokeStyle = st.tag; ctx.globalAlpha = 0.45; ctx.lineWidth = 1.5; ctx.setLineDash([S * 0.07, S * 0.06]);
+        ctx.beginPath(); ctx.ellipse(cxOf(j), wellY(j), S * 0.4, S * 0.27, 0, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+    }
+    for (const i of cells) {
+      if (!state.cells[i] || (state.cells[i].inf && !k.pending) || (vis[i] && vis[i].gone)) continue;
+      ctx.fillStyle = st.glow; ctx.beginPath(); ctx.ellipse(cxOf(i), wellY(i), S * 0.44, S * 0.3, 0, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
   }
 
   for (let i = 0; i < vis.length; i++) {
@@ -565,10 +594,12 @@ function draw(dt) {
 
   for (const k of state.customers) {
     if (k.done && !k.pending) continue;
-    const i = k.r * W + k.c;
-    if (!state.cells[i] || (state.cells[i].inf && !k.pending) || (vis[i] && vis[i].gone)) continue;
-    const left = k.turn - state.turn;
-    drawTag(ctx, cxOf(i) + S * 0.33, cyOf(i) - S * 0.5, S * 0.15, left > 0 ? left : '!', left <= 1 ? (Math.sin(T * 6) * 0.5 + 0.5) : 0);
+    const left = k.turn - state.turn, cells = customerCells(state, k), st = custStyle(k);
+    const spots = k.kind === 'order' ? [cells[cells.length - 1]] : cells;
+    for (const i of spots) {
+      if (!state.cells[i] || (state.cells[i].inf && !k.pending && k.kind !== 'order') || (vis[i] && vis[i].gone)) continue;
+      drawTag(ctx, cxOf(i) + S * 0.33, cyOf(i) - S * 0.5, S * 0.15, left > 0 ? left : '!', left <= 1 ? (Math.sin(T * 6) * 0.5 + 0.5) : 0, st.tag);
+    }
   }
 
   drawHintMarker(T);
@@ -848,10 +879,11 @@ function drawArm(sc) {
   if (e < 430) { const p = e / 430; y = -S * 0.6 + (ty + S * 0.6) * (1 - Math.pow(1 - p, 3)); }
   else if (e < 600) y = ty;
   else { const p = Math.min(1, (e - 600) / (arm.fresh ? 600 : 380)); y = ty - (ty + S * 1.4) * p * p; }
-  const shake = !arm.fresh && e > 430 && e < 650 ? Math.sin(e / 18) * S * 0.04 : 0;
-  const x = tx + shake;
+  const shake = !arm.fresh && !arm.refused && e > 430 && e < 650 ? Math.sin(e / 18) * S * 0.04 : 0;
+  const x = tx + shake + (arm.refused && e > 430 && e < 600 ? Math.sin((e - 430) / 170 * Math.PI) * S * 0.1 : 0); // picky waves it off
+  const st = custStyle(arm), hr = S * 0.24 * st.hand;
   ctx.save();
-  ctx.fillStyle = '#9CC3E6'; ctx.strokeStyle = '#4A2E27'; ctx.lineWidth = 2.2;
+  ctx.fillStyle = st.sleeve; ctx.strokeStyle = '#4A2E27'; ctx.lineWidth = 2.2;
   roundRect(ctx, x - S * 0.2, -S, S * 0.4, y + S * 0.85, S * 0.12); ctx.fill(); ctx.stroke();
   ctx.fillStyle = '#FFF9F2'; roundRect(ctx, x - S * 0.23, y - S * 0.28, S * 0.46, S * 0.14, S * 0.06); ctx.fill(); ctx.stroke();
   ctx.restore();
@@ -860,7 +892,7 @@ function drawArm(sc) {
     const key = v.t === 'b' ? (v.lid > 0 ? 'butter' : 'butter_open') : TYPES[v.t].key;
     drawSpriteAt(ctx, key, x, y + S * 0.95, sc, Math.sin(e / 90) * 0.06);
   }
-  drawHand(ctx, x, y, S * 0.24, arm.fresh && e > 430);
+  drawHand(ctx, x, y, hr, arm.fresh && e > 430);
 }
 
 function drawStamp(t, age) {

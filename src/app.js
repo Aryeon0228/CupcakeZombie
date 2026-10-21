@@ -412,10 +412,10 @@ async function showResult(kind, stars) {
     const fresh = freshCount(state);
     $('resEyebrow').textContent = mode === 'daily' ? t('play.daily') : t('res.stage', { n: li + 1 });
     if (kind === 'lost') {
-      const k = state.customers.find(c => c.turn === state.turn && state.cells[c.r * state.W + c.c] && !state.cells[c.r * state.W + c.c].inf);
-      const cell = k && state.cells[k.r * state.W + k.c];
-      $('resTitle').textContent = t('res.lost');
-      setText($('resMsg'), t('res.lostMsg', { name: cell ? typeName(cell.t) : 'cupcake' }));
+      const k = state.customers.find(c => c.turn === state.turn && customerCells(state, c).some(j => state.cells[j] && !state.cells[j].inf));
+      const j = k && customerCells(state, k).find(j => state.cells[j] && !state.cells[j].inf), cell = j >= 0 && state.cells[j];
+      $('resTitle').textContent = t(k && k.kind === 'order' ? 'res.lostOrder' : 'res.lost');
+      setText($('resMsg'), t(k && k.kind === 'kid' ? 'res.lostKidMsg' : k && k.kind === 'order' ? 'res.lostOrderMsg' : 'res.lostMsg', { name: cell ? typeName(cell.t) : 'cupcake' }));
       mk(t('res.undo'), 'go', undo);
     } else {
       $('resTitle').textContent = t('res.out');
@@ -461,6 +461,9 @@ function drawIntroArt(c, kind) {
   if (kind === 'start') { drawSpriteAt(g, 'basic', 60, 200, sc); drawSpriteAt(g, 'zombieB', 160, 200, sc); drawSpore(g, 110, 40, 16, 0, 1); }
   else if (kind === 'spores') { drawSpore(g, 70, 104, 30); drawSpore(g, 150, 104, 30, 0.5); }
   else if (kind === 'cust') { drawSpriteAt(g, 'basic', 110, 204, sc); drawHand(g, 110, 36, 34, false); drawTag(g, 172, 70, 20, 1, 0); }
+  else if (kind === 'kid') { const s2 = 120 / UNIT; drawSpriteAt(g, 'basic', 70, 204, s2); drawSpriteAt(g, 'berry', 150, 204, s2); drawHand(g, 110, 40, 26, false); drawTag(g, 110, 100, 18, 1, 0, '#F2A33A'); }
+  else if (kind === 'order') { const s2 = 86 / UNIT; [40, 110, 180].forEach((x, i) => drawSpriteAt(g, ['basic', 'sprinkle', 'berry'][i], x, 200, s2)); g.strokeStyle = '#5B8E3E'; g.lineWidth = 4; g.setLineDash([10, 7]); roundRect(g, 4, 112, 212, 100, 14); g.stroke(); g.setLineDash([]); drawTag(g, 200, 112, 20, 2, 0, '#5B8E3E'); }
+  else if (kind === 'picky') { const s2 = 100 / UNIT; drawSpriteAt(g, 'zombieB', 50, 206, s2); drawSpriteAt(g, 'basic', 125, 206, s2); drawSpriteAt(g, 'berry', 200, 206, s2); drawHand(g, 125, 44, 30, false, '#F7CFAE'); drawTag(g, 178, 70, 20, 1, 0, '#8E5EA8'); g.strokeStyle = '#8E5EA8'; g.lineWidth = 3; g.setLineDash([6, 5]); g.beginPath(); g.ellipse(50, 206, 40, 14, 0, 0, Math.PI * 2); g.stroke(); g.beginPath(); g.ellipse(200, 206, 40, 14, 0, 0, Math.PI * 2); g.stroke(); g.setLineDash([]); }
   else if (kind === 'wrap') { drawSpriteAt(g, 'berry', 110, 200, sc); drawWrap(g, 110, 202, 150); }
   else if (kind === 'defl') { drawSpatula(g, 110, 110, 190, '/'); drawMoldCherry(g, 40, 160, 18, 0.4); g.strokeStyle = '#5B7A21'; g.setLineDash([6, 6]); g.lineWidth = 3; g.beginPath(); g.moveTo(60, 160); g.lineTo(110, 160); g.lineTo(110, 30); g.stroke(); }
 }
@@ -529,7 +532,11 @@ function renderLegend() {
   const before = fn => mode === 'stage' && !LEVELS.slice(0, li).some(fn);
   if (hasWrap(def.grid)) extra('wrap', t('leg.wrap'), t('rule.wrap'), before(l => hasWrap(l.grid)), g => { drawSpriteAt(g, 'basic', 40, 76, 62 / UNIT); drawWrap(g, 40, 76, 64); });
   if (hasDefl(def.grid)) extra('defl', t('leg.defl'), t('rule.defl'), before(l => hasDefl(l.grid)), g => drawSpatula(g, 40, 40, 74, '/'));
-  if ((def.customers || []).length) extra('cust', t('leg.cust'), t('rule.cust'), before(l => (l.customers || []).length), g => { drawHand(g, 36, 30, 24, false); drawTag(g, 58, 58, 13, 1, 0); });
+  const hasKind = (l, kind) => (l.customers || []).some(k => (k.kind || 'cust') === kind);
+  if (hasKind(def, 'cust')) extra('cust', t('leg.cust'), t('rule.cust'), before(l => hasKind(l, 'cust')), g => { drawHand(g, 36, 30, 24, false); drawTag(g, 58, 58, 13, 1, 0); });
+  if (hasKind(def, 'kid')) extra('kid', t('leg.kid'), t('rule.kid'), before(l => hasKind(l, 'kid')), g => { drawHand(g, 36, 30, 19, false); drawTag(g, 58, 58, 13, 1, 0, '#F2A33A'); });
+  if (hasKind(def, 'order')) extra('order', t('leg.order'), t('rule.order'), before(l => hasKind(l, 'order')), g => { g.strokeStyle = '#5B8E3E'; g.lineWidth = 2.5; g.setLineDash([5, 4]); roundRect(g, 8, 24, 60, 40, 8); g.stroke(); g.setLineDash([]); drawTag(g, 62, 26, 11, 2, 0, '#5B8E3E'); });
+  if (hasKind(def, 'picky')) extra('picky', t('leg.picky'), t('rule.picky'), before(l => hasKind(l, 'picky')), g => { drawHand(g, 36, 30, 24, false); drawTag(g, 58, 58, 13, 1, 0, '#8E5EA8'); });
 }
 // Wrap each sentence so a line breaks between sentences rather than inside one when it can
 const esc = x => String(x).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
@@ -544,8 +551,8 @@ function updateHint() {
     let s = c.inf ? (c.wrap ? t('hint.sealedInf') : t('hint.inf')) : c.pend ? t('hint.pending') : t('rule.' + ty.key);
     if (!c.inf && c.wrap) s = t('hint.wrapPrefix') + t('rule.wrap');
     if (!c.inf && c.t === 'b') s += c.lid > 0 ? t('hint.lidOn') : t('hint.lidOff');
-    const k = state.customers.find(k => !k.done && k.r * state.W + k.c === i);
-    if (k && !c.inf) { const n = k.turn - state.turn; s += t('hint.cust', { n, s: plural(n) }); }
+    const k = state.customers.find(k => !k.done && customerCells(state, k).includes(i));
+    if (k && !c.inf) { const n = k.turn - state.turn; s += t('hint.' + (k.kind || 'cust'), { n, s: plural(n) }); }
     el.innerHTML = sents(`<b>${c.inf ? t('hint.spoiled') : ''}${tl(ty, 'name')}</b> ${s}`);
     if (i === selected && !busy && !result && canTarget(state, i)) el.innerHTML += `<span class="selection-tip">${t('hint.confirm')}</span>`;
   } else if (i >= 0 && state.tiles[i]) el.innerHTML = sents(`<b>${t('hint.spatula')}</b> ${t('rule.defl')}`);

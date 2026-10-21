@@ -109,11 +109,41 @@ function generate(spec, seed) {
     let guard2 = 0;
     while (guard2++ < 300) { const r = Math.floor(R() * H), c = Math.floor(R() * W); if (/[a-mo-zA-MO-Z]/.test(g[r][c]) && !customers.some(k => k.r === r && k.c === c)) { customers.push({ r, c, turn }); break; } }
   }
+  const cake = (r, c) => r >= 0 && r < H && c >= 0 && c < W && /[a-mo-zA-MO-Z]/.test(g[r][c]);
+  const used = (r, c) => customers.some(k => (k.cells || [[k.r, k.c]]).some(([kr, kc]) => kr === r && kc === c));
+  // kid: two cupcakes side by side, both must be spoiled
+  for (const turn of (spec.kids || [])) {
+    let guard2 = 0;
+    while (guard2++ < 400) {
+      const r = Math.floor(R() * H), c = Math.floor(R() * W), [dr, dc] = L.DIRS4[Math.floor(R() * 4)];
+      if (cake(r, c) && cake(r + dr, c + dc) && !used(r, c) && !used(r + dr, c + dc)) { customers.push({ r, c, turn, kind: 'kid', cells: [[r, c], [r + dr, c + dc]] }); break; }
+    }
+  }
+  // delivery order: a whole row (or column) of cupcakes, at least three of them
+  for (const turn of (spec.orders || [])) {
+    let guard2 = 0;
+    while (guard2++ < 400) {
+      const vertical = R() < 0.35, line = vertical ? Math.floor(R() * W) : Math.floor(R() * H);
+      const cells = [];
+      for (let k = 0; k < (vertical ? H : W); k++) { const r = vertical ? k : line, c = vertical ? line : k; if (cake(r, c) && !used(r, c)) cells.push([r, c]); }
+      const any = (vertical ? Array.from({ length: H }, (_, k) => [k, line]) : Array.from({ length: W }, (_, k) => [line, k])).some(([r, c]) => used(r, c));
+      if (cells.length >= 3 && cells.length <= 5 && !any) { customers.push({ r: cells[0][0], c: cells[0][1], turn, kind: 'order', cells, vertical }); break; }
+    }
+  }
+  // picky: a cupcake with at least one cupcake neighbour (otherwise the rule never matters)
+  for (const turn of (spec.pickies || [])) {
+    let guard2 = 0;
+    while (guard2++ < 400) {
+      const r = Math.floor(R() * H), c = Math.floor(R() * W);
+      if (cake(r, c) && !used(r, c) && L.DIRS4.some(([dr, dc]) => cake(r + dr, c + dc))) { customers.push({ r, c, turn, kind: 'picky' }); break; }
+    }
+  }
   // trim fully empty outer rows/cols
   let grid = g.map(row => row.join(''));
-  while (grid.length && /^[.]+$/.test(grid[0])) { grid.shift(); customers.forEach(k => k.r--); }
+  const shift = (dr, dc) => customers.forEach(k => { k.r += dr; k.c += dc; if (k.cells) k.cells = k.cells.map(([r, c]) => [r + dr, c + dc]); });
+  while (grid.length && /^[.]+$/.test(grid[0])) { grid.shift(); shift(-1, 0); }
   while (grid.length && /^[.]+$/.test(grid[grid.length - 1])) grid.pop();
-  while (grid[0] && grid.every(r => r[0] === '.')) { grid = grid.map(r => r.slice(1)); customers.forEach(k => k.c--); }
+  while (grid[0] && grid.every(r => r[0] === '.')) { grid = grid.map(r => r.slice(1)); shift(0, -1); }
   while (grid[0] && grid.every(r => r[r.length - 1] === '.')) grid = grid.map(r => r.slice(0, -1));
   return { spores: spec.spores, grid, customers };
 }
@@ -149,9 +179,17 @@ function featureMatters(spec, def, a) {
     const s0 = L.parseLevel(def);
     return a.seqs.length > 0 && a.seqs.every(seq => seq.some(i => s0.cells[i] && s0.cells[i].wrap));
   }
-  if (f === 'cust') {
+  if (f === 'cust' || f === 'kid' || f === 'order') {
+    // the customers must change the answer
     const b = analyze({ ...def, customers: [] });
     return b.first > a.first;
+  }
+  if (f === 'picky') {
+    // the leniency must be used: as an ordinary customer the stage gets harder (fewer openings) or unsolvable,
+    // and the customer must still matter at all
+    const plain = analyze({ ...def, customers: def.customers.map(k => k.kind === 'picky' ? { r: k.r, c: k.c, turn: k.turn } : k) });
+    const none = analyze({ ...def, customers: [] });
+    return plain.first < a.first && none.first > a.first;
   }
   if (f === 'defl') {
     const d2 = { ...def, grid: def.grid.map(r => r.replace(/[\/\\]/g, '.')) };
