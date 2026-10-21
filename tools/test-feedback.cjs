@@ -43,11 +43,11 @@ async function main() {
   assert.notEqual(motion.cupcakeReactionPose(8000,false,true).arms,motion.cupcakeReactionPose(8080,false,true).arms);
   assert.equal(motion.cupcakeReactionPose(8000).active,false,'one-shot lab remains finite');
   const calls=[],drop={DROP:420,LAND:260,projs:[],now:0,S:60,reduceMotion:false,dropOrigin:{ceiling:-120},ctx:{},dropCtx:{},
-    cxOf:()=>120,cyOf:()=>60,META:{mold_drop:{w:240,k:1}},IMG:{mold_drop:{}},drawSpriteAt:(...a)=>calls.push(a)};
+    cxOf:()=>120,cyOf:()=>60,META:{mold_player:{w:240,k:1},mold_drop:{w:240,k:1}},IMG:{mold_player:{},mold_drop:{}},drawSpriteAt:(...a)=>calls.push(a)};
   vm.createContext(drop);vm.runInContext(render.slice(render.indexOf('function dropPose('),render.indexOf('function drawParticles(')),drop);
   for(const age of [350,420,475,600]){
     drop.projs=[{style:'drop',to:1,contactOffset:-.2,t0:0,dur:420}];drop.now=age;drop.drawProjectiles(1);
-    assert.equal(calls.at(-1)[1],'mold_drop');
+    assert.equal(calls.at(-1)[1],'mold_player','use the smiling parent even when open-mouth art is available');
     assert.equal(calls.at(-1)[0],drop.dropCtx,'large mold uses unclipped layer');
   }
   assert.equal(calls[1][3],calls[2][3],'squash keeps contact point');
