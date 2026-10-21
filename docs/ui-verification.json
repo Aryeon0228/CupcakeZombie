@@ -4,12 +4,12 @@
       "width": 320,
       "height": 568,
       "logical": [
-        266,
-        279
+        273,
+        288
       ],
       "actual": [
-        266,
-        279
+        273,
+        288
       ],
       "within": true,
       "bodyOverflow": false
