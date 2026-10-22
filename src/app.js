@@ -619,6 +619,8 @@ canvas.addEventListener('pointerdown', e => {
   press = { id: e.pointerId, x: e.clientX, y: e.clientY, lastX: e.clientX, lastY: e.clientY, cell: i, confirm: selected === i && canTarget(state, i), moved: false };
   canvas.setPointerCapture(e.pointerId);
   pointPreview(e, true, true);
+  // A mouse has already hovered the cell, so pointPreview sees no "entry" and stays silent: the press itself must meow.
+  if (i >= 0 && state.cells[i] && vis[i] && !vis[i].gone && now - lastPeekNote >= 115) { lastPeekNote = now; cupcakeSound(i); }
   if (canTarget(state, i) && vis[i] && !vis[i].gone) vis[i].reactAt = now;
   updateHint();
 });
