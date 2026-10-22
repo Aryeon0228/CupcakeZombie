@@ -1,0 +1,1 @@
+{"grid":["or..uc",".mu.ox","x.o...","....m.","c.xxo.","..mm.."],"customers":[{"r":4,"c":2,"turn":1,"kind":"kid","cells":[[4,2],[4,3]]},{"r":0,"c":0,"turn":2,"kind":"order","cells":[[0,0],[0,1],[0,4],[0,5]],"vertical":false}],"spores":3,"a":{"first":1,"total":17,"waves":9,"greedy":false,"surv":null,"n":17,"bits":7.672425341971495,"traps":3}}

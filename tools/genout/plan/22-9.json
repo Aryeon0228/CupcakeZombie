@@ -1,0 +1,1 @@
+{"grid":[".rooxo","xu..x.","c.ox..","cu.urx","co.s.x","...o.."],"customers":[{"r":0,"c":2,"turn":1},{"r":0,"c":5,"turn":2,"kind":"order","cells":[[0,5],[3,5],[4,5]],"vertical":true}],"spores":3,"a":{"first":1,"total":21,"waves":6,"greedy":false,"surv":null,"n":21,"bits":8.266786540694902,"traps":11}}

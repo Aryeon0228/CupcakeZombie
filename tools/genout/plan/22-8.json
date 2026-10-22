@@ -1,0 +1,1 @@
+{"grid":["..xomx","o.m..c","o.mu.o","o....o",".o..u.","..rs.."],"customers":[{"r":0,"c":2,"turn":1,"kind":"order","cells":[[0,2],[0,3],[0,4],[0,5]],"vertical":false}],"spores":2,"a":{"first":2,"total":17,"waves":3,"greedy":true,"surv":null,"n":17,"bits":5.787902559391432,"traps":9}}

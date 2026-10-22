@@ -1,0 +1,1 @@
+{"grid":[".xm.so","ox..o.",".x....","o.o.c.","xxs.m.","oo..x."],"customers":[{"r":3,"c":0,"turn":1,"kind":"order","cells":[[3,0],[3,2],[3,4]],"vertical":false}],"spores":2,"a":{"first":2,"total":18,"waves":6,"greedy":true,"surv":null,"n":18,"bits":5.491853096329675,"traps":1}}

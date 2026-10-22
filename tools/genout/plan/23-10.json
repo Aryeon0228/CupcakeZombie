@@ -1,0 +1,1 @@
+{"grid":["m.x..xe",".l.r.ms","go..ooe","ms..ol.","gg.gogc",".lm..c.","o.ol.om"],"customers":[{"r":0,"c":2,"turn":2},{"r":0,"c":0,"turn":2,"kind":"order","cells":[[0,0],[2,0],[3,0],[4,0],[6,0]],"vertical":true},{"r":3,"c":5,"turn":1,"kind":"picky"}],"spores":3,"a":{"first":1,"total":31,"waves":8,"greedy":false,"surv":null,"n":31,"bits":9.124121311829187,"traps":4}}

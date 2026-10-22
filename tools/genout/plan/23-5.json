@@ -1,0 +1,1 @@
+{"grid":["x.g..c",".xx.cx","o....x","l..l..","m.sr.r",".x.g.s"],"customers":[{"r":3,"c":3,"turn":1,"kind":"picky"},{"r":3,"c":0,"turn":2,"kind":"picky"}],"spores":3,"a":{"first":1,"total":18,"waves":5,"greedy":false,"surv":null,"n":18,"bits":7.6293566200796095,"traps":3}}
