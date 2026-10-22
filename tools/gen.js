@@ -249,8 +249,9 @@ function fits(spec, def, a) {
 }
 
 function search(spec, tries, keep = 5) {
-  const found = [];
+  const found = [], t0 = Date.now(), budget = spec.timeBudgetMs || Infinity;
   for (let k = 1; k <= tries; k++) {
+    if (Date.now() - t0 > budget) break;
     const seed = k * 7919 + (spec.salt || 0) * 104729;
     const def = generate(spec, seed);
     if (!def.grid.length) continue;

@@ -24,10 +24,21 @@ if (which === 'daily') {
       const file = path.join(outDir, `${ch.no}-${i + 1}.json`);
       if (fs.existsSync(file) && JSON.parse(fs.readFileSync(file, 'utf8'))) return;
       const t0 = Date.now();
-      const spec = { ...st, salt: ch.no * 100 + i + 1 };
-      let res = G.search(spec, spec.tries || 5000, 3);
+      const spec = { ...st, salt: ch.no * 100 + i + 1, timeBudgetMs: i === 9 ? 240000 : 120000 };
+      // Search within a time budget; if the difficulty band cannot be hit, relax it step by step rather than giving up.
+      const steps = [
+        s => s,
+        s => ({ ...s, minBits: s.minBits != null ? s.minBits - 0.6 : undefined, maxBits: s.maxBits != null ? s.maxBits + 0.6 : undefined }),
+        s => { const r = { ...s }; delete r.minTraps; return r; },
+        s => { const r = { ...s }; delete r.minTraps; delete r.minBits; delete r.maxBits; return r; },
+        s => { const r = { ...s }; delete r.minTraps; delete r.minBits; delete r.maxBits; delete r.greedy; return r; },
+      ];
+      let res = [], relaxed = 0;
+      for (let k = 0; k < steps.length && !res.length; k++) { relaxed = k; res = G.search(steps[k](spec), spec.tries || 5000, 3); }
       if (!res.length) { console.log(`${ch.no}-${i + 1} ${st.name}: NONE (${Date.now() - t0}ms)`); fs.writeFileSync(file, 'null'); return; }
       const best = res[0];
+      if (best.a.bits == null) { const c = G.curve(best.def); best.a.bits = c.bits; best.a.traps = c.traps; }
+      if (relaxed) console.log(`  (relaxed ${relaxed})`);
       fs.writeFileSync(file, JSON.stringify({ grid: best.def.grid, customers: best.def.customers, spores: st.spores, a: { first: best.a.first, total: best.a.total, waves: best.a.maxWaves, greedy: best.a.greedyWins, surv: best.a.minSurvivorsWrong, n: best.a.cupcakes, bits: best.a.bits, traps: best.a.traps } }));
       console.log(`${ch.no}-${i + 1} ${st.name}: first=${best.a.first}/${best.a.total} waves=${best.a.maxWaves} greedy=${best.a.greedyWins} n=${best.a.cupcakes} bits=${best.a.bits != null ? best.a.bits.toFixed(1) : '-'} traps=${best.a.traps ?? '-'} (${Date.now() - t0}ms)`);
     });
