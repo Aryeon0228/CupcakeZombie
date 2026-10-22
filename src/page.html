@@ -148,8 +148,8 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 .sent { display: inline-block; }
 /* Reserve three lines, including padding. Hover, selection and busy copy must
    not resize the tray or change the cell underneath a stationary pointer. */
-.hintline { flex: 0 0 auto; height: calc(4.2em + 12px); min-height: calc(4.2em + 12px); overflow-y: auto; overscroll-behavior: contain; text-wrap: balance; padding: 6px 18px; font-size: 13px; color: var(--ink-soft); text-align: center; line-height: 1.4; }
-.hintline b { font-family: var(--f-display); font-weight: 400; color: var(--ink); margin-right: 6px; }
+.hintline { flex: 0 0 auto; height: calc(4.35em + 12px); min-height: calc(4.35em + 12px); overflow-y: auto; overscroll-behavior: contain; text-wrap: balance; padding: 6px 18px; font-size: 15px; color: var(--ink-soft); text-align: center; line-height: 1.45; display: flex; flex-direction: column; justify-content: center; justify-content: safe center; }
+.hintline b { font-family: var(--f-display); font-weight: 400; color: var(--ink); margin-right: 6px; font-size: 16px; }
 .selection-tip { display: block; color: var(--mold-deep); font-size: 0.92em; }
 .hud {
   background: var(--paper); border-top: 2px solid var(--ink);
@@ -273,7 +273,7 @@ html.reduce-motion .reward-card, html.reduce-motion .reward-card small { animati
 @keyframes starpop { from { transform: scale(0) rotate(-40deg); } }
 html.reduce-motion .overlay, html.reduce-motion .card, html.reduce-motion .bigstars span.on, html.reduce-motion .pips .mold { animation: none; } html.reduce-motion .btn, html.reduce-motion .sheet, html.reduce-motion .sheet-card { transition: none; }
 @media (max-height: 700px) {
-  .hintline { font-size: 12px; }
+  .hintline { font-size: 14px; }
   .logo-big p { font-size: 12px; }
   #app.has-bg .title-wrap { padding-top: 28px; gap: 12px; }
 }

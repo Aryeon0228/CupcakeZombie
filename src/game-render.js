@@ -716,25 +716,24 @@ function cupcakePose(v, time = now, reduced = reduceMotion) {
   }
   return { sx: 1 + k * 0.55, sy: 1 - k };
 }
-// Celebration hop: the whole cupcake leaves the well (feet off the ground), squashing on take-off and landing.
-const HOP = 560;
-function hop(i, delay = 0, amp = 0.32) { if (vis[i]) { vis[i].hopAt = now + delay; vis[i].hopAmp = amp; } }
-function hopPose(v) {
-  const p = v.hopAt >= 0 ? (now - v.hopAt) / HOP : -1;
-  if (reduceMotion || !(p >= 0 && p < 1)) return { dy: 0, sx: 1, sy: 1, air: 0 };
-  const air = Math.sin(p * Math.PI);
-  let sx = 1, sy = 1;
-  if (p < 0.12) { const q = Math.sin(p / 0.12 * Math.PI); sy = 1 - 0.14 * q; sx = 1 + 0.1 * q; }
-  else if (p > 0.84) { const q = Math.sin((p - 0.84) / 0.16 * Math.PI); sy = 1 - 0.17 * q; sx = 1 + 0.12 * q; }
-  else { sy = 1 + 0.1 * air; sx = 1 - 0.07 * air; }
-  return { dy: -S * (v.hopAmp || 0.32) * air, sx, sy, air };
+// Celebration shamble: zombies are slow and heavy, so they do not jump — they sway on their feet with a lazy
+// lurch (tilt about the feet, a slump into each lean) while stink wafts up, one after another across the tray.
+const SWAY = 1300;
+function sway(i, delay = 0, amp = 0.15) { if (vis[i]) { vis[i].swayAt = now + delay; vis[i].swayAmp = amp; } }
+function swayPose(v) {
+  const p = v.swayAt >= 0 ? (now - v.swayAt) / SWAY : -1;
+  if (reduceMotion || !(p >= 0 && p < 1)) return { rot: 0, sx: 1, sy: 1, dy: 0 };
+  const env = Math.sin(p * Math.PI); // eases in and out
+  const rot = (v.swayAmp || 0.15) * Math.sin(p * Math.PI * 3) * env; // one and a half slow lurches
+  const lean = Math.abs(Math.sin(p * Math.PI * 3)) * env;
+  return { rot, sx: 1 + 0.05 * lean, sy: 1 - 0.07 * lean, dy: 0 };
 }
 function drawCupcake(i, v, sc) {
-  const x0 = cxOf(i), hp = hopPose(v), by = baseY(i) + hp.dy;
+  const x0 = cxOf(i), sw = swayPose(v), by = baseY(i);
   const zombie = isZombieShown(v);
-  const pose = cupcakePose(v), sx = pose.sx * hp.sx, sy = pose.sy * hp.sy;
-  ctx.save(); ctx.fillStyle = `rgba(60, 40, 40, ${0.18 * (1 - hp.air * 0.5)})`;
-  ctx.beginPath(); ctx.ellipse(x0, baseY(i) - S * 0.04, S * 0.33 * (1 - hp.air * 0.3), S * 0.09 * (1 - hp.air * 0.3), 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  const pose = cupcakePose(v), sx = pose.sx * sw.sx, sy = pose.sy * sw.sy;
+  ctx.save(); ctx.fillStyle = 'rgba(60, 40, 40, 0.18)';
+  ctx.beginPath(); ctx.ellipse(x0, by - S * 0.04, S * 0.33, S * 0.09, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
   const freshKey = freshSpriteKey(v);
   if (!zombie) {
     const react = v.reactAt >= 0 && selected === i && !busy && !result && !introOpen && v.infAt < 0 &&
@@ -744,7 +743,7 @@ function drawCupcake(i, v, sc) {
     // The tint shares the exact same pose; rotating a second copy made two
     // outlines shimmer against each other during the infection fade.
     if (v.infAt >= 0 && TINT[freshKey]) { const p = Math.min(1, (now - v.infAt) / 230); drawSpriteAt(ctx, freshKey, x0, by, sc, 0, sx, sy, false, p, TINT[freshKey]); }
-  } else drawSpriteAt(ctx, zombieKey(v), x0, by, sc, 0, sx, sy, zombieFlip(v));
+  } else drawSpriteAt(ctx, zombieKey(v), x0, by, sc, sw.rot, sx, sy, zombieFlip(v));
   if (v.wrap) { const fl = v.flashAt >= 0 ? Math.max(0, 1 - (now - v.flashAt) / 500) : 0; drawWrap(ctx, x0, by + 2, S * 0.86, 1, fl); }
 }
 

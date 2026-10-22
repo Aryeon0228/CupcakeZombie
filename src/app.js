@@ -193,7 +193,7 @@ function rebuildVis() {
     zv: ((i * 7 + li * 3) % 3 === 0) ? 'zombieA' : 'zombieB',
     flip: ((i * 5 + li) % 4) === 1,
     phase: (i * 1.37) % (Math.PI * 2),
-    infAt: -1, bumpAt: -1, bumpAmp: 0, hopAt: -1, hopAmp: 0, peekAt: -1, reactAt: -1, flashAt: -1, gone: false,
+    infAt: -1, bumpAt: -1, bumpAmp: 0, swayAt: -1, swayAmp: 0, peekAt: -1, reactAt: -1, flashAt: -1, gone: false,
   });
 }
 function loadLevel(d, opts = {}) {
@@ -285,17 +285,20 @@ function playTicks(n, sim, done) {
   at(end + 450, () => playTicks(n - 1, sim, done));
 }
 
-// The shelf has gone bad: zombies hop in a wave across the tray, sprinkles rain down, a stamp slams on.
+// The shelf has gone bad: the zombies shamble and sway in a slow wave across the tray with stink rising,
+// sprinkles rain down for the player, and a stamp slams on.
 function chapterDone() { return mode === 'stage' && li % 10 === 9 && li < LEVELS.length - 1; }
 function celebrate(stars) {
   const last = mode === 'stage' && li === LEVELS.length - 1;
   const text = last ? t('res.bakery') : chapterDone() ? t('res.chapterStamp', { n: Math.floor(li / 10) + 1 }) : t('res.wiped');
   if (reduceMotion) { stamp(text, '#5B7A21', 900); return; }
-  for (let i = 0; i < vis.length; i++) if (vis[i]) hop(i, (i % state.W) * 55 + Math.floor(i / state.W) * 25, 0.34);
+  for (let i = 0; i < vis.length; i++) if (vis[i]) {
+    const delay = (i % state.W) * 90 + Math.floor(i / state.W) * 40;
+    sway(i, delay, 0.15); at(delay + 120, () => { if (vis[i] && isZombieShown(vis[i])) stink(i); });
+  }
   at(260, () => stamp(text, '#5B7A21', 1400));
   at(380, () => confetti(stars === 3 ? 52 : 36));
-  at(900, () => { for (let i = 0; i < vis.length; i++) if (vis[i]) hop(i, (state.W - 1 - i % state.W) * 45, 0.2); });
-  at(950, () => tone(note(9), 0.12, 'sine', 0.04));
+  at(700, () => tone(110, 0.5, 'sawtooth', 0.03, 0.8)); // a low, lazy groan under the sway
 }
 function finish(res) {
   busy = false;
@@ -570,6 +573,12 @@ function updateHint() {
   else if (result) el.innerHTML = '';
   else if (hintCell >= 0) el.innerHTML = sents(t('hint.hint'));
   else el.innerHTML = tutorialStage() ? sents(t('hint.default')) : '';
+  fitHint(el);
+}
+// The hint box has a fixed height so the board never jumps; long rule text steps down a size or two instead of clipping.
+function fitHint(el) {
+  el.style.fontSize = '';
+  for (const px of [14, 13, 12]) { if (el.scrollHeight <= el.clientHeight + 1) break; el.style.fontSize = px + 'px'; }
 }
 
 // ---------- input ----------
