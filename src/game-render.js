@@ -47,6 +47,7 @@ const zombieKey = (v) => IMG['zombie_' + TYPES[v.t].key] ? 'zombie_' + TYPES[v.t
 
 // ---------- audio ----------
 let AC = null, audioBus = null, lastChainNote = -Infinity;
+const BUS_GAIN = 3.5; // master: chain notes ~-17 dBFS RMS, meow ~-11, peaks held at -1.4 by the limiter (0.7 left everything 15 dB too quiet)
 let audioResume = null;
 const soundBuffers = {}, soundVersions = { button: 0, meow: 0 };
 function resumeAudio(a) {
@@ -61,11 +62,11 @@ function audio() {
       AC = new (window.AudioContext || window.webkitAudioContext)();
       audioBus = AC.createGain();
       const limiter = AC.createDynamicsCompressor();
-      limiter.threshold.value = -18; limiter.knee.value = 12; limiter.ratio.value = 6;
+      limiter.threshold.value = -6; limiter.knee.value = 6; limiter.ratio.value = 12; // safety brickwall: only real peaks get squashed
       limiter.attack.value = 0.003; limiter.release.value = 0.12;
       audioBus.connect(limiter).connect(AC.destination);
     }
-    audioBus.gain.setTargetAtTime(0.7, AC.currentTime, 0.01);
+    audioBus.gain.setTargetAtTime(BUS_GAIN, AC.currentTime, 0.01);
     if (AC.state === 'suspended' || AC.state === 'interrupted') resumeAudio(AC).catch(() => {});
   } catch (e) { return null; }
   return AC;
@@ -74,7 +75,7 @@ function syncSound() {
   if (!save.sound) { soundVersions.button++; soundVersions.meow++; } // Cancel pending sounds when muted.
   if (!AC || !audioBus) return;
   const g = audioBus.gain; g.cancelScheduledValues(AC.currentTime);
-  if (save.sound) g.setTargetAtTime(0.7, AC.currentTime, 0.01); else g.setValueAtTime(0, AC.currentTime); // muting is immediate
+  if (save.sound) g.setTargetAtTime(BUS_GAIN, AC.currentTime, 0.01); else g.setValueAtTime(0, AC.currentTime); // muting is immediate
 }
 function buttonSound() { return playUISound('button'); }
 function cupcakeSound() { return playUISound('meow'); }
@@ -92,7 +93,7 @@ async function playUISound(key, pitch = 1) {
     const source = a.createBufferSource();
     source.buffer = buffer;
     source.playbackRate.value = pitch;
-    const gain = a.createGain(); gain.gain.value = key === 'meow' ? 0.7 : 1;
+    const gain = a.createGain(); gain.gain.value = key === 'meow' ? 0.75 : 0.6;
     source.connect(gain).connect(audioBus);
     source.onended = () => { source.disconnect(); gain.disconnect(); if (lastVoice[key] && lastVoice[key].source === source) lastVoice[key] = null; };
     // A new meow cuts the one still ringing (25ms fade) so quick taps and drags never stack up.
@@ -438,7 +439,7 @@ function applyHit(h) {
   // One note for simultaneous hits, so a large cascade keeps a readable rhythm.
   if (now - lastChainNote >= 45) {
     lastChainNote = now;
-    tone(note(h.depth), 0.18, v.t === 'u' ? 'sine' : 'triangle', 0.11); // the rising scale is the reward; keep it clearly above the thud and the spore noise
+    tone(note(h.depth), 0.18, v.t === 'u' ? 'sine' : 'triangle', 0.15); // the rising scale is the reward; keep it clearly above the thud and the spore noise
   }
   if (h.kind === 'sealed') { v.flashAt = now; tone(180, 0.12, 'square', 0.03); floatText(x, y - S * 0.8, t('fx.sealed'), '#6E8FB4', 0.24, 800); }
 }
