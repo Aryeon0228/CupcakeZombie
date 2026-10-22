@@ -140,7 +140,7 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 #scr-play > .bar, #scr-play > .board-wrap, #scr-play > .hintline, #scr-play > .hud { position: relative; z-index: 1; }
 #scr-play.has-bg > .bar { background: rgba(255, 249, 242, 0.55); backdrop-filter: blur(3px); }
 #scr-play.has-bg > .hud { background: rgba(255, 249, 242, 0.84); backdrop-filter: blur(4px); }
-#scr-play.has-bg > .hintline { margin: 0 14px 4px; background: rgba(255, 249, 242, 0.7); border-radius: 12px; backdrop-filter: blur(3px); }
+#scr-play.has-bg > .hintline { margin: 0 12px 12px; background: rgba(255, 249, 242, 0.7); border-radius: 12px; backdrop-filter: blur(3px); }
 #scr-play.has-bg > .hintline:empty { background: transparent; backdrop-filter: none; }
 .board-wrap { flex: 1 1 0; min-height: 0; display: flex; align-items: center; justify-content: center; position: relative; padding: 4px 10px; }
 #board { display: block; touch-action: none; border-radius: 12px; max-width: 100%; user-select: none; -webkit-user-select: none; }
@@ -148,7 +148,7 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 .sent { display: inline-block; }
 /* Reserve three lines, including padding. Hover, selection and busy copy must
    not resize the tray or change the cell underneath a stationary pointer. */
-.hintline { flex: 0 0 auto; height: calc(4.35em + 12px); min-height: calc(4.35em + 12px); overflow-y: auto; overscroll-behavior: contain; text-wrap: balance; padding: 6px 18px; font-size: 15px; color: var(--ink-soft); text-align: center; line-height: 1.45; display: flex; flex-direction: column; justify-content: center; justify-content: safe center; }
+.hintline { flex: 0 0 auto; height: calc(4.35em + 12px); min-height: calc(4.35em + 12px); overflow-y: auto; overscroll-behavior: contain; text-wrap: balance; padding: 8px 16px; font-size: 15px; color: var(--ink-soft); text-align: center; line-height: 1.45; display: flex; flex-direction: column; justify-content: center; justify-content: safe center; }
 .hintline b { font-family: var(--f-display); font-weight: 400; color: var(--ink); margin-right: 6px; font-size: 16px; }
 .selection-tip { display: block; color: var(--mold-deep); font-size: 0.92em; }
 .hud {

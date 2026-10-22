@@ -677,14 +677,14 @@ function drawPreview(i, T, preview = previewOf(state, i)) {
       const lift = sp.style === 'lob' ? S * (sp.dist === 2 ? 0.9 : 0.5) : S * 0.25;
       ctx.moveTo(ax, ay); ctx.quadraticCurveTo((ax + bx) / 2, Math.min(ay, by) - lift, bx, by);
     }
-    // A pale backing keeps the moving olive dashes distinct on every chapter.
-    ctx.setLineDash([]); ctx.strokeStyle = fresh ? 'rgba(255,249,229,.8)' : 'rgba(255,249,229,.3)';
-    ctx.lineWidth = Math.max(3.5, S * 0.075); ctx.stroke();
+    // A dark backing under bright lime dashes reads on the grey tray and on every chapter background.
+    ctx.setLineDash([]); ctx.strokeStyle = fresh ? 'rgba(74,46,39,.6)' : 'rgba(74,46,39,.22)';
+    ctx.lineWidth = Math.max(4.5, S * 0.095); ctx.lineCap = 'round'; ctx.stroke();
     ctx.setLineDash([dash, gap]);
     // Negative offset advances dashes from the path's start toward its end.
     ctx.lineDashOffset = reduceMotion ? 0 : -(T * 34) % (dash + gap);
-    ctx.strokeStyle = fresh ? '#536D2D' : 'rgba(91,122,33,.32)';
-    ctx.lineWidth = Math.max(1.8, S * 0.04); ctx.stroke();
+    ctx.strokeStyle = fresh ? '#C6F542' : 'rgba(198,245,66,.4)';
+    ctx.lineWidth = Math.max(2.4, S * 0.05); ctx.stroke();
   }
   ctx.restore();
 }
