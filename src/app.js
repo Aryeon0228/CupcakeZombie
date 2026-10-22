@@ -1,5 +1,8 @@
 // ---------- platform adapters (web mock now, native plugins later) ----------
-const Native = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+// The app build stays sequential even when the native bridge has not loaded.
+const NATIVE_BUILD = /*NATIVE_BUILD*/false;
+const Native = NATIVE_BUILD || !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+const WEB_STAGE_SELECT = !Native;
 function haptic(kind = 'light') {
   if (!save.haptics) return;
   try {
@@ -55,7 +58,8 @@ function toast(msg, ms = 1800) { const t = $('toast'); t.textContent = msg; t.hi
 
 // ---------- progress ----------
 const starsOf = i => save.stars[i] || 0;
-const unlocked = i => i === 0 || starsOf(i - 1) > 0;
+const validStage = i => Number.isInteger(i) && i >= 0 && i < LEVELS.length;
+const unlocked = i => validStage(i) && (WEB_STAGE_SELECT || i === 0 || starsOf(i - 1) > 0);
 const totalStars = () => LEVELS.reduce((a, _, i) => a + starsOf(i), 0);
 function nextStage() { const i = LEVELS.findIndex((_, k) => !starsOf(k)); return i < 0 ? LEVELS.length - 1 : i; }
 function starsFor(m) { return m === 0 ? 3 : m <= 2 ? 2 : 1; }
@@ -113,6 +117,13 @@ function renderMap() {
   const box = $('chapterList'); box.innerHTML = '';
   const jump = $('chapterChips'); jump.innerHTML = '';
   const next = nextStage();
+  const focus = WEB_STAGE_SELECT && validStage(save.level) ? save.level : next;
+  $('stageJumpForm').hidden = !WEB_STAGE_SELECT;
+  if (WEB_STAGE_SELECT) {
+    $('stageJumpNote').textContent = t('map.freeSelect', { n: LEVELS.length });
+    $('stageNumber').max = LEVELS.length;
+    $('stageNumber').value = focus + 1;
+  }
   $('mapContinue').textContent = t('title.continue', { n: next + 1 });
   for (const ch of CHAPTERS) {
     const got = LEVELS.slice(ch.from, ch.to + 1).reduce((a, _, k) => a + starsOf(ch.from + k), 0);
@@ -140,8 +151,16 @@ function renderMap() {
     }
     box.appendChild(wrap);
   }
-  requestAnimationFrame(() => jumpToChapter(CHAPTERS.find(ch => next >= ch.from && next <= ch.to).no));
+  requestAnimationFrame(() => jumpToChapter(CHAPTERS.find(ch => focus >= ch.from && focus <= ch.to).no));
 }
+// Submit also works with Enter; range checks apply to programmatic submits too.
+$('stageJumpForm').onsubmit = e => {
+  e.preventDefault();
+  if (!WEB_STAGE_SELECT || screen !== 'map') return;
+  const input = $('stageNumber'), index = input.valueAsNumber - 1;
+  if (!validStage(index)) { toast(t('map.stageRange', { n: LEVELS.length })); input.focus(); return; }
+  startStage(index);
+};
 function jumpToChapter(no) {
   const box = $('chapterList'), chapter = $('chapter-' + no);
   if (chapter) box.scrollTop += chapter.getBoundingClientRect().top - box.getBoundingClientRect().top - 16;
@@ -154,6 +173,12 @@ function markChapterChip(no) {
 // the chip row follows the shelf being scrolled
 $('chapterList').addEventListener('scroll', () => {
   const box = $('chapterList'), top = box.getBoundingClientRect().top + box.clientHeight * 0.35;
+  // The last shelf cannot always align with the top of a tall viewport.
+  if (box.scrollTop + box.clientHeight >= box.scrollHeight - 2) {
+    const last = box.lastElementChild;
+    if (last) markChapterChip(last.id.replace('chapter-', ''));
+    return;
+  }
   let best = null;
   for (const el of box.querySelectorAll('.chapter')) { if (el.getBoundingClientRect().top <= top) best = el; }
   if (best) markChapterChip(best.id.replace('chapter-', ''));
@@ -231,10 +256,13 @@ function motionNotice() {
   setTimeout(() => toast(t('toast.motion'), 4500), 600);
 }
 function startStage(i) {
+  if (!validStage(i)) return false;
+  if (!unlocked(i)) { haptic(); toast(t('map.locked')); return false; }
   motionNotice();
-  mode = 'stage'; li = Math.max(0, Math.min(LEVELS.length - 1, i));
+  mode = 'stage'; li = i;
   save.level = li; writeSave(save);
   loadLevel(LEVELS[li]);
+  return true;
 }
 function startDaily() { mode = 'daily'; li = -1; loadLevel(dailyDef()); }
 function restart() {
@@ -720,10 +748,10 @@ async function boot(data) {
   buildTints();
   drawBg();
   requestAnimationFrame(t => { now = t; requestAnimationFrame(frame); });
-  if (data && data.screen === 'play' && Number.isInteger(data.level)) startStage(data.level);
-  else showScreen('title');
+  if (!(data && data.screen === 'play' && startStage(data.level))) showScreen('title');
   try { await document.fonts.ready; if (state) renderHUD(); } catch (e) {}
 }
 try { window.claude?.hot?.snapshot?.(() => ({ screen, level: li })); } catch (e) {}
 window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot(window.claude?.hot?.data ?? {});
+
 

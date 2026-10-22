@@ -21,6 +21,8 @@ ko: {
   'title.settings': '설정', 'title.streak': '{n}일 연속', 'title.foot': '빌드 /*BUILD_TAG*/',
   'map.title': '스테이지', 'map.chapter': '{n}장', 'map.chip': '{n}장', 'map.locked': '앞 스테이지를 먼저 깨면 열려요',
   'map.navigation': '스테이지 탐색', 'map.jump': '장 바로가기',
+  'map.stageNumber': '스테이지 바로가기', 'map.stageGo': '이동',
+  'map.freeSelect': '전체 {n}판 자유롭게 선택', 'map.stageRange': '1~{n} 사이의 스테이지 번호를 입력해 주세요',
   'map.ariaStage': '스테이지 {n} {name}', 'map.ariaStars': ', 별 {n}개', 'map.ariaLocked': ', 잠김',
   'aria.home': '처음으로', 'aria.back': '뒤로', 'aria.help': '이 진열대의 규칙',
   'aria.board': '머핀 틀 게임판. 방향키로 칸을 고르고 Enter로 포자를 날려요.',
@@ -101,6 +103,8 @@ en: {
   'title.settings': 'Settings', 'title.streak': '{n}-day streak', 'title.foot': 'build /*BUILD_TAG*/',
   'map.title': 'Stages', 'map.chapter': 'CHAPTER {n}', 'map.chip': 'Ch.{n}', 'map.locked': 'Clear the previous stage to unlock',
   'map.navigation': 'Stage navigation', 'map.jump': 'Jump to chapter',
+  'map.stageNumber': 'Jump to stage', 'map.stageGo': 'Go',
+  'map.freeSelect': 'Choose any of the {n} stages', 'map.stageRange': 'Enter a stage number from 1 to {n}',
   'map.ariaStage': 'Stage {n} {name}', 'map.ariaStars': ', {n} stars', 'map.ariaLocked': ', locked',
   'aria.home': 'Home', 'aria.back': 'Back', 'aria.help': 'Rules for this shelf',
   'aria.board': 'Muffin tin board. Use the arrow keys to pick a cell and Enter to fling a spore.',
@@ -193,4 +197,5 @@ function localeDate(d) {
   try { return d.toLocaleDateString(LANG === 'ko' ? 'ko-KR' : 'en-US', { month: LANG === 'ko' ? 'long' : 'short', day: 'numeric' }); }
   catch (e) { return `${d.getMonth() + 1}/${d.getDate()}`; }
 }
+
 

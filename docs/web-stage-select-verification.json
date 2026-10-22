@@ -1,0 +1,58 @@
+{
+  "web": {
+    "stages": 230,
+    "buttons": 230,
+    "locked": 0,
+    "stars": 0,
+    "free": true,
+    "form": true
+  },
+  "returnToChapter": {
+    "chapter": 23,
+    "value": "230"
+  },
+  "responsive": [
+    {
+      "width": 320,
+      "overflow": false,
+      "formFits": true,
+      "inputHeight": 44
+    },
+    {
+      "width": 390,
+      "overflow": false,
+      "formFits": true,
+      "inputHeight": 44
+    },
+    {
+      "width": 430,
+      "overflow": false,
+      "formFits": true,
+      "inputHeight": 44
+    }
+  ],
+  "english": true,
+  "native": [
+    {
+      "runtimeBridge": false,
+      "native": true,
+      "free": false,
+      "hidden": true,
+      "locked": 229,
+      "stars": 0,
+      "directLast": false
+    },
+    {
+      "runtimeBridge": true,
+      "native": true,
+      "free": false,
+      "hidden": true,
+      "locked": 229,
+      "stars": 0,
+      "directLast": false
+    }
+  ],
+  "nativeFirstClearUnlocksSecond": true,
+  "errors": [],
+  "pass": true
+}

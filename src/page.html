@@ -104,6 +104,15 @@ button { font: inherit; color: inherit; touch-action: manipulation; }
 .chip.done { color: var(--mold-deep); }
 .map-nav select { min-width: 0; flex: 1; min-height: 44px; border: 2px solid var(--ink); border-radius: 12px; padding: 6px; color: var(--ink); background: var(--paper); font: inherit; font-size: 13px; }
 .map-nav .btn { min-height: 44px; font-size: 12px; padding: 6px 10px; }
+.stage-jump { flex: none; display: grid; grid-template-columns: minmax(0, 1fr) 76px auto; align-items: center; gap: 8px; margin: 0 16px 8px; padding: 10px 12px; border: 2px solid var(--ink); border-radius: 14px; background: var(--paper); }
+.stage-jump[hidden] { display: none; }
+.stage-jump-copy { min-width: 0; line-height: 1.3; }
+.stage-jump label { display: block; font-family: var(--f-display); font-size: 15px; }
+.stage-jump .small { display: block; margin-top: 3px; font-size: 11px; }
+.stage-jump input { min-width: 0; width: 100%; min-height: 44px; padding: 6px 4px; border: 2px solid var(--ink); border-radius: 10px; background: #fff; color: var(--ink); font: inherit; font-size: 18px; text-align: center; }
+.stage-jump input:focus-visible { outline: 3px solid var(--mold); outline-offset: 2px; }
+.stage-jump .btn { padding: 6px 10px; font-size: 14px; }
+@media (max-width: 360px) { .stage-jump { margin-inline: 10px; padding: 8px; gap: 6px; grid-template-columns: minmax(0, 1fr) 62px auto; } }
 /* shelf map: cupcakes standing on wooden planks */
 .chapter.shelf { padding: 12px 10px 14px; }
 .chap-head { align-items: center; margin-bottom: 4px; padding: 0 4px; }
@@ -321,6 +330,11 @@ html.reduce-motion .overlay, html.reduce-motion .card, html.reduce-motion .bigst
   <section class="screen" id="scr-map">
     <header class="bar"><button class="btn small" id="mapBack" data-i18n-aria="aria.home" aria-label="처음으로">←</button><h2 data-i18n="map.title">스테이지</h2><button class="btn small" id="mapCollectionBtn" data-i18n="collection.short">도감</button><span class="small" id="mapStars"></span></header>
     <nav class="map-nav" data-i18n-aria="map.navigation"><div class="chapter-chips" id="chapterChips" role="tablist" data-i18n-aria="map.jump"></div><button class="btn small" id="mapContinue"></button></nav>
+    <form class="stage-jump" id="stageJumpForm" hidden>
+      <div class="stage-jump-copy"><label for="stageNumber" data-i18n="map.stageNumber">스테이지 바로가기</label><span class="small" id="stageJumpNote"></span></div>
+      <input id="stageNumber" type="number" inputmode="numeric" min="1" step="1" required aria-describedby="stageJumpNote">
+      <button class="btn small go" type="submit" data-i18n="map.stageGo">이동</button>
+    </form>
     <div class="scroll" id="chapterList"></div>
   </section>
 
@@ -446,4 +460,5 @@ const BG = /*BG*/null; // per chapter [{ src, w, h, band, wall, floor }] or null
 /*UI_INTERACTIONS*/
 /*APP*/
 </script>
+
 

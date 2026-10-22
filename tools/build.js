@@ -68,9 +68,11 @@ const capDir = path.join(root, 'capacitor/www');
 if (fs.existsSync(capDir)) {
   const vendor = ['vendor/capacitor.js', 'vendor/haptics.js', 'vendor/splash-screen.js', 'vendor/status-bar.js', 'native.js'].map(f => `<script src="${f}"></script>`).join('\n');
   const capPage = standalone.replace('<script>\nconst ASSETS', () => vendor + '\n<script>\nconst ASSETS')
+    .replace('const NATIVE_BUILD = /*NATIVE_BUILD*/false;', 'const NATIVE_BUILD = /*NATIVE_BUILD*/true;')
     .replace(/<div class="foot" data-i18n="title.foot">[^<]*<\/div>/, '<div class="foot"></div>').replace("'title.foot': '빌드 " + buildTag + "'", "'title.foot': ''").replace("'title.foot': 'build " + buildTag + "'", "'title.foot': ''");
   fs.writeFileSync(path.join(capDir, 'index.html'), capPage);
 }
 if (stale.length) console.log('stale webp twins ignored (run python3 tools/compress-assets.py):', stale.join(' '));
 console.log('built', (page.length / 1024).toFixed(0) + 'KB', LEVELS.length, 'levels', DAILY.length, 'daily');
+
 
