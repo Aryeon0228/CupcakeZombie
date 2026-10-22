@@ -96,7 +96,11 @@ function drawBg() {
   g.fillStyle = bg.floor; g.fillRect(0, midBot + botH - 1, W, H);
   g.drawImage(bgImage, 0, b1, iw, ih - b1, 0, midBot, W, botH);
   g.drawImage(bgImage, 0, b0, iw, b1 - b0, 0, midTop, W, midBot - midTop);
-  g.drawImage(bgImage, 0, 0, iw, b0, 0, midTop - topH, W, topH);
+  // The shop slice sits on the band. When the tray is low on a tall phone, zoom the shop a little (cropping the sides)
+  // and extend its top edge upward, so no flat wall colour shows above the shelves.
+  const z = Math.min(1.4, Math.max(1, midTop / topH)), sh = topH * z, sw = W * z, sx = (W - sw) / 2;
+  g.drawImage(bgImage, 0, 0, iw, b0, sx, midTop - sh, sw, sh);
+  if (midTop - sh > 0) g.drawImage(bgImage, 0, 0, iw, 6, sx, 0, sw, midTop - sh + 1);
 }
 const cxOf = i => padX + ((i % state.W) + 0.5) * S;
 const cyOf = i => padTop + (Math.floor(i / state.W) + 0.5) * S;

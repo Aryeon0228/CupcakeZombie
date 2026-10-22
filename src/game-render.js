@@ -249,10 +249,12 @@ const CUST_STYLE = {
   picky:  { tag: '#8E5EA8', glow: 'rgba(142, 94, 168, 0.25)', sleeve: '#C9A7E0', hand: 1 },
 };
 const custStyle = k => CUST_STYLE[k && k.kind] || CUST_STYLE.normal;
-function drawTag(g, x, y, r, n, pulse, col = '#DB4B58') {
+function drawTag(g, x, y, r, n, pulse, col = '#DB4B58', blink = false) {
   g.save(); g.translate(x, y);
-  const s = 1 + pulse * 0.12; g.scale(s, s);
-  g.fillStyle = col; g.strokeStyle = '#4A2E27'; g.lineWidth = 2;
+  const s = 1 + pulse * 0.16; g.scale(s, s);
+  // a paper ring keeps the tag readable over any cupcake; the last turn flashes brighter
+  g.fillStyle = 'rgba(255,249,242,0.95)'; g.beginPath(); g.arc(0, 0, r + 3, 0, Math.PI * 2); g.fill();
+  g.fillStyle = blink && Math.floor(now / 260) % 2 === 0 ? '#FF4F62' : col; g.strokeStyle = '#4A2E27'; g.lineWidth = 2;
   g.beginPath(); g.arc(0, 0, r, 0, Math.PI * 2); g.fill(); g.stroke();
   g.fillStyle = '#FFF9F2'; g.font = `${Math.round(r * 1.25)}px Jua, sans-serif`;
   g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(String(n), 0, r * 0.08);
@@ -587,7 +589,8 @@ function draw(dt) {
 
   for (let i = 0; i < vis.length; i++) {
     const v = vis[i];
-    if (!v || v.gone) continue;
+    if (!v) continue;
+    if (v.gone) { if (!(arm && arm.idx === i)) drawSoldGhost(i, v, sc); continue; }
     if (arm && arm.idx === i && arm.fresh && now - arm.t0 > 430) continue;
     if (preview && preview.targets.includes(i)) drawPreviewOutline(i, v, sc);
     drawCupcake(i, v, sc);
@@ -599,7 +602,7 @@ function draw(dt) {
     const spots = k.kind === 'order' ? [cells[cells.length - 1]] : cells;
     for (const i of spots) {
       if (!state.cells[i] || (state.cells[i].inf && !k.pending && k.kind !== 'order') || (vis[i] && vis[i].gone)) continue;
-      drawTag(ctx, cxOf(i) + S * 0.33, cyOf(i) - S * 0.5, S * 0.15, left > 0 ? left : '!', left <= 1 ? (Math.sin(T * 6) * 0.5 + 0.5) : 0, st.tag);
+      drawTag(ctx, cxOf(i) + S * 0.34, cyOf(i) - S * 0.52, S * 0.2, left > 0 ? left : '!', left <= 1 ? (Math.sin(T * 6) * 0.5 + 0.5) : 0, st.tag, left <= 1 && !reduceMotion);
     }
   }
 
@@ -727,6 +730,20 @@ function swayPose(v) {
   const rot = (v.swayAmp || 0.15) * Math.sin(p * Math.PI * 3) * env; // one and a half slow lurches
   const lean = Math.abs(Math.sin(p * Math.PI * 3)) * env;
   return { rot, sx: 1 + 0.05 * lean, sy: 1 - 0.07 * lean, dy: 0 };
+}
+// A cupcake a customer carried off leaves a faint ghost and a SOLD tag, so the lost screen can show which one it was.
+function drawSoldGhost(i, v, sc) {
+  const x0 = cxOf(i), by = baseY(i);
+  ctx.save();
+  ctx.setLineDash([S * 0.08, S * 0.06]); ctx.strokeStyle = 'rgba(219, 75, 88, 0.8)'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.ellipse(x0, wellY(i), S * 0.42, S * 0.28, 0, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+  ctx.globalAlpha = 0.26; drawSpriteAt(ctx, freshSpriteKey(v), x0, by, sc); ctx.globalAlpha = 1;
+  const px = Math.max(10, Math.round(S * 0.17)); ctx.font = `${px}px Jua, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  const label = t('fx.sold'), w = ctx.measureText(label).width + px * 0.9, h = px * 1.5, y = cyOf(i) - S * 0.5;
+  ctx.translate(x0, y); ctx.rotate(-0.1);
+  ctx.fillStyle = '#DB4B58'; ctx.strokeStyle = '#4A2E27'; ctx.lineWidth = 1.5; roundRect(ctx, -w / 2, -h / 2, w, h, px * 0.3); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#FFF9F2'; ctx.fillText(label, 0, px * 0.05);
+  ctx.restore();
 }
 function drawCupcake(i, v, sc) {
   const x0 = cxOf(i), sw = swayPose(v), by = baseY(i);

@@ -1,5 +1,7 @@
 // Collection is cosmetic: it never changes the puzzle rules or star rewards.
 const CARD_ORDER = ['o', 'x', 's', 'c', 'm', 'b', 'g', 'l', 'e', 'n', 'u', 'r'];
+// chapter where a flavour first shows up (for the album's uncollected tiles)
+function chapterOfFirst(k) { const i = LEVELS.findIndex(l => tastesInLevel(l).includes(k)); const ch = CHAPTERS.find(c => i >= c.from && i <= c.to); return ch ? ch.no : 1; }
 function tastesInLevel(level) {
   const chars = (level?.grid || []).join('').toLowerCase();
   return CARD_ORDER.filter(k => chars.includes(k));
@@ -62,7 +64,7 @@ function renderCollection() {
     b.className = 'collection-tile ' + (rating ? cardFinish(rating) : 'uncollected');
     b.dataset.type = k;
     b.setAttribute('aria-label', rating ? `${tl(ty, 'name')} · ${t('collection.finish' + rating)} · ${rating}★` : t('collection.lockedLabel', { name: tl(ty, 'name') }));
-    b.innerHTML = `<span class="card-number">NO. ${String(CARD_ORDER.indexOf(k) + 1).padStart(2, '0')}</span><span class="mini-art"><img src="${ASSETS[ty.key]}" alt="">${rating ? '' : '<span class="card-question">?</span>'}</span><span class="mini-name">${rating ? tl(ty, 'name') : '???'}</span><span class="mini-stars">${rating ? '★'.repeat(rating) : t('collection.uncollected')}</span>`;
+    b.innerHTML = `<span class="card-number">NO. ${String(CARD_ORDER.indexOf(k) + 1).padStart(2, '0')}</span><span class="mini-art"><img src="${ASSETS[ty.key]}" alt="">${rating ? '' : '<span class="card-question">?</span>'}</span><span class="mini-name">${rating ? tl(ty, 'name') : '???'}</span><span class="mini-stars">${rating ? '★'.repeat(rating) : t('collection.where', { n: chapterOfFirst(k) })}</span>`;
     b.onclick = () => {
       if (!rating) { const first = LEVELS.findIndex(l => tastesInLevel(l).includes(k)); toast(t('collection.unlock', { n: first + 1, name: tl(ty, 'name') })); return; }
       showCupcakeCard(k);
@@ -165,4 +167,6 @@ function renderCardRewards() {
     b.onclick = () => { openCollection('play'); showCupcakeCard(reward.type); }; row.appendChild(b);
   }
   box.appendChild(row);
+  requestAnimationFrame(() => row.classList.toggle('more', row.scrollWidth > row.clientWidth + 4));
+  row.addEventListener('scroll', () => row.classList.toggle('more', row.scrollLeft + row.clientWidth < row.scrollWidth - 4), { passive: true });
 }

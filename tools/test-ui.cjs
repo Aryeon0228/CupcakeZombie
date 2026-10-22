@@ -70,7 +70,7 @@ const root = path.resolve(__dirname,'..'), solutions = require('./solutions.json
  }
  report.stages=runs.length;report.totalStars=await page.evaluate(()=>totalStars());
  assert.equal(report.totalStars,solutions.length*3);
- report.map=await page.evaluate(()=>{showScreen('map');jumpToChapter(20);const a=$('chapter-20').getBoundingClientRect(),b=$('chapterList').getBoundingClientRect();return {chapters:$('chapterJump').options.length,buttons:document.querySelectorAll('.stage-btn').length,chapter20Visible:a.top>=b.top&&a.top<b.bottom};});
+ report.map=await page.evaluate(()=>{showScreen('map');jumpToChapter(20);const a=$('chapter-20').getBoundingClientRect(),b=$('chapterList').getBoundingClientRect();return {chapters:$('chapterChips').children.length,buttons:document.querySelectorAll('.stage-btn').length,chapter20Visible:a.top>=b.top&&a.top<b.bottom};});
  assert.deepEqual(report.map,{chapters:Math.ceil(solutions.length/10),buttons:solutions.length,chapter20Visible:true});
  await page.screenshot({path:path.join(root,'out/qa/map-20.png')});
  report.sound=await page.evaluate(async()=>{save.sound=true;tone(500,.05);const exists=!!audioBus;save.sound=false;syncSound();await new Promise(r=>setTimeout(r,160));return {busCreated:exists,muted:audioBus.gain.value<.001};});

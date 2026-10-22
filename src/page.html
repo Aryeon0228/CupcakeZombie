@@ -68,7 +68,7 @@ button { font: inherit; color: inherit; touch-action: manipulation; }
 .btn.go { background: var(--mold); }
 .btn.quiet { background: transparent; box-shadow: none; border-color: transparent; color: var(--ink-soft); }
 .btn.big { width: 100%; min-height: 54px; font-size: 19px; }
-.btn.small { min-height: 36px; min-width: 36px; font-size: 14px; padding: 3px 10px; box-shadow: 2px 2px 0 var(--ink); }
+.btn.small { min-height: 44px; min-width: 44px; font-size: 15px; padding: 4px 14px; box-shadow: 2px 2px 0 var(--ink); }
 .btn .k { font-family: var(--f-body); font-size: 12px; color: var(--ink-soft); border: 1px solid var(--paper-edge); border-radius: 6px; padding: 0 6px; background: #fff; }
 .btn svg { flex: none; }
 .chip { font-family: var(--f-display); font-size: 12px; color: #fff; background: var(--mold-deep); border-radius: 8px; padding: 1px 8px; margin-left: 6px; }
@@ -97,6 +97,11 @@ button { font: inherit; color: inherit; touch-action: manipulation; }
 .chap-head h3 { margin: 0; flex: 0 1 auto; white-space: nowrap; font-family: var(--f-display); font-weight: 400; font-size: 20px; }
 .stage-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px 8px; }
 .map-nav { display: flex; gap: 8px; align-items: center; padding: 8px 16px; background: var(--paper); }
+.chapter-chips { flex: 1; min-width: 0; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 2px 2px; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; }
+.chapter-chips::-webkit-scrollbar { display: none; }
+.chip { flex: none; min-width: 40px; height: 40px; padding: 0 10px; border: 2px solid var(--ink); border-radius: 999px; background: var(--paper); font-family: var(--f-display); font-size: 15px; color: var(--ink-soft); display: grid; place-items: center; scroll-snap-align: center; cursor: pointer; }
+.chip.on { background: var(--mold); color: #fff; box-shadow: 2px 2px 0 var(--ink); }
+.chip.done { color: var(--mold-deep); }
 .map-nav select { min-width: 0; flex: 1; min-height: 44px; border: 2px solid var(--ink); border-radius: 12px; padding: 6px; color: var(--ink); background: var(--paper); font: inherit; font-size: 13px; }
 .map-nav .btn { min-height: 44px; font-size: 12px; padding: 6px 10px; }
 /* shelf map: cupcakes standing on wooden planks */
@@ -142,7 +147,7 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 #scr-play.has-bg > .hud { background: rgba(255, 249, 242, 0.84); backdrop-filter: blur(4px); }
 #scr-play.has-bg > .hintline { margin: 0 12px 12px; background: rgba(255, 249, 242, 0.7); border-radius: 12px; backdrop-filter: blur(3px); }
 #scr-play.has-bg > .hintline:empty { background: transparent; backdrop-filter: none; }
-.board-wrap { flex: 1 1 0; min-height: 0; display: flex; align-items: center; justify-content: center; position: relative; padding: 4px 10px; }
+.board-wrap { flex: 1 1 0; min-height: 0; display: flex; align-items: flex-end; justify-content: center; position: relative; padding: 4px 10px 0; }
 #board { display: block; touch-action: none; border-radius: 12px; max-width: 100%; user-select: none; -webkit-user-select: none; }
 #board:focus-visible { outline: 3px dashed var(--mold-deep); outline-offset: 4px; }
 .sent { display: inline-block; }
@@ -159,8 +164,8 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 .pips { display: flex; gap: 7px; align-items: center; min-height: 38px; flex-shrink: 0; }
 .pips .mold { width: 44px; height: auto; display: block; margin: -4px 0 -2px -4px; transform-origin: 50% 100%; }
 .spore-readout { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; white-space: nowrap; }
-.spore-label { font-size: 11px; font-weight: 700; color: var(--ink-soft); line-height: 1.2; }
-.spore-value { display: flex; align-items: baseline; gap: 3px; color: var(--mold-deep); line-height: 1; }
+.spore-label { font-size: 12px; font-weight: 700; color: var(--ink-soft); line-height: 1.2; }
+.spore-value { display: flex; align-items: baseline; gap: 0; color: var(--mold-deep); line-height: 1; }
 .spore-count { min-width: 1ch; font-family: var(--f-display); font-size: 26px; font-weight: 400; font-variant-numeric: tabular-nums; }
 .spore-unit { font-size: 12px; font-weight: 700; }
 .pips.empty .spore-value { color: var(--ink); }
@@ -170,6 +175,15 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 #starText { text-wrap: balance; }
 .starline .st { white-space: nowrap; flex-shrink: 0; font-family: var(--f-display); font-size: 20px; letter-spacing: 1px; line-height: 1; }
 @media (max-width: 360px) { .starline { flex-direction: column; align-items: flex-end; gap: 3px; } #starText { text-align: right; font-size: 10px; } .pips .mold { width: 38px; } }
+#custInfo:empty { display: none; }
+.cust-chip { display: inline-flex; align-items: center; gap: 7px; padding: 4px 12px 4px 5px; border: 2px solid #DB4B58; border-radius: 999px; background: var(--paper); font-family: var(--f-display); font-size: 14px; color: var(--ink); line-height: 1; }
+.cust-chip .tagdot { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #DB4B58; color: #FFF9F2; font-style: normal; font-size: 13px; border: 1.5px solid var(--ink); }
+.cust-chip.soon { animation: chip-blink .9s steps(2, start) infinite; }
+.cust-chip.soon .tagdot { background: #FF4F62; }
+@keyframes chip-blink { 0% { box-shadow: 0 0 0 0 rgba(219, 75, 88, 0); } 50% { box-shadow: 0 0 0 3px rgba(219, 75, 88, .35); } }
+html.reduce-motion .cust-chip.soon { animation: none; }
+.rotate { display: none; position: fixed; inset: 0; z-index: 90; background: var(--paper); color: var(--ink); flex-direction: column; align-items: center; justify-content: center; gap: 12px; font-family: var(--f-display); font-size: 22px; }
+@media (orientation: landscape) and (max-height: 520px) { .rotate { display: flex; } }
 .hud-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 .hud-btn { display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; }
 .hud-btn .bi { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
@@ -233,13 +247,13 @@ html.reduce-motion .reward-card, html.reduce-motion .reward-card small { animati
 .bigstars span:nth-child(3).on { animation-delay: .3s; }
 .setting { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; }
 #setMotionNote { display: block; font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
-.switch { appearance: none; width: 50px; height: 30px; border-radius: 15px; background: var(--paper-edge); border: 2px solid var(--ink); position: relative; cursor: pointer; margin: 0; }
-.switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 2px solid var(--ink); transition: transform .15s; }
+.switch { appearance: none; width: 56px; height: 34px; border-radius: 17px; background: var(--paper-edge); border: 2px solid var(--ink); position: relative; cursor: pointer; margin: 0; }
+.switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; border: 2px solid var(--ink); transition: transform .15s; }
 .switch:checked { background: var(--mold); }
-.switch:checked::after { transform: translateX(20px); }
+.switch:checked::after { transform: translateX(22px); }
 .confirm { background: #fff; border: 1.5px solid var(--paper-edge); border-radius: 12px; padding: 10px; display: grid; gap: 8px; }
 .seg { display: inline-flex; border: 2px solid var(--ink); border-radius: 12px; overflow: hidden; background: #fff; }
-.segbtn { border: 0; background: transparent; padding: 6px 12px; font-family: var(--f-display); font-size: 14px; cursor: pointer; min-height: 36px; }
+.segbtn { border: 0; background: transparent; padding: 6px 12px; font-family: var(--f-display); font-size: 15px; cursor: pointer; min-height: 40px; }
 .segbtn + .segbtn { border-left: 2px solid var(--ink); }
 .segbtn.on { background: var(--mold); }
 
@@ -257,6 +271,7 @@ html.reduce-motion .reward-card, html.reduce-motion .reward-card small { animati
 .card .art svg { width: 92px; height: 92px; }
 
 /* legend */
+.legend-sound { border-top: 1.5px dashed var(--paper-edge); margin-top: 6px; padding-top: 4px; }
 .legend { display: grid; gap: 8px; }
 .leg { display: grid; grid-template-columns: 40px 1fr 42px; gap: 10px; align-items: center; padding: 6px 8px; border-radius: 12px; background: #fff; border: 1.5px solid var(--paper-edge); }
 .leg img, .leg .ico { width: 38px; height: 38px; object-fit: contain; }
@@ -305,7 +320,7 @@ html.reduce-motion .overlay, html.reduce-motion .card, html.reduce-motion .bigst
 
   <section class="screen" id="scr-map">
     <header class="bar"><button class="btn small" id="mapBack" data-i18n-aria="aria.home" aria-label="처음으로">←</button><h2 data-i18n="map.title">스테이지</h2><button class="btn small" id="mapCollectionBtn" data-i18n="collection.short">도감</button><span class="small" id="mapStars"></span></header>
-    <nav class="map-nav" data-i18n-aria="map.navigation"><select id="chapterJump" data-i18n-aria="map.jump"></select><button class="btn small" id="mapContinue"></button></nav>
+    <nav class="map-nav" data-i18n-aria="map.navigation"><div class="chapter-chips" id="chapterChips" role="tablist" data-i18n-aria="map.jump"></div><button class="btn small" id="mapContinue"></button></nav>
     <div class="scroll" id="chapterList"></div>
   </section>
 
@@ -336,7 +351,7 @@ html.reduce-motion .overlay, html.reduce-motion .card, html.reduce-motion .bigst
         </div>
         <div class="starline"><span class="st" id="starNow"></span><span class="small" id="starText"></span></div>
       </div>
-      <div class="small" id="custInfo"></div>
+      <div id="custInfo"></div>
       <div class="hud-btns">
         <button class="btn hud-btn" id="undoBtn"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7 4 11.5 9 16"/><path d="M4.5 11.5H14a5 5 0 0 1 0 10h-3"/></svg><span data-i18n="play.undo">한 수 무르기</span></button>
         <button class="btn hud-btn" id="resetBtn"><svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 12a7.5 7.5 0 1 1-2.4-5.5"/><path d="M17.8 2.8v4.4h-4.4"/></svg><span data-i18n="play.retry">처음부터</span></button>
@@ -377,6 +392,7 @@ html.reduce-motion .overlay, html.reduce-motion .card, html.reduce-motion .bigst
     <p id="legendTip"></p>
     <div class="legend" id="legend"></div>
     <button class="btn" id="introAgain" hidden data-i18n="leg.again">규칙 카드 다시 보기</button>
+    <label class="setting legend-sound"><span data-i18n="set.sound">소리</span><input type="checkbox" class="switch" id="setSound2"></label>
   </div>
 </div>
 
@@ -413,6 +429,7 @@ html.reduce-motion .overlay, html.reduce-motion .card, html.reduce-motion .bigst
   </div>
 </div>
 <div class="toast" id="toast" hidden></div>
+<div class="rotate" id="rotate" aria-hidden="true"><svg viewBox="0 0 64 64" width="72" height="72"><rect x="14" y="4" width="36" height="56" rx="6" fill="#FFF9F2" stroke="#4A2E27" stroke-width="3"/><rect x="19" y="11" width="26" height="40" rx="2" fill="#E4F0C6"/><circle cx="32" cy="56" r="2" fill="#4A2E27"/><path d="M6 32a26 26 0 0 1 8-19" fill="none" stroke="#93B743" stroke-width="3" stroke-linecap="round"/><path d="M10 10l4 3-1 5" fill="none" stroke="#93B743" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><p data-i18n="rotate.msg">세로로 돌려 주세요</p></div>
 
 <script>
 const ASSETS = /*ASSETS*/null;

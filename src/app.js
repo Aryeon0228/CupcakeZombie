@@ -111,15 +111,16 @@ function chapterFlavor(ch) {
 function renderMap() {
   $('mapStars').textContent = `★ ${totalStars()} / ${LEVELS.length * 3}`;
   const box = $('chapterList'); box.innerHTML = '';
-  const jump = $('chapterJump'); jump.innerHTML = '';
+  const jump = $('chapterChips'); jump.innerHTML = '';
   const next = nextStage();
   $('mapContinue').textContent = t('title.continue', { n: next + 1 });
   for (const ch of CHAPTERS) {
     const got = LEVELS.slice(ch.from, ch.to + 1).reduce((a, _, k) => a + starsOf(ch.from + k), 0);
     const wrap = document.createElement('section'); wrap.className = 'chapter shelf'; wrap.id = 'chapter-' + ch.no;
-    const option = document.createElement('option'); option.value = ch.no;
-    option.textContent = `${t('map.chapter', { n: ch.no })} · ${tl(ch, 'name')}`;
-    jump.appendChild(option);
+    const chip = document.createElement('button'); chip.className = 'chip' + (got === (ch.to - ch.from + 1) * 3 ? ' done' : ''); chip.dataset.no = ch.no; chip.setAttribute('role', 'tab');
+    chip.textContent = t('map.chip', { n: ch.no }); chip.title = tl(ch, 'name');
+    chip.onclick = () => jumpToChapter(ch.no);
+    jump.appendChild(chip);
     const face = shelfArt(TYPES[chapterFlavor(ch)].key, 'fresh');
     wrap.innerHTML = `<div class="chap-head">${face ? `<img class="chap-face" src="${face}" alt="">` : ''}<div class="chap-text"><span class="eyebrow">${t('map.chapter', { n: ch.no })}</span><h3>${tl(ch, 'name')}</h3></div><span class="small">★ ${got} / ${(ch.to - ch.from + 1) * 3}</span></div>`;
     for (let row = ch.from; row <= ch.to; row += 5) {
@@ -139,14 +140,24 @@ function renderMap() {
     }
     box.appendChild(wrap);
   }
-  jump.value = CHAPTERS.find(ch => next >= ch.from && next <= ch.to).no;
-  requestAnimationFrame(() => jumpToChapter(jump.value));
+  requestAnimationFrame(() => jumpToChapter(CHAPTERS.find(ch => next >= ch.from && next <= ch.to).no));
 }
 function jumpToChapter(no) {
   const box = $('chapterList'), chapter = $('chapter-' + no);
   if (chapter) box.scrollTop += chapter.getBoundingClientRect().top - box.getBoundingClientRect().top - 16;
+  markChapterChip(no);
 }
-$('chapterJump').onchange = e => jumpToChapter(e.target.value);
+function markChapterChip(no) {
+  const chips = $('chapterChips');
+  for (const c of chips.children) { const on = +c.dataset.no === +no; c.classList.toggle('on', on); c.setAttribute('aria-selected', on); if (on) { const r = c.getBoundingClientRect(), b = chips.getBoundingClientRect(); if (r.left < b.left || r.right > b.right) c.scrollIntoView({ block: 'nearest', inline: 'center' }); } }
+}
+// the chip row follows the shelf being scrolled
+$('chapterList').addEventListener('scroll', () => {
+  const box = $('chapterList'), top = box.getBoundingClientRect().top + box.clientHeight * 0.35;
+  let best = null;
+  for (const el of box.querySelectorAll('.chapter')) { if (el.getBoundingClientRect().top <= top) best = el; }
+  if (best) markChapterChip(best.id.replace('chapter-', ''));
+}, { passive: true });
 $('mapContinue').onclick = () => startStage(nextStage());
 const LOCK = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="2" fill="#B9A89C"/><path d="M5 7V5a3 3 0 0 1 6 0v2" fill="none" stroke="#B9A89C" stroke-width="2"/></svg>';
 function starsHTML(n) { return [0, 1, 2].map(i => `<i class="${i < n ? 'on' : 'off'}">★</i>`).join(''); }
@@ -164,7 +175,7 @@ function openSettings() {
   $('resetConfirm').hidden = true;
   openSheet('settingsSheet');
 }
-$('setSound').onchange = e => { save.sound = e.target.checked; syncSound(); writeSave(save); if (save.sound) buttonSound(); };
+$('setSound').onchange = e => { save.sound = e.target.checked; syncSound(); writeSave(save); $('setSound2').checked = save.sound; if (save.sound) buttonSound(); };
 $('setHaptic').onchange = e => { save.haptics = e.target.checked; writeSave(save); haptic('medium'); };
 $('setMotion').onchange = e => { save.motion = e.target.checked ? 'on' : 'off'; syncMotion(); writeSave(save); };
 $('noAdsBtn').onclick = async () => { const ok = await Store.buyRemoveAds(); if (ok) { save.noAds = true; writeSave(save); openSettings(); toast(t('toast.noAds')); } };
@@ -316,7 +327,7 @@ function finish(res) {
     haptic('success');
     [0, 4, 7, 12].forEach((s, i) => tone(note(s), 0.32, 'triangle', 0.09, 1, i * 0.09));
     celebrate(stars);
-    at(reduceMotion ? 600 : 1500, () => showResult('win', stars));
+    at(reduceMotion ? 600 : (innerHeight < 700 ? 2200 : 1500), () => showResult('win', stars));
   } else if (res === 'lost') {
     tone(330, 0.3, 'triangle', 0.08, 0.7); tone(247, 0.4, 'triangle', 0.08, 0.7, 0.18);
     showResult('lost');
@@ -492,7 +503,9 @@ function renderHUD() {
   }
   $('pips').classList.toggle('empty', state.spores === 0);
   const pending = state.customers.filter(c => !c.done && c.turn > state.turn);
-  $('custInfo').textContent = pending.length ? t('hud.customers', { n: pending.length, s: plural(pending.length) }) : '';
+  // the customer chip repeats the board's red tag: soonest arrival in the dot, how many are coming beside it
+  const soon = pending.length ? Math.min(...pending.map(c => c.turn - state.turn)) : 0;
+  $('custInfo').innerHTML = pending.length ? `<span class="cust-chip${soon <= 1 ? ' soon' : ''}"><i class="tagdot">${soon}</i>${t('hud.customers', { n: pending.length, s: plural(pending.length) })}</span>` : '';
   const st = currentStars();
   $('starNow').innerHTML = starsHTML(st);
   // the star rule is explained once, on the very first stage; afterwards the stars speak for themselves
@@ -665,7 +678,8 @@ canvas.addEventListener('pointerup', e => {
 $('undoBtn').onclick = undo;
 $('resetBtn').onclick = restart;
 $('hintBtn').onclick = onHint;
-$('helpBtn').onclick = () => openSheet('legendSheet');
+$('helpBtn').onclick = () => { $('setSound2').checked = save.sound; openSheet('legendSheet'); };
+$('setSound2').onchange = e => { save.sound = e.target.checked; syncSound(); writeSave(save); $('setSound').checked = save.sound; if (save.sound) buttonSound(); };
 $('legendClose').onclick = () => closeSheet('legendSheet');
 $('introAgain').onclick = () => { closeSheet('legendSheet'); if (!busy && def.intro) showIntro(); };
 $('backBtn').onclick = () => { if (busy) return; showScreen(mode === 'daily' ? 'title' : 'map'); };
