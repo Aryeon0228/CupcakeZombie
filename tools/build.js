@@ -22,6 +22,9 @@ put('/*ASSETS*/null', JSON.stringify(assets));
 put('/*SOUNDS*/null', JSON.stringify({ button: fs.readFileSync(path.join(root, 'assets/audio/ui-click.wav')).toString('base64'), meow: fs.readFileSync(path.join(root, 'assets/audio/cupcake-nya.wav')).toString('base64') }));
 const scaleFile = path.join(root, 'assets/scale.json');
 put('/*SPRITE_K*/null', fs.existsSync(scaleFile) ? fs.readFileSync(scaleFile, 'utf8') : '{}');
+// Build stamp (date + commit) so a player can tell which version a page is: Settings footer and title foot.
+const buildTag = (() => { let sha = ''; try { sha = require('child_process').execSync('git rev-parse --short HEAD', { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); } catch (e) {}
+  const d = new Date(), kst = new Date(d.getTime() + 9 * 3600e3); return `${kst.getUTCFullYear()}.${String(kst.getUTCMonth() + 1).padStart(2, '0')}.${String(kst.getUTCDate()).padStart(2, '0')} ${String(kst.getUTCHours()).padStart(2, '0')}:${String(kst.getUTCMinutes()).padStart(2, '0')}${sha ? ' · ' + sha : ''}`; })();
 put('/*LOGIC*/', rd('logic.js'));
 put('/*LEVELS*/null', JSON.stringify(LEVELS));
 put('/*CHAPTERS*/null', JSON.stringify(CHAPTERS));
@@ -56,6 +59,7 @@ put('/*COLLECTION*/', rd('collection.js'));
 put('/*UI_INTERACTIONS*/', rd('ui-interactions.js'));
 put('/*APP*/', rd('app.js'));
 fs.mkdirSync(path.join(root, 'out/www'), { recursive: true });
+page = page.split('/*BUILD_TAG*/').join(buildTag);
 fs.writeFileSync(path.join(root, 'out/cupcake-zombie.html'), page);
 const standalone = '<!doctype html>\n<html lang="ko">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">\n<meta name="apple-mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-status-bar-style" content="default">\n<meta name="theme-color" content="#FBEFF1">\n<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>\n</head>\n<body>\n' + page + '\n</body>\n</html>\n';
 fs.writeFileSync(path.join(root, 'out/www/index.html'), standalone);
