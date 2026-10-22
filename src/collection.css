@@ -107,9 +107,7 @@
 .reward-card img { width:32px; height:42px; object-fit:contain; }
 .reward-card small { display:block; font-size:11px; color:var(--mold-deep); margin-top:3px; }
 @media(max-height:700px) { .collector-card { height:390px; } .card-picture img { max-height:132px; } .card-name { font-size:21px; padding:5px 3px; } .card-rule { font-size:12px; min-height:54px; padding:8px 2px 6px; } .card-dialog-head { margin-bottom:8px; } .card-dialog { max-width:330px; } }
-@media(prefers-reduced-motion:reduce) {
-  .card-tilt { --sparkle:0; }
-  .btn, .stage-btn, .collection-tile, .segbtn, .card-tilt, .card-rotator { transition:none!important; }
-  .btn:not(:disabled):hover, .stage-btn:hover, .collection-tile:hover, .segbtn:hover { transform:none; }
-  .btn.ui-pressed:not(:disabled), .stage-btn.ui-pressed, .collection-tile.ui-pressed, .segbtn.ui-pressed { transform:translate(2px,2px); }
-}
+html.reduce-motion .card-tilt { --sparkle:0; }
+html.reduce-motion :is(.btn, .stage-btn, .collection-tile, .segbtn, .card-tilt, .card-rotator) { transition:none!important; }
+html.reduce-motion :is(.btn:not(:disabled):hover, .stage-btn:hover, .collection-tile:hover, .segbtn:hover) { transform:none; }
+html.reduce-motion :is(.btn.ui-pressed:not(:disabled), .stage-btn.ui-pressed, .collection-tile.ui-pressed, .segbtn.ui-pressed) { transform:translate(2px,2px); }

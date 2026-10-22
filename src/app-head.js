@@ -13,7 +13,7 @@ const boardWrap = $('boardWrap');
 const STORE_KEY = 'cupcake-zombie-v3';
 function loadSave() { try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { return {}; } }
 function writeSave(o) { try { localStorage.setItem(STORE_KEY, JSON.stringify(o)); } catch (e) {} }
-const save = Object.assign({ stars: {}, daily: {}, streak: { last: '', count: 0 }, hints: 3, noAds: false, sound: true, haptics: true, seen: [], clears: 0, adClears: 0, level: 0 }, loadSave());
+const save = Object.assign({ stars: {}, daily: {}, streak: { last: '', count: 0 }, hints: 3, noAds: false, sound: true, haptics: true, motion: 'auto', motionNoticed: false, seen: [], clears: 0, adClears: 0, level: 0 }, loadSave());
 
 // ---------- game state ----------
 let li = 0, def = null, state = null, undoStack = [];
@@ -26,7 +26,14 @@ let particles = [], projs = [], timeline = [], texts = [];
 let arm = null;
 let S = 64, padX = 20, padTop = 40, padBot = 20, CW = 300, CH = 300, DPR = 1;
 let now = performance.now();
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Motion: 'auto' follows the OS "reduce motion" flag (often switched on by IT on shared PCs), the player can override it in Settings.
+const osReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let reduceMotion = osReduceMotion;
+function syncMotion() {
+  reduceMotion = save.motion === 'on' ? false : save.motion === 'off' ? true : osReduceMotion;
+  document.documentElement.classList.toggle('reduce-motion', reduceMotion);
+}
+syncMotion();
 
 // ---------- board geometry ----------
 function layout() {

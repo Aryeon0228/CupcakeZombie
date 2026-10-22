@@ -51,7 +51,7 @@ function showScreen(name) {
 function openSheet(id) { const el = $(id); el.hidden = false; requestAnimationFrame(() => el.classList.add('open')); }
 function closeSheet(id) { const el = $(id); el.classList.remove('open'); setTimeout(() => { if (!el.classList.contains('open')) el.hidden = true; }, 220); }
 let toastTimer = 0;
-function toast(msg) { const t = $('toast'); t.textContent = msg; t.hidden = false; t.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.classList.remove('on'); setTimeout(() => t.hidden = true, 250); }, 1800); }
+function toast(msg, ms = 1800) { const t = $('toast'); t.textContent = msg; t.hidden = false; t.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.classList.remove('on'); setTimeout(() => t.hidden = true, 250); }, ms); }
 
 // ---------- progress ----------
 const starsOf = i => save.stars[i] || 0;
@@ -155,6 +155,8 @@ $('mapBack').onclick = () => showScreen('title');
 // ---------- settings ----------
 function openSettings() {
   $('setSound').checked = save.sound; $('setHaptic').checked = save.haptics;
+  $('setMotion').checked = !reduceMotion;
+  const note = $('setMotionNote'); note.hidden = !osReduceMotion; note.textContent = osReduceMotion ? t('set.motionOs') : '';
   $('noAdsBtn').textContent = save.noAds ? t('set.noAdsDone') : t('set.noAds', { price: Store.price });
   $('noAdsBtn').disabled = save.noAds;
   $('hintCount').textContent = t('set.hints', { n: save.hints });
@@ -164,6 +166,7 @@ function openSettings() {
 }
 $('setSound').onchange = e => { save.sound = e.target.checked; syncSound(); writeSave(save); if (save.sound) buttonSound(); };
 $('setHaptic').onchange = e => { save.haptics = e.target.checked; writeSave(save); haptic('medium'); };
+$('setMotion').onchange = e => { save.motion = e.target.checked ? 'on' : 'off'; syncMotion(); writeSave(save); };
 $('noAdsBtn').onclick = async () => { const ok = await Store.buyRemoveAds(); if (ok) { save.noAds = true; writeSave(save); openSettings(); toast(t('toast.noAds')); } };
 $('restoreBtn').onclick = async () => { const ok = await Store.restore(); if (ok) { save.noAds = true; writeSave(save); openSettings(); toast(t('toast.restored')); } else toast(t('toast.noRestore')); };
 document.querySelectorAll('.segbtn').forEach(b => { b.onclick = () => setLang(b.dataset.lang); });
@@ -210,7 +213,14 @@ function loadLevel(d, opts = {}) {
   layout(); renderHUD(); renderLegend(); updateHint();
   if (def.intro && opts.intro !== false && mode === 'stage' && !save.seen.includes(li)) showIntro(); else hideIntro();
 }
+// Shared PCs often have the OS "reduce motion" flag on; say so once, because it hides most of the game's feedback.
+function motionNotice() {
+  if (!osReduceMotion || save.motion !== 'auto' || save.motionNoticed) return;
+  save.motionNoticed = true; writeSave(save);
+  setTimeout(() => toast(t('toast.motion'), 4500), 600);
+}
 function startStage(i) {
+  motionNotice();
   mode = 'stage'; li = Math.max(0, Math.min(LEVELS.length - 1, i));
   save.level = li; writeSave(save);
   loadLevel(LEVELS[li]);

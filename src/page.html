@@ -124,7 +124,7 @@ button { font: inherit; color: inherit; touch-action: manipulation; }
 .stage-btn .cloche { position: absolute; left: 50%; bottom: 0; width: 84%; height: 92%; transform: translateX(-50%); border-radius: 30px 30px 6px 6px / 34px 34px 4px 4px; background: linear-gradient(100deg, rgba(255, 255, 255, 0.55), rgba(220, 235, 245, 0.18) 45%, rgba(255, 255, 255, 0.42)); border: 1.5px solid rgba(74, 46, 39, 0.55); box-shadow: inset 2px 0 3px rgba(255, 255, 255, 0.7), inset -2px -2px 3px rgba(120, 140, 160, 0.25); }
 .stage-btn .cloche::before { content: ''; position: absolute; left: 50%; top: -7px; width: 10px; height: 10px; margin-left: -5px; border-radius: 50%; background: #d8b58a; border: 1.5px solid rgba(74, 46, 39, 0.6); }
 .stage-btn .cloche::after { content: ''; position: absolute; left: 9px; top: 9px; width: 7px; height: 26px; border-radius: 6px; background: rgba(255, 255, 255, 0.75); transform: rotate(8deg); }
-@media (prefers-reduced-motion: reduce) { .stage-btn .spore { animation: none; } }
+html.reduce-motion .stage-btn .spore { animation: none; }
 .st i, .starline i, .bigstars span { font-style: normal; }
 i.on { color: var(--star); -webkit-text-stroke: 1px var(--ink); }
 i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
@@ -228,10 +228,11 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 @keyframes reward-flip { 0% { transform: perspective(500px) rotateY(-100deg) scale(.86); opacity: 0; } 55% { transform: perspective(500px) rotateY(12deg) scale(1.03); opacity: 1; } 100% { transform: none; opacity: 1; } }
 .reward-card small { animation: reward-pop .4s .5s cubic-bezier(.3, 1.8, .5, 1) both; }
 @keyframes reward-pop { 0% { transform: scale(.4); opacity: 0; } 100% { transform: none; opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .reward-card, .reward-card small { animation: none; } }
+html.reduce-motion .reward-card, html.reduce-motion .reward-card small { animation: none; }
 .bigstars span:nth-child(2).on { animation-delay: .15s; }
 .bigstars span:nth-child(3).on { animation-delay: .3s; }
 .setting { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; }
+#setMotionNote { display: block; font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
 .switch { appearance: none; width: 50px; height: 30px; border-radius: 15px; background: var(--paper-edge); border: 2px solid var(--ink); position: relative; cursor: pointer; margin: 0; }
 .switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 2px solid var(--ink); transition: transform .15s; }
 .switch:checked { background: var(--mold); }
@@ -270,7 +271,7 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
 @keyframes fadein { from { opacity: 0 } }
 @keyframes popin { from { transform: scale(.85); opacity: 0 } }
 @keyframes starpop { from { transform: scale(0) rotate(-40deg); } }
-@media (prefers-reduced-motion: reduce) { .overlay, .card, .bigstars span.on, .pips .mold { animation: none; } .btn, .sheet, .sheet-card { transition: none; } }
+html.reduce-motion .overlay, html.reduce-motion .card, html.reduce-motion .bigstars span.on, html.reduce-motion .pips .mold { animation: none; } html.reduce-motion .btn, html.reduce-motion .sheet, html.reduce-motion .sheet-card { transition: none; }
 @media (max-height: 700px) {
   .hintline { font-size: 12px; }
   .logo-big p { font-size: 12px; }
@@ -385,6 +386,7 @@ i.off { color: var(--paper-edge); -webkit-text-stroke: 1px var(--ink-soft); }
     <div class="setting"><span data-i18n="set.lang">언어 / Language</span><div class="seg"><button class="segbtn" data-lang="ko">한국어</button><button class="segbtn" data-lang="en">English</button></div></div>
     <label class="setting"><span data-i18n="set.sound">소리</span><input type="checkbox" class="switch" id="setSound"></label>
     <label class="setting"><span data-i18n="set.haptic">진동</span><input type="checkbox" class="switch" id="setHaptic"></label>
+    <label class="setting"><span><span data-i18n="set.motion">애니메이션</span><small class="small" id="setMotionNote" hidden></small></span><input type="checkbox" class="switch" id="setMotion"></label>
     <div class="setting"><span class="small" id="hintCount"></span></div>
     <button class="btn go" id="noAdsBtn">광고 제거</button>
     <button class="btn" id="restoreBtn" data-i18n="set.restore">구매 복원</button>
