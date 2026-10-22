@@ -92,7 +92,7 @@ async function playUISound(key, pitch = 1) {
     const source = a.createBufferSource();
     source.buffer = buffer;
     source.playbackRate.value = pitch;
-    const gain = a.createGain();
+    const gain = a.createGain(); gain.gain.value = key === 'meow' ? 0.7 : 1;
     source.connect(gain).connect(audioBus);
     source.onended = () => { source.disconnect(); gain.disconnect(); if (lastVoice[key] && lastVoice[key].source === source) lastVoice[key] = null; };
     // A new meow cuts the one still ringing (25ms fade) so quick taps and drags never stack up.
@@ -410,7 +410,7 @@ function applyHit(h) {
   if (h.direct) {
     if (!reduceMotion) sporeDust(x, sporeContactY(h.idx), 7, 0.55);
     tone(360, 0.085, 'sine', 0.065, 0.55); noise(0.045, 650, 0.07);
-    cupcakeSound(); // the cupcake you shot squeaks once; chain hits keep the rising melody
+    // no meow here: the 0.45s "nyaa" sits 18 dB above the chain notes and buried the melody's start (the meow lives on tap/drag)
   }
   if (h.torn) { v.wrap = false; wrapShreds(h.idx); tone(900, 0.08, 'square', 0.03, 0.4); }
   if (h.kind === 'pending') {
@@ -438,7 +438,7 @@ function applyHit(h) {
   // One note for simultaneous hits, so a large cascade keeps a readable rhythm.
   if (now - lastChainNote >= 45) {
     lastChainNote = now;
-    tone(note(h.depth), 0.18, v.t === 'u' ? 'sine' : 'triangle', 0.065);
+    tone(note(h.depth), 0.18, v.t === 'u' ? 'sine' : 'triangle', 0.11); // the rising scale is the reward; keep it clearly above the thud and the spore noise
   }
   if (h.kind === 'sealed') { v.flashAt = now; tone(180, 0.12, 'square', 0.03); floatText(x, y - S * 0.8, t('fx.sealed'), '#6E8FB4', 0.24, 800); }
 }
