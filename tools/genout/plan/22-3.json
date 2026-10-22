@@ -1,1 +1,0 @@
-{"grid":["x.xoo.",".u.mu.","..ocum","x...o.","u...oo","om...o"],"customers":[{"r":2,"c":5,"turn":1,"kind":"order","cells":[[2,5],[4,5],[5,5]],"vertical":true}],"spores":2,"a":{"first":3,"total":19,"waves":11,"greedy":true,"surv":null,"n":19}}

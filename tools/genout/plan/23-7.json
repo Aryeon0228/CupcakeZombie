@@ -1,1 +1,0 @@
-{"grid":["x...eu","x..xgr","g.o.oo","c.cuxl",".....m","xloxx."],"customers":[{"r":2,"c":4,"turn":2,"kind":"kid","cells":[[2,4],[3,4]]},{"r":3,"c":5,"turn":1,"kind":"picky"}],"spores":3,"a":{"first":1,"total":22,"waves":9,"greedy":true,"surv":null,"n":22}}

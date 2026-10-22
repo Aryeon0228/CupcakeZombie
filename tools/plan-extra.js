@@ -105,6 +105,7 @@ for(const [no,name,name_en,feature,weights,required,tip,tip_en,names,names_en] o
   if(no===20&&j>=6)st.customerTurns=j>=8?[1,2,3]:[1];
   // Rest stages genuinely ease the decision count; avoid overconstraining them.
   if(rest){delete st.feature;st.minWaves=0;delete st.customerTurns;}
+  Object.assign(st, require('./curve-targets.js').targets(no, j, st.spores)); st.tries = Math.max(st.tries || 0, 30000);
   // A one-spore opening cannot serve a second/third-turn order and is deliberately smaller.
   if(st.spores===1){st.maxCells=small?17:20;st.minCells=small?10:12;st.minSurvivors=2;delete st.greedy;}
   if(j===0&&no===7){st={...st,grid:['o...o','.o.o.','..u..','.o.o.','o...o'],customers:[],intro:INTRO.u,spores:1};}

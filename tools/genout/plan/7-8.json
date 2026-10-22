@@ -1,1 +1,1 @@
-{"grid":["oou..x","x....o","xx.x..","......",".moxxu","m.ou.o"],"customers":[],"spores":2,"a":{"first":2,"total":18,"waves":9,"greedy":true,"surv":null,"n":18}}
+{"grid":["o.o.u.","x.m.ou",".x.mo.",".o..u.",".o.mmx","...xxu"],"customers":[],"spores":2,"a":{"first":2,"total":19,"waves":10,"greedy":true,"surv":null,"n":19,"bits":3.2479275134435857,"traps":0}}

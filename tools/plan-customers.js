@@ -70,6 +70,7 @@ for (const [no, name, name_en, feature, weights, tip, tip_en, names, names_en, s
   const stages = specs.map((sp, j) => {
     const st = { name: names[j], tip, ...B, weights: { ...weights }, feature, ...sp };
     if (st.spores === 1) { st.minSurvivors = st.minSurvivors || 2; delete st.greedy; }
+    Object.assign(st, require('./curve-targets.js').targets(no, j, st.spores)); st.tries = Math.max(st.tries || 0, 30000);
     EN.stages[no + '-' + (j + 1)] = [names_en[j], tip_en];
     return st;
   });

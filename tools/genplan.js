@@ -28,8 +28,8 @@ if (which === 'daily') {
       let res = G.search(spec, spec.tries || 5000, 3);
       if (!res.length) { console.log(`${ch.no}-${i + 1} ${st.name}: NONE (${Date.now() - t0}ms)`); fs.writeFileSync(file, 'null'); return; }
       const best = res[0];
-      fs.writeFileSync(file, JSON.stringify({ grid: best.def.grid, customers: best.def.customers, spores: st.spores, a: { first: best.a.first, total: best.a.total, waves: best.a.maxWaves, greedy: best.a.greedyWins, surv: best.a.minSurvivorsWrong, n: best.a.cupcakes } }));
-      console.log(`${ch.no}-${i + 1} ${st.name}: first=${best.a.first}/${best.a.total} waves=${best.a.maxWaves} greedy=${best.a.greedyWins} surv=${best.a.minSurvivorsWrong} n=${best.a.cupcakes} (${Date.now() - t0}ms)`);
+      fs.writeFileSync(file, JSON.stringify({ grid: best.def.grid, customers: best.def.customers, spores: st.spores, a: { first: best.a.first, total: best.a.total, waves: best.a.maxWaves, greedy: best.a.greedyWins, surv: best.a.minSurvivorsWrong, n: best.a.cupcakes, bits: best.a.bits, traps: best.a.traps } }));
+      console.log(`${ch.no}-${i + 1} ${st.name}: first=${best.a.first}/${best.a.total} waves=${best.a.maxWaves} greedy=${best.a.greedyWins} n=${best.a.cupcakes} bits=${best.a.bits != null ? best.a.bits.toFixed(1) : '-'} traps=${best.a.traps ?? '-'} (${Date.now() - t0}ms)`);
     });
   }
 }

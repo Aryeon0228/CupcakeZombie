@@ -104,6 +104,8 @@ const CH = [
 ];
 // daily puzzles: medium, 2 spores, everything mixed, a few winners so it feels fair
 const DAILY = { ...T.all3, spores: 2, wraps: 1, deflectors: 1, customerTurns: [1], minCells: 17, maxCells: 24, minFirst: 1, maxFirst: 4, minWaves: 7, tries: 6000 };
+// chapters 5–6 are hand-planned above; give them the same difficulty targets as the generated chapters
+for (const ch of CH) if (ch.no >= 5) ch.stages.forEach((st, j) => { if (!st.grid && !st.hand) { Object.assign(st, require('./curve-targets.js').targets(ch.no, j, st.spores)); st.tries = Math.max(st.tries || 0, 30000); } });
 CH.push(...require('./plan-extra.js').CH);
 CH.push(...require('./plan-customers.js').CH);
 module.exports = { CH, DAILY };

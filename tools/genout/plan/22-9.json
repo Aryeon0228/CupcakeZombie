@@ -1,1 +1,0 @@
-{"grid":[".....c","ox.rc.","xcm..o","...cou","xs.ccc","rc.omm"],"customers":[{"r":4,"c":4,"turn":1},{"r":1,"c":0,"turn":2,"kind":"order","cells":[[1,0],[1,1],[1,3],[1,4]],"vertical":false}],"spores":3,"a":{"first":2,"total":22,"waves":10,"greedy":false,"surv":null,"n":22}}

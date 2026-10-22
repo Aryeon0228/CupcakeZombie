@@ -67,6 +67,34 @@ function analyze(def, opts = {}) {
   return { firstWin, first: firstWin.length, total, maxWaves, greedyWins, minSurvivorsWrong, fewer, seqs, cupcakes: s0.cells.filter(Boolean).length };
 }
 
+// Difficulty curve of a board: bits = -log2(chance that uniformly random legal play wins); traps = wrong openings that
+// spoil at least as much as the best right opening. Costly (full tree), so fits() only calls it after every cheaper check.
+function curve(def) {
+  const root = L.parseLevel(def), memo = new Map();
+  function value(s) {
+    const k = key(s) + '|' + s.spores;
+    if (memo.has(k)) return memo.get(k);
+    let p = 0, wins = 0, n = 0;
+    for (let i = 0; i < s.cells.length; i++) {
+      if (!L.canTarget(s, i)) continue;
+      n++;
+      const t = L.playTurn(s, i);
+      if (t.res === 'win') { p += 1; wins += 1; }
+      else if (t.res === 'play') { const v = value(t.state); p += v.p; wins += v.wins; }
+    }
+    const v = { p: n ? p / n : 0, wins }; memo.set(k, v); return v;
+  }
+  const fresh0 = L.freshCount(root), firsts = [];
+  for (let i = 0; i < root.cells.length; i++) {
+    if (!L.canTarget(root, i)) continue;
+    const t = L.playTurn(root, i);
+    firsts.push({ spoil: fresh0 - L.freshCount(t.state), win: t.res === 'win' || (t.res === 'play' && value(t.state).wins > 0) });
+  }
+  const v = value(root), winning = firsts.filter(f => f.win), dead = firsts.filter(f => !f.win);
+  const bestWinSpoil = winning.length ? Math.max(...winning.map(f => f.spoil)) : 0;
+  return { bits: v.p > 0 ? -Math.log2(v.p) : Infinity, traps: dead.filter(f => f.spoil >= bestWinSpoil).length };
+}
+
 function solvableWith(def, k) {
   const s0 = L.parseLevel({ ...def, spores: k });
   const memo = new Map();
@@ -209,7 +237,15 @@ function fits(spec, def, a) {
   if (spec.greedy === true && !a.greedyWins) return false;
   if (spec.greedy === false && a.greedyWins) return false;
   if (a.maxWaves < (spec.minWaves || 0)) return false;
-  return featureMatters(spec, def, a);
+  if (!featureMatters(spec, def, a)) return false;
+  if (spec.minBits != null || spec.maxBits != null || spec.minTraps) {
+    const c = curve(def);
+    if (spec.minBits != null && c.bits < spec.minBits) return false;
+    if (spec.maxBits != null && c.bits > spec.maxBits) return false;
+    if (spec.minTraps && c.traps < spec.minTraps) return false;
+    a.bits = c.bits; a.traps = c.traps;
+  }
+  return true;
 }
 
 function search(spec, tries, keep = 5) {
@@ -223,11 +259,12 @@ function search(spec, tries, keep = 5) {
     found.push({ def, a, seed });
     if (found.length >= keep * 3) break;
   }
-  found.sort((p, q) => (q.a.maxWaves - p.a.maxWaves) || (p.a.first - q.a.first));
+  const mid = spec.minBits != null && spec.maxBits != null ? (spec.minBits + spec.maxBits) / 2 : null;
+  found.sort((p, q) => (mid != null ? Math.abs(p.a.bits - mid) - Math.abs(q.a.bits - mid) : 0) || (q.a.maxWaves - p.a.maxWaves) || (p.a.first - q.a.first));
   return found.slice(0, keep);
 }
 
-module.exports = { analyze, generate, search, fits };
+module.exports = { analyze, generate, search, fits, curve };
 
 if (require.main === module) {
   const specs = require('./specs.js');
