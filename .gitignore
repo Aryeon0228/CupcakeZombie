@@ -14,3 +14,4 @@ capacitor/android/local.properties
 *.jks
 .DS_Store
 __pycache__/
+tools/genout/regen.log
