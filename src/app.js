@@ -112,6 +112,7 @@ function chapterFlavor(ch) {
   const n = {}; for (let i = ch.from; i <= ch.to; i++) { const f = stageFlavor(i); n[f] = (n[f] || 0) + 1; }
   return Object.keys(n).sort((a, b) => n[b] - n[a])[0];
 }
+const PART2_FROM = 24; // chapters 24+ are part 2: the new menu
 function renderMap() {
   $('mapStars').textContent = `★ ${totalStars()} / ${LEVELS.length * 3}`;
   const box = $('chapterList'); box.innerHTML = '';
@@ -127,6 +128,11 @@ function renderMap() {
   $('mapContinue').textContent = t('title.continue', { n: next + 1 });
   for (const ch of CHAPTERS) {
     const got = LEVELS.slice(ch.from, ch.to + 1).reduce((a, _, k) => a + starsOf(ch.from + k), 0);
+    if (ch.no === PART2_FROM) { // the signboard that opens part 2: the new menu arrives (rose vanilla is its face, no rule of its own)
+      const sign = document.createElement('div'); sign.className = 'part-sign';
+      sign.innerHTML = `${ASSETS.rose_vanilla ? `<img src="${ASSETS.rose_vanilla}" alt="">` : ''}<div><span class="eyebrow">${t('map.part2')}</span><h3>${t('map.part2Title')}</h3><p>${t('map.part2Text')}</p></div>`;
+      box.appendChild(sign);
+    }
     const wrap = document.createElement('section'); wrap.className = 'chapter shelf'; wrap.id = 'chapter-' + ch.no;
     const chip = document.createElement('button'); chip.className = 'chip' + (got === (ch.to - ch.from + 1) * 3 ? ' done' : ''); chip.dataset.no = ch.no; chip.setAttribute('role', 'tab');
     chip.textContent = t('map.chip', { n: ch.no }); chip.title = tl(ch, 'name');

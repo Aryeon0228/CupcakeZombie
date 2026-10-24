@@ -1,0 +1,1 @@
+{"grid":["o...ms","x.xf.m","u.xu.f",".xf...","o.xsx.","f.o.mu"],"customers":[{"r":5,"c":0,"turn":1,"kind":"order","cells":[[5,0],[5,2],[5,4],[5,5]],"vertical":false}],"spores":3,"a":{"first":1,"total":21,"waves":5,"greedy":false,"surv":null,"n":21,"bits":5.877744249949002,"traps":1}}

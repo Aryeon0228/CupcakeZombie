@@ -45,6 +45,8 @@ const CARD_PAL = {
   n: ['#e6faf1', '#9fdcc4', '#8fd3b9', ['#73f0c4', '#9fbfff', '#e9fff4']],
   u: ['#e9edff', '#aab8f2', '#9eadef', ['#8aa4ff', '#d09aff', '#93f0ff']],
   r: ['#fdf1e2', '#e6be92', '#deb487', ['#ffcc6e', '#ff9c7a', '#fff0bf']],
+  k: ['#eef7ff', '#bcd8f2', '#aacdef', ['#9fd8ff', '#ffffff', '#c9b6ff']],
+  f: ['#ffe9ec', '#f7b0bd', '#f3a0b0', ['#ff8ea4', '#ffd98a', '#9fe8d8']],
 };
 function cardFinish(stars) { return ['paper', 'paper', 'gold', 'aurora'][stars] || 'paper'; }
 function cardCount() { return CARD_ORDER.filter(k => save.collection[k] > 0).length; }

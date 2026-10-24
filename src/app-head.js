@@ -1,6 +1,6 @@
 // ---------- copy ----------
 const TYPE_TINT = { basic: '120, 214, 196', berry: '246, 206, 80', sprinkle: '244, 160, 190', cherry: '232, 96, 104', cream: '186, 140, 104', butter: '130, 176, 232', earl_grey: '186, 160, 222', lemon_yogurt: '255, 236, 140', espresso: '214, 112, 96', mint_choco: '0, 0, 0' };
-Object.assign(TYPE_TINT, {blueberry:'120, 143, 220', cinnamon_roll:'207, 157, 101'});
+Object.assign(TYPE_TINT, {blueberry:'120, 143, 220', cinnamon_roll:'207, 157, 101', coconut_snow:'150, 196, 236', grapefruit_yogurt:'244, 150, 170'});
 
 // ---------- dom ----------
 const $ = id => document.getElementById(id);
