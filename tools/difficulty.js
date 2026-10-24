@@ -2,8 +2,7 @@
 // node tools/difficulty.js  ->  tools/genout/difficulty.json (plotted by tools/difficulty_plot.py)
 const L = require('../src/logic.js');
 const { LEVELS } = require('../src/levels.js');
-const planA = require('./plan.js'), planB = require('./plan-extra.js');
-const CHAPTERS = [...planA.CH, ...planB.CH].map(c => c.name);
+const CHAPTERS = require('./plan.js').CH.map(c => c.name); // plan.js already appends the extra, customer and part-2 chapters
 
 function analyze(def) {
   const root = L.parseLevel(def);

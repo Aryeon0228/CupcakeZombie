@@ -225,7 +225,7 @@ $('settingsClose').onclick = () => closeSheet('settingsSheet');
 // ---------- loading a level ----------
 function rebuildVis() {
   vis = state.cells.map((c, i) => c && {
-    t: c.t, zombie: c.inf, lid: c.lid, wrap: c.wrap, sealed: c.inf && c.wrap, pend: c.pend,
+    t: c.t, zombie: c.inf, lid: c.lid, wrap: c.wrap, sealed: c.inf && c.wrap, pend: c.pend, sour: !!c.sour, sourAt: -1, frost: false, frostAt: -1, meltAt: -1,
     zv: ((i * 7 + li * 3) % 3 === 0) ? 'zombieA' : 'zombieB',
     flip: ((i * 5 + li) % 4) === 1,
     phase: (i * 1.37) % (Math.PI * 2),
@@ -341,6 +341,7 @@ function celebrate(stars) {
 }
 function finish(res) {
   busy = false;
+  for (const v of vis) if (v && v.frost) { v.frost = false; v.meltAt = now; } // the snow melts with the turn
   renderHUD(); updateHint();
   if (res === 'win') {
     const stars = currentStars();
@@ -367,7 +368,7 @@ function finish(res) {
 
 // ---------- hint & boost ----------
 function solveNext(s) {
-  const key = st => st.turn + '|' + st.cells.map(c => c ? (c.inf ? 'I' : (c.wrap ? 'W' : '') + c.lid) : '_').join(',');
+  const key = stateKey;
   const memo = new Map();
   function best(st) {
     const k = key(st); if (memo.has(k)) return memo.get(k);
@@ -536,8 +537,8 @@ function renderHUD() {
   $('custInfo').innerHTML = pending.length ? `<span class="cust-chip${soon <= 1 ? ' soon' : ''}"><i class="tagdot">${soon}</i>${t('hud.customers', { n: pending.length, s: plural(pending.length) })}</span>` : '';
   const st = currentStars();
   $('starNow').innerHTML = starsHTML(st);
-  // the star rule is explained once, on the very first stage; afterwards the stars speak for themselves
-  $('starText').textContent = tutorialStage() ? (mistakes === 0 && !usedHint && !boosted ? t('hud.stars3') : t('hud.starsNow', { n: st, s: plural(st) })) : '';
+  // the stars speak for themselves: the rule card on stage 1 (and the ? button) already explain the three-star rule
+  $('starText').textContent = '';
   $('undoBtn').disabled = busy || !undoStack.length;
   $('hintLabel').innerHTML = save.hints > 0 ? `${t('play.hint')} <span class="k">${save.hints}</span>` : `${t('play.hint')} ${AD_ICON}`;
   const ch = mode === 'stage' ? CHAPTERS.find(c => li >= c.from && li <= c.to) : null;
@@ -545,20 +546,22 @@ function renderHUD() {
   $('stageName').textContent = levelName(def);
 }
 function patternSVG(key) {
-  const p = TYPES[Object.keys(TYPES).find(k => TYPES[k].key === key)].pattern;
+  const ty = TYPES[Object.keys(TYPES).find(k => TYPES[k].key === key)], p = ty.pattern;
   const N = 5, cell = 9, gap = 1.5, o = 0.5;
   let s = `<svg viewBox="0 0 ${N * cell + (N - 1) * gap + 1} ${N * cell + (N - 1) * gap + 1}" aria-hidden="true">`;
-  const hit = new Set();
+  const hit = new Set(), snow = new Set();
   const offs = patternOffsets(p);
   if (offs === 'lines') [[-1, 0], [1, 0], [0, -1], [0, 1]].forEach(([a, b]) => hit.add(`${2 + 2 * a},${2 + 2 * b}`));
   else if (offs === 'scent') ['0,0', '0,4', '4,1', '3,4'].forEach(k => hit.add(k));
   else if (offs !== 'none') offs.forEach(([a, b]) => hit.add(`${2 + a},${2 + b}`));
+  if (ty.frost) DIRS4.concat(DIAG4).forEach(([a, b]) => snow.add(`${2 + a},${2 + b}`)); // the coconut's snow ring
   for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
     const x = o + c * (cell + gap), y = o + r * (cell + gap);
     let fill = '#F3E9E1', stroke = '';
-    if (r === 2 && c === 2) fill = offs === 'none' ? '#5FB8A8' : '#4A2E27';
+    if (r === 2 && c === 2) fill = offs === 'none' && !ty.frost ? '#5FB8A8' : '#4A2E27';
+    else if (snow.has(`${r},${c}`)) { fill = '#DCEFFF'; stroke = ' stroke="#5E8FB8" stroke-width="0.8"'; }
     else if (offs === 'scent' && hit.has(`${r},${c}`)) { fill = '#BBA3DE'; }
-    else if (hit.has(`${r},${c}`)) fill = '#93B743';
+    else if (hit.has(`${r},${c}`)) fill = ty.sour ? '#F48FA6' : '#93B743';
     else if (offs === 'lines' && (r === 2 || c === 2) && Math.abs(r - 2) + Math.abs(c - 2) === 1) { fill = '#FFF9F2'; stroke = ' stroke="#93B743" stroke-dasharray="2 1.5"'; }
     s += `<rect x="${x}" y="${y}" width="${cell}" height="${cell}" rx="2.5" fill="${fill}"${stroke}/>`;
   }
@@ -570,7 +573,7 @@ function renderLegend() {
   $('introAgain').hidden = !def.intro;
   const lg = $('legend'); lg.innerHTML = '';
   const flat = def.grid.join('');
-  for (const tk of ['o', 'x', 's', 'c', 'm', 'b', 'g', 'l', 'e', 'n']) {
+  for (const tk of Object.keys(TYPES)) {
     if (!flat.toLowerCase().includes(tk)) continue;
     const ty = TYPES[tk];
     const row = document.createElement('div'); row.className = 'leg'; row.dataset.key = ty.key;
@@ -602,7 +605,7 @@ function updateHint() {
   const el = $('hintLine');
   if (i >= 0 && state.cells[i]) {
     const c = state.cells[i], ty = TYPES[c.t];
-    let s = c.inf ? (c.wrap ? t('hint.sealedInf') : t('hint.inf')) : c.pend ? t('hint.pending') : t('rule.' + ty.key);
+    let s = c.inf ? (c.wrap ? t('hint.sealedInf') : c.sour ? t('hint.sourInf') : t('hint.inf')) : c.pend ? t('hint.pending') : t('rule.' + ty.key);
     if (!c.inf && c.wrap) s = t('hint.wrapPrefix') + t('rule.wrap');
     if (!c.inf && c.t === 'b') s += c.lid > 0 ? t('hint.lidOn') : t('hint.lidOff');
     const k = state.customers.find(k => !k.done && customerCells(state, k).includes(i));
@@ -613,7 +616,7 @@ function updateHint() {
   else if (busy) el.innerHTML = sents(t('hint.busy'));
   else if (result) el.innerHTML = '';
   else if (hintCell >= 0) el.innerHTML = sents(t('hint.hint'));
-  else el.innerHTML = tutorialStage() ? sents(t('hint.default')) : '';
+  else el.innerHTML = ''; // no standing tutorial line: the rule card and the ? button cover it, and the box fills once a cupcake is picked
   fitHint(el);
 }
 // The hint box has a fixed height so the board never jumps; long rule text steps down a size or two instead of clipping.

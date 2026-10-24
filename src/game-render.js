@@ -21,7 +21,7 @@ function loadImages() {
   })));
 }
 function buildTints() {
-  for (const k of ['basic', 'berry', 'sprinkle', 'cherry', 'cream', 'butter_open', 'butter', 'earl_grey', 'lemon_yogurt', 'pending_lemon_yogurt', 'espresso', 'blueberry', 'cinnamon_roll']) {
+  for (const k of ['basic', 'berry', 'sprinkle', 'cherry', 'cream', 'butter_open', 'butter', 'earl_grey', 'lemon_yogurt', 'pending_lemon_yogurt', 'espresso', 'blueberry', 'cinnamon_roll', 'coconut_snow', 'grapefruit_yogurt']) {
     const m = META[k], im = IMG[k];
     if (!im) continue;
     const c = document.createElement('canvas'); c.width = m.w; c.height = m.h;
@@ -366,26 +366,31 @@ function travelTime(sp) {
   if (sp.style === 'waft') return 380 + 40 * Math.min(8, sp.dist || 1);
   return 230;
 }
-// Same rules as logic.cascade (hitCell), played out on a clock. seeds: [{ idx, t, direct?, release? }]
+// Same rules as logic.cascade (hitCell), with a clock attached. seeds: [{ idx, t, direct?, release? }]
+// Walks the cascade wave by wave in the same order as the rules do, so snow from a coconut falls between the same waves
+// here as there; each hit still carries its own time (t) for the animation.
 function planCascade(s0, seeds, mutate) {
   const sim = mutate ? s0 : cloneState(s0);
   const hits = [], flights = [];
-  const queue = seeds.map(h => ({ from: -1, depth: 0, ...h }));
-  while (queue.length) {
-    queue.sort((a, b) => a.t - b.t);
-    const h = queue.shift();
-    const r = hitCell(sim, h);
-    if (r.kind === 'none') { if (h.from >= 0 && sim.cells[h.idx]) hits.push({ ...h, kind: 'thud' }); continue; }
-    hits.push({ ...h, ...r });
-    if (!r.spread) continue;
-    const t0 = h.t + INCUBATE;
-    const strong = !!TYPES[sim.cells[h.idx].t].strong;
-    for (const sp of spreadsOf(sim, h.idx, true)) {
-      if (sp.to >= 0 && sim.cells[sp.to].inf && !(sim.cells[sp.to].wrap && strong) && sp.style !== 'roll') continue;
-      const dur = travelTime(sp);
-      flights.push({ ...sp, from: h.idx, t0, dur, depth: h.depth, strong });
-      if (sp.to >= 0) queue.push({ t: t0 + dur, idx: sp.to, from: h.idx, direct: false, strong, depth: h.depth + 1 });
+  let frontier = seeds.map(h => ({ from: -1, depth: 0, ...h }));
+  while (frontier.length) {
+    const wave = [], next = [];
+    for (const h of frontier) {
+      const r = hitCell(sim, h);
+      if (r.kind === 'none') { if (h.from >= 0 && sim.cells[h.idx]) hits.push({ ...h, kind: 'thud' }); continue; }
+      const hit = { ...h, ...r }; hits.push(hit); wave.push(hit);
+      if (!r.spread) continue;
+      const t0 = h.t + INCUBATE;
+      const ty = TYPES[sim.cells[h.idx].t], strong = !!ty.strong, sour = !!ty.sour && RULES.sour;
+      for (const sp of spreadsOf(sim, h.idx, true)) {
+        if (sp.to >= 0 && sim.cells[sp.to].inf && !(sim.cells[sp.to].wrap && strong) && sp.style !== 'roll') continue;
+        const dur = travelTime(sp);
+        flights.push({ ...sp, from: h.idx, t0, dur, depth: h.depth, strong, sour });
+        if (sp.to >= 0) next.push({ t: t0 + dur, idx: sp.to, from: h.idx, direct: false, strong, sour, depth: h.depth + 1 });
+      }
     }
+    frostAfterWave(sim, wave);
+    frontier = next;
   }
   return { hits, flights, sim };
 }
@@ -410,6 +415,10 @@ function applyHit(h) {
   const v = vis[h.idx]; if (!v) return;
   const x = cxOf(h.idx), y = cyOf(h.idx);
   if (h.kind === 'thud') { bump(h.idx, 0.06); return; }
+  if (h.kind === 'frosted') { // the spore lands on snow and fizzles
+    bump(h.idx, 0.05); frostBurst(h.idx, 0.4); tone(1500, 0.08, 'sine', 0.03, 0.8); noise(0.03, 2500, 0.05);
+    return;
+  }
   if (h.direct) {
     if (!reduceMotion) sporeDust(x, sporeContactY(h.idx), 7, 0.55);
     tone(360, 0.085, 'sine', 0.065, 0.55); noise(0.045, 650, 0.07);
@@ -438,6 +447,14 @@ function applyHit(h) {
   moldPuffs(h.idx, h.kind === 'sealed' ? 6 : 12, h.kind === 'sealed' ? 0.25 : 0.42);
   if (!h.direct) sporeDust(x, y - S * 0.25, 6, 0.7);
   if (v.t === 's' && h.kind === 'infect') at(INCUBATE - 20, () => { sprinkleBurst(h.idx); noise(0.08, 3000, 0.12); });
+  // sour: spoiled by a grapefruit, so it keeps its spores to itself
+  if (h.sour && h.kind === 'infect') { v.sour = true; v.sourAt = now; floatText(x, y - S * 0.8, t('fx.sour'), '#E0607A', 0.26, 900); tone(520, 0.1, 'square', 0.025, 0.6); }
+  // snow: the coconut's neighbours are covered for the rest of the turn
+  if (h.frosted && h.frosted.length) at(INCUBATE, () => {
+    for (const j of h.frosted) { const w = vis[j]; if (!w) continue; w.frost = true; w.frostAt = now; w.meltAt = -1; frostBurst(j, 0.7); }
+    tone(1760, 0.22, 'sine', 0.05, 1); tone(2093, 0.3, 'sine', 0.035, 1, 0.08);
+    floatText(x, y - S * 0.85, t('fx.frost'), '#5E8FB8', 0.28, 900);
+  });
   // One note for simultaneous hits, so a large cascade keeps a readable rhythm.
   if (now - lastChainNote >= 45) {
     lastChainNote = now;
@@ -617,15 +634,17 @@ function draw(dt) {
 // Only the first outward spread is previewed. A lid/pending lemon does not
 // promise an immediate chain; the rules and hint still describe that state.
 function previewOf(s, i) {
-  if (!canTarget(s, i)) return { spreads: [], targets: [] };
+  if (!canTarget(s, i)) return { spreads: [], targets: [], frost: [], sour: false };
   const trial = cloneState(s);
-  if (!hitCell(trial, { idx: i, direct: true }).spread) return { spreads: [], targets: [] };
+  if (!hitCell(trial, { idx: i, direct: true }).spread) return { spreads: [], targets: [], frost: [], sour: false };
   const spreads = spreadsOf(trial, i, true);
-  const strong = !!TYPES[trial.cells[i].t].strong;
+  const ty = TYPES[trial.cells[i].t], strong = !!ty.strong, sour = !!ty.sour;
   const targets = [...new Set(spreads.filter(sp =>
-    sp.to >= 0 && hitCell(trial, { idx: sp.to, direct: false, strong }).kind !== 'none'
+    sp.to >= 0 && hitCell(trial, { idx: sp.to, direct: false, strong, sour }).kind !== 'none'
   ).map(sp => sp.to))];
-  return { spreads, targets };
+  // a coconut shows where its snow will fall instead of a route
+  const frost = ty.frost ? ringOf(trial, i).filter(j => !trial.cells[j].inf && !trial.cells[j].pend) : [];
+  return { spreads, targets, frost, sour };
 }
 const PREVIEW_OUTLINES = {};
 function previewOutlineArt(key) {
@@ -689,6 +708,19 @@ function drawPreview(i, T, preview = previewOf(state, i)) {
     ctx.strokeStyle = fresh ? '#C6F542' : 'rgba(198,245,66,.4)';
     ctx.lineWidth = Math.max(2.4, S * 0.05); ctx.stroke();
   }
+  ctx.setLineDash([]);
+  // where the snow will fall: a soft blue ring and a little flake over each neighbour
+  for (const j of (preview.frost || [])) {
+    const x = cxOf(j), y = wellY(j), bob = reduceMotion ? 0 : Math.sin(T * 3 + j) * S * 0.02;
+    ctx.fillStyle = 'rgba(214, 236, 255, 0.5)'; ctx.strokeStyle = 'rgba(94, 143, 184, 0.8)'; ctx.lineWidth = Math.max(1.5, S * 0.03);
+    ctx.beginPath(); ctx.ellipse(x, y, S * 0.4, S * 0.26, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    const fy = cyOf(j) - S * 0.3 + bob, r = S * 0.07;
+    ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = Math.max(2, S * 0.035); ctx.lineCap = 'round';
+    ctx.beginPath(); for (let k = 0; k < 3; k++) { const a = k * Math.PI / 3; ctx.moveTo(x - Math.cos(a) * r, fy - Math.sin(a) * r); ctx.lineTo(x + Math.cos(a) * r, fy + Math.sin(a) * r); } ctx.stroke();
+    ctx.strokeStyle = 'rgba(94, 143, 184, 0.9)'; ctx.lineWidth = Math.max(1, S * 0.015); ctx.stroke();
+  }
+  // sour: the targets will spoil but keep their spores to themselves
+  if (preview.sour) for (const j of preview.targets) drawSourBadge(ctx, cxOf(j) + S * 0.3, cyOf(j) - S * 0.78, S * 0.1);
   ctx.restore();
 }
 
@@ -745,6 +777,38 @@ function drawSoldGhost(i, v, sc) {
   ctx.fillStyle = '#FFF9F2'; ctx.fillText(label, 0, px * 0.05);
   ctx.restore();
 }
+// Snow on a frosted cupcake: a soft white cap with a cool tint over the sprite, a few sparkles, melting away at the end of the turn.
+function drawSnow(g, x, by, w, alpha, T) {
+  g.save(); g.globalAlpha = alpha;
+  const top = by - w * 1.02;
+  g.fillStyle = 'rgba(214, 236, 255, 0.42)';
+  g.beginPath(); g.ellipse(x, by - w * 0.5, w * 0.46, w * 0.56, 0, 0, Math.PI * 2); g.fill();
+  g.fillStyle = '#FFFFFF'; g.strokeStyle = 'rgba(120, 165, 205, 0.7)'; g.lineWidth = 1.5;
+  g.beginPath();
+  g.moveTo(x - w * 0.46, top + w * 0.22);
+  g.quadraticCurveTo(x - w * 0.42, top - w * 0.02, x - w * 0.2, top + w * 0.04);
+  g.quadraticCurveTo(x - w * 0.05, top - w * 0.12, x + w * 0.12, top + w * 0.02);
+  g.quadraticCurveTo(x + w * 0.3, top - w * 0.06, x + w * 0.46, top + w * 0.2);
+  g.quadraticCurveTo(x + w * 0.3, top + w * 0.3, x + w * 0.1, top + w * 0.24);
+  g.quadraticCurveTo(x - w * 0.15, top + w * 0.36, x - w * 0.46, top + w * 0.22);
+  g.closePath(); g.fill(); g.stroke();
+  g.fillStyle = '#FFFFFF';
+  for (let k = 0; k < 4; k++) {
+    const a = T * 1.3 + k * 1.7, sx = x + Math.cos(a) * w * 0.3, sy = by - w * (0.35 + 0.3 * Math.abs(Math.sin(a * 0.7))), r = w * (0.025 + 0.015 * (0.5 + 0.5 * Math.sin(T * 5 + k)));
+    g.beginPath(); g.moveTo(sx - r * 2, sy); g.lineTo(sx, sy - r * 0.6); g.lineTo(sx + r * 2, sy); g.lineTo(sx, sy + r * 0.6); g.closePath(); g.fill();
+    g.beginPath(); g.moveTo(sx, sy - r * 2); g.lineTo(sx + r * 0.6, sy); g.lineTo(sx, sy + r * 2); g.lineTo(sx - r * 0.6, sy); g.closePath(); g.fill();
+  }
+  g.restore();
+}
+// The sour badge on a cupcake a grapefruit spoiled: a pink drop with a crossed-out spore.
+function drawSourBadge(g, x, y, r) {
+  g.save();
+  g.fillStyle = '#F48FA6'; g.strokeStyle = '#4A2E27'; g.lineWidth = Math.max(1.2, r * 0.14);
+  g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); g.stroke();
+  g.strokeStyle = '#4A2E27'; g.lineWidth = Math.max(1.4, r * 0.2); g.lineCap = 'round';
+  g.beginPath(); g.moveTo(x - r * 0.42, y - r * 0.42); g.lineTo(x + r * 0.42, y + r * 0.42); g.moveTo(x + r * 0.42, y - r * 0.42); g.lineTo(x - r * 0.42, y + r * 0.42); g.stroke();
+  g.restore();
+}
 function drawCupcake(i, v, sc) {
   const x0 = cxOf(i), sw = swayPose(v), by = baseY(i);
   const zombie = isZombieShown(v);
@@ -762,6 +826,11 @@ function drawCupcake(i, v, sc) {
     if (v.infAt >= 0 && TINT[freshKey]) { const p = Math.min(1, (now - v.infAt) / 230); drawSpriteAt(ctx, freshKey, x0, by, sc, 0, sx, sy, false, p, TINT[freshKey]); }
   } else drawSpriteAt(ctx, zombieKey(v), x0, by, sc, sw.rot, sx, sy, zombieFlip(v));
   if (v.wrap) { const fl = v.flashAt >= 0 ? Math.max(0, 1 - (now - v.flashAt) / 500) : 0; drawWrap(ctx, x0, by + 2, S * 0.86, 1, fl); }
+  if (v.frost || (v.meltAt >= 0 && now - v.meltAt < 450)) {
+    const grow = v.frostAt >= 0 ? Math.min(1, (now - v.frostAt) / 260) : 1, melt = v.frost ? 1 : Math.max(0, 1 - (now - v.meltAt) / 450);
+    drawSnow(ctx, x0, by - S * 0.02, S * 0.8 * (0.85 + 0.15 * grow), grow * melt, now / 1000);
+  }
+  if (v.sour && zombie) { const pop = v.sourAt >= 0 ? Math.min(1, (now - v.sourAt) / 220) : 1; drawSourBadge(ctx, x0 + S * 0.3, by - S * 0.78, S * 0.11 * (0.6 + 0.4 * pop)); }
 }
 
 function pathPoint(pts, p) {

@@ -27,7 +27,7 @@ for (const def of LEVELS) for (let rep = 0; rep < 40; rep++) {
 console.log('levels', LEVELS.length, 'checks', checks, 'mismatches', bad);
 // random boards with every type, wraps and spatulas
 {
-  const chars = 'oxscmbglenurOXGLEUR/\\..';
+  const chars = 'oxscmbglenurkfOXGLEURKF/\\..';
   let c2 = 0, b2 = 0;
   for (let n = 0; n < 3000; n++) {
     const W = 4 + (n % 4), H = 4 + ((n >> 2) % 4);

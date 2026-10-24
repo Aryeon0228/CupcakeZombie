@@ -89,3 +89,7 @@ const custom = require('./plan-customers.js');
 Object.assign(module.exports.chapters, custom.EN.chapters);
 Object.assign(module.exports.stages, custom.EN.stages);
 Object.assign(module.exports.intros, custom.EN.intros);
+const part2 = require('./plan-part2.js');
+Object.assign(module.exports.chapters, part2.EN.chapters);
+Object.assign(module.exports.stages, part2.EN.stages);
+Object.assign(module.exports.intros, part2.EN.intros);

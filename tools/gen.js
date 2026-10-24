@@ -187,6 +187,14 @@ function featureMatters(spec, def, a) {
     const b = analyze(d2);
     return b.first !== a.first;
   }
+  if (f === 'k' || f === 'f') {
+    // snow / sour must change the answer: with the rule switched off (coconut = a dud, grapefruit = a muffin) the winning
+    // first moves differ, or the board gets cheaper
+    const flag = f === 'k' ? 'frost' : 'sour';
+    L.RULES[flag] = false;
+    let b; try { b = analyze(def); } finally { L.RULES[flag] = true; }
+    return b.fewer || b.first !== a.first || b.first > a.first;
+  }
   if ('xscmgleur'.includes(f)) {
     const d2 = { ...def, grid: def.grid.map(r => r.replace(new RegExp(f, 'g'), 'o').replace(new RegExp(f.toUpperCase(), 'g'), 'O')) };
     return !solvable(d2);

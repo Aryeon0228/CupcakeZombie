@@ -12,7 +12,14 @@ const TYPES = {
   n: { key: 'mint_choco',   name: '민트초코',    name_en: 'Mint Choco',         pattern: 'none',  wall: 1 },
   u: { key: 'blueberry',    name: '블루베리',    name_en: 'Blueberry',          pattern: 'diag2', style: 'hop' },
   r: { key: 'cinnamon_roll',name: '시나몬롤',    name_en: 'Cinnamon Roll',      pattern: 'ring2', style: 'burst' },
+  // Part 2 (chapters 24+): timing and routing rules.
+  // coconut snow: spreads nothing; when it spoils, snow falls on the eight cells around it and nothing can spoil there for the rest of the turn.
+  // grapefruit yogurt: spreads like a muffin, but whatever it infects turns sour — spoiled, yet unable to pass spores on.
+  k: { key: 'coconut_snow',     name: '코코넛 스노우', name_en: 'Coconut Snow',      pattern: 'none',  style: 'hop', frost: 1 },
+  f: { key: 'grapefruit_yogurt',name: '자몽 요거트',   name_en: 'Grapefruit Yogurt', pattern: 'plus',  style: 'hop', sour: 1 },
 };
+// Rule switches for the generator's "does this mechanic matter?" checks. Always on in the game.
+const RULES = { frost: true, sour: true };
 const DIRS4 = [[-1, 0], [1, 0], [0, -1], [0, 1]];
 const DIAG4 = [[-1, -1], [-1, 1], [1, -1], [1, 1]];
 const DEFLECT = {
@@ -43,6 +50,29 @@ function cloneState(s) {
 }
 
 const isWall = (s, i) => !!(s.cells[i] && s.cells[i].wall);
+// The eight cells around idx that hold a cupcake (walls excluded).
+function ringOf(s, idx) {
+  const r = Math.floor(idx / s.W), c = idx % s.W, out = [];
+  for (const [dr, dc] of DIRS4.concat(DIAG4)) {
+    const rr = r + dr, cc = c + dc;
+    if (rr < 0 || rr >= s.H || cc < 0 || cc >= s.W) continue;
+    const i = rr * s.W + cc; if (s.cells[i] && !s.cells[i].wall) out.push(i);
+  }
+  return out;
+}
+// Snow from the coconuts that spoiled in this wave: their fresh neighbours cannot spoil for the rest of the turn.
+// Applied once the whole wave has landed, so hits that were already in flight still count; returns what each coconut frosted.
+function frostAfterWave(s, wave) {
+  const out = [];
+  for (const h of wave) {
+    if (!h.spread || !TYPES[s.cells[h.idx].t].frost || !RULES.frost) continue;
+    const got = [];
+    for (const i of ringOf(s, h.idx)) { const c = s.cells[i]; if (!c.inf && !c.pend && !c.frost) { c.frost = true; got.push(i); } }
+    h.frosted = got; out.push(...got);
+  }
+  return out;
+}
+function clearFrost(s) { for (const c of s.cells) if (c && c.frost) c.frost = false; }
 
 // Where a cupcake's spores go once it goes bad.
 // Returns [{ to, path, style, dist }] — path lists every cell passed through, ending at `to`.
@@ -119,25 +149,28 @@ function canTarget(s, idx) {
 }
 
 // One hit on one cell. Mutates the cell and says what happened.
-// hit: { idx, direct (the player's own spore), strong (from espresso), release (a chilled lemon finally going bad) }
+// hit: { idx, direct (the player's own spore), strong (from espresso), sour (from a grapefruit), release (a chilled lemon finally going bad) }
 // kind: 'none' | 'infect' | 'lid' | 'sealed' (wrapped: spoiled but cannot spread) | 'pending' (lemon: spoils next turn)
-// The final spoiled set never depends on the order hits arrive in, so the page can play them on its own clock.
+//     | 'frosted' (snow from a coconut: nothing happens this turn)
+// Within one wave the final spoiled set never depends on the order hits land in; across waves the cascade is
+// breadth-first in both the rules and the page's animation (planCascade), so snow falls at the same moment for both.
 function hitCell(s, hit) {
   const cell = s.cells[hit.idx];
   if (!cell || cell.wall) return { kind: 'none' };
   if (cell.inf) {
     // espresso tears open a wrap that already went bad inside, and it starts spreading
-    if (cell.wrap && hit.strong) { cell.wrap = false; return { kind: 'infect', torn: true, late: true, spread: true }; }
+    if (cell.wrap && hit.strong) { cell.wrap = false; return { kind: 'infect', torn: true, late: true, spread: !cell.sour }; }
     return { kind: 'none' };
   }
+  if (cell.frost && !hit.release) return { kind: 'frosted' };
   const T = TYPES[cell.t];
   if (T.delay && !hit.release) {
     if (cell.pend) return { kind: 'none' };
-    cell.pend = true; return { kind: 'pending' };
+    cell.pend = true; if (hit.sour) cell.sour = true; return { kind: 'pending', sour: !!hit.sour };
   }
   let torn = false;
   if (cell.wrap) {
-    if (!hit.direct && !hit.strong) { cell.inf = true; return { kind: 'sealed' }; }
+    if (!hit.direct && !hit.strong) { cell.inf = true; if (hit.sour) cell.sour = true; return { kind: 'sealed' }; }
     cell.wrap = false; torn = true;
   }
   let lidPop = false;
@@ -147,7 +180,10 @@ function hitCell(s, hit) {
   }
   cell.pend = false;
   cell.inf = true;
-  return { kind: 'infect', torn, lidPop, spread: true };
+  // A sour spore spoils the cupcake but leaves it unable to pass spores on. A chilled lemon remembers who hit it.
+  const sour = hit.release ? !!cell.sour : !!hit.sour;
+  if (sour) cell.sour = true;
+  return { kind: 'infect', torn, lidPop, sour, spread: !sour };
 }
 
 // Breadth-first cascade from a set of starting hits.
@@ -161,11 +197,11 @@ function cascade(s, seeds) {
       if (r.kind === 'none') continue;
       wave.push({ ...hit, ...r });
       if (r.spread) {
-        const strong = !!TYPES[s.cells[hit.idx].t].strong;
-        for (const sp of spreadsOf(s, hit.idx)) next.push({ idx: sp.to, from: hit.idx, direct: false, strong });
+        const ty = TYPES[s.cells[hit.idx].t], strong = !!ty.strong, sour = !!ty.sour && RULES.sour;
+        for (const sp of spreadsOf(s, hit.idx)) next.push({ idx: sp.to, from: hit.idx, direct: false, strong, sour });
       }
     }
-    if (wave.length) waves.push(wave);
+    if (wave.length) { waves.push(wave); frostAfterWave(s, wave); }
     frontier = next;
   }
   return waves;
@@ -174,6 +210,7 @@ function cascade(s, seeds) {
 // Fire a spore at idx.
 function fire(s0, idx) {
   const s = cloneState(s0);
+  clearFrost(s);
   const waves = cascade(s, [{ idx, direct: true }]);
   s.spores -= 1;
   s.turn += 1;
@@ -214,7 +251,13 @@ function customerCheck(s) {
 
 // One full turn as the rules see it: fire → customers → chilled lemons spoil → verdict.
 // When the spores run out, remaining chilled lemons keep spoiling until nothing is chilled.
+// Snow melts when the turn is over (after the chilled lemons have spoiled), so the next shot sees a clean shelf.
 function playTurn(s, idx) {
+  const r = playTurnRaw(s, idx);
+  clearFrost(r.state);
+  return r;
+}
+function playTurnRaw(s, idx) {
   const { state, waves } = fire(s, idx);
   const ticks = [];
   if (freshCount(state) === 0) return { state, waves, ticks, cust: [], res: 'win' };
@@ -230,8 +273,8 @@ function playTurn(s, idx) {
   return { state, waves, ticks, cust, res: 'play' };
 }
 
-// state key for solvers
-function stateKey(s) { return s.turn + '|' + s.cells.map(c => c ? (c.inf ? (c.wrap ? 'S' : 'I') : (c.pend ? 'P' : '') + (c.wrap ? 'W' : '') + c.lid) : '_').join(','); }
+// state key for solvers (snow never outlives a turn, so it is not part of the key; a sour chilled lemon is)
+function stateKey(s) { return s.turn + '|' + s.cells.map(c => c ? (c.inf ? (c.wrap ? (c.sour ? 'T' : 'S') : 'I') : (c.pend ? (c.sour ? 'Q' : 'P') : '') + (c.wrap ? 'W' : '') + c.lid) : '_').join(','); }
 
-if (typeof module !== 'undefined') module.exports = { TYPES, DIRS4, DIAG4, parseLevel, cloneState, spreadsOf, targetsOf, hitCell, cascade, fire, releasePending, hasPending, playTurn, freshCount, customerCheck, customerCells, canTarget, patternOffsets, stateKey };
+if (typeof module !== 'undefined') module.exports = { TYPES, RULES, DIRS4, DIAG4, parseLevel, cloneState, spreadsOf, targetsOf, hitCell, cascade, fire, releasePending, hasPending, playTurn, freshCount, customerCheck, customerCells, canTarget, patternOffsets, stateKey, ringOf, frostAfterWave, clearFrost };
 

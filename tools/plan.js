@@ -108,5 +108,6 @@ const DAILY = { ...T.all3, spores: 2, wraps: 1, deflectors: 1, customerTurns: [1
 for (const ch of CH) if (ch.no >= 5) ch.stages.forEach((st, j) => { if (!st.grid && !st.hand) { Object.assign(st, require('./curve-targets.js').targets(ch.no, j, st.spores)); st.tries = Math.max(st.tries || 0, 30000); } });
 CH.push(...require('./plan-extra.js').CH);
 CH.push(...require('./plan-customers.js').CH);
+CH.push(...require('./plan-part2.js').CH);
 module.exports = { CH, DAILY };
 

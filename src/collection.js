@@ -1,5 +1,5 @@
 // Collection is cosmetic: it never changes the puzzle rules or star rewards.
-const CARD_ORDER = ['o', 'x', 's', 'c', 'm', 'b', 'g', 'l', 'e', 'n', 'u', 'r'];
+const CARD_ORDER = ['o', 'x', 's', 'c', 'm', 'b', 'g', 'l', 'e', 'n', 'u', 'r', 'k', 'f'];
 // chapter where a flavour first shows up (for the album's uncollected tiles)
 function chapterOfFirst(k) { const i = LEVELS.findIndex(l => tastesInLevel(l).includes(k)); const ch = CHAPTERS.find(c => i >= c.from && i <= c.to); return ch ? ch.no : 1; }
 function tastesInLevel(level) {
