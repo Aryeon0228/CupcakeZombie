@@ -12,8 +12,8 @@ assert.deepEqual(Array.from(env.tastesInLevel({grid:['O.n/','N.x\\']})),['o','x'
 const old={stars:{0:2,3:3,60:1,199:3},collection:{g:2,unknown:3},hints:9};const before=JSON.stringify(old);
 const recovered=env.recoverCollection(old,LEVELS);assert.equal(JSON.stringify(old),before);assert.equal(recovered.g,3);assert.equal(recovered.o,3);assert.equal(recovered.s,3);assert.equal(recovered.unknown,undefined);
 assert.equal(env.recoverCollection({collection:{g:2}},LEVELS).g,2);
-const total={};for(const l of LEVELS)env.addCollectionClear(total,l,3);assert.equal(Object.keys(total).length,12);assert.ok(Object.values(total).every(n=>n===3));
+const total={};for(const l of LEVELS)env.addCollectionClear(total,l,3);assert.equal(Object.keys(total).length,vm.runInContext('CARD_ORDER.length',env));assert.ok(Object.values(total).every(n=>n===3));
 const empty=env.recoverCollection({stars:{'999999':3,'0':0,'-1':3}},LEVELS);assert.equal(Object.keys(empty).length,0);
 const roundtrip=env.recoverCollection(JSON.parse(JSON.stringify({collection:total})),LEVELS);assert.deepEqual(JSON.parse(JSON.stringify(roundtrip)),total);
 const assetNames=new Set(fs.readdirSync(path.join(root,'assets')).map(s=>s.replace(/\.png$/,'')));const{TYPES}=require('../src/logic.js');for(const k of Object.keys(total))assert.ok(assetNames.has(TYPES[k].key),'Missing card art '+k);
-console.log('PASS: collection unlock, upgrades, no duplicates/downgrades, legacy recovery, wrapped/mint types, all 12 flavors, persistence and existing artwork.');
+console.log('PASS: collection unlock, upgrades, no duplicates/downgrades, legacy recovery, wrapped/mint types, every flavor in CARD_ORDER, persistence and existing artwork.');

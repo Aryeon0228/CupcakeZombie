@@ -139,11 +139,11 @@
       }
     }
   ],
-  "stages": 230,
-  "totalStars": 690,
+  "stages": 260,
+  "totalStars": 780,
   "map": {
-    "chapters": 23,
-    "buttons": 230,
+    "chapters": 26,
+    "buttons": 260,
     "chapter20Visible": true
   },
   "sound": {

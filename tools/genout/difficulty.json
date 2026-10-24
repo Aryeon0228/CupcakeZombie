@@ -23,20 +23,9 @@
   "꼬마 손님",
   "배달 주문",
   "깐깐한 손님",
-  "보랏빛 도약",
-  "시나몬의 빈자리",
-  "포장 작업대",
-  "민트 정원",
-  "찻잔 너머",
-  "차가운 약속",
-  "버터와 진한 커피",
-  "체리 골목길",
-  "교차하는 포자",
-  "단체 주문",
-  "작은 진열대",
-  "두 갈래 연쇄",
-  "마지막 영업",
-  "곰팡이의 축제"
+  "눈 내리는 진열대",
+  "시큼한 자몽",
+  "눈과 자몽"
  ],
  "rows": [
   {
@@ -60,7 +49,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 12
+   "ms": 14
   },
   {
    "stage": 2,
@@ -83,7 +72,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.08333333333333333,
-   "ms": 5
+   "ms": 2
   },
   {
    "stage": 3,
@@ -106,7 +95,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 6
+   "ms": 14
   },
   {
    "stage": 4,
@@ -129,7 +118,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.8571428571428571,
-   "ms": 2
+   "ms": 4
   },
   {
    "stage": 5,
@@ -152,7 +141,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.6875,
-   "ms": 5
+   "ms": 2
   },
   {
    "stage": 6,
@@ -175,7 +164,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.5294117647058824,
-   "ms": 16
+   "ms": 11
   },
   {
    "stage": 7,
@@ -198,7 +187,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 1,
-   "ms": 2
+   "ms": 8
   },
   {
    "stage": 8,
@@ -244,7 +233,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 1,
-   "ms": 3
+   "ms": 7
   },
   {
    "stage": 10,
@@ -267,7 +256,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.2222222222222222,
-   "ms": 5
+   "ms": 12
   },
   {
    "stage": 11,
@@ -359,7 +348,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.1875,
-   "ms": 5
+   "ms": 2
   },
   {
    "stage": 15,
@@ -382,7 +371,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 16,
@@ -405,7 +394,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 10
+   "ms": 6
   },
   {
    "stage": 17,
@@ -428,7 +417,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.1875,
-   "ms": 10
+   "ms": 7
   },
   {
    "stage": 18,
@@ -451,7 +440,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 3
+   "ms": 5
   },
   {
    "stage": 19,
@@ -497,7 +486,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.8928571428571429,
-   "ms": 13
+   "ms": 27
   },
   {
    "stage": 21,
@@ -520,7 +509,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.9473684210526315,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 22,
@@ -543,7 +532,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.95,
-   "ms": 3
+   "ms": 2
   },
   {
    "stage": 23,
@@ -566,7 +555,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 24,
@@ -589,7 +578,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.85,
-   "ms": 2
+   "ms": 5
   },
   {
    "stage": 25,
@@ -612,7 +601,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.7692307692307693,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 26,
@@ -635,7 +624,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 11
+   "ms": 10
   },
   {
    "stage": 27,
@@ -658,7 +647,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.9375,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 28,
@@ -727,7 +716,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0.68,
-   "ms": 5
+   "ms": 10
   },
   {
    "stage": 31,
@@ -773,7 +762,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.9375,
-   "ms": 14
+   "ms": 11
   },
   {
    "stage": 33,
@@ -796,7 +785,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.8888888888888888,
-   "ms": 3
+   "ms": 8
   },
   {
    "stage": 34,
@@ -819,7 +808,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.8823529411764706,
-   "ms": 8
+   "ms": 10
   },
   {
    "stage": 35,
@@ -842,7 +831,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.8461538461538461,
-   "ms": 27
+   "ms": 45
   },
   {
    "stage": 36,
@@ -865,7 +854,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 29
+   "ms": 11
   },
   {
    "stage": 37,
@@ -888,7 +877,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.375,
-   "ms": 42
+   "ms": 76
   },
   {
    "stage": 38,
@@ -911,7 +900,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 3
+   "ms": 4
   },
   {
    "stage": 39,
@@ -934,7 +923,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 4
+   "ms": 5
   },
   {
    "stage": 40,
@@ -957,7 +946,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 21
+   "ms": 10
   },
   {
    "stage": 41,
@@ -980,7 +969,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.7692307692307693,
-   "ms": 7
+   "ms": 1
   },
   {
    "stage": 42,
@@ -1003,7 +992,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 2
+   "ms": 4
   },
   {
    "stage": 43,
@@ -1026,7 +1015,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 6
+   "ms": 9
   },
   {
    "stage": 44,
@@ -1049,7 +1038,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.9090909090909091,
-   "ms": 2
+   "ms": 13
   },
   {
    "stage": 45,
@@ -1072,7 +1061,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.8421052631578947,
-   "ms": 9
+   "ms": 7
   },
   {
    "stage": 46,
@@ -1095,7 +1084,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 8
+   "ms": 9
   },
   {
    "stage": 47,
@@ -1118,7 +1107,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 12
+   "ms": 15
   },
   {
    "stage": 48,
@@ -1141,7 +1130,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 7
+   "ms": 3
   },
   {
    "stage": 49,
@@ -1164,7 +1153,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 8
+   "ms": 7
   },
   {
    "stage": 50,
@@ -1210,7 +1199,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.75,
-   "ms": 1
+   "ms": 3
   },
   {
    "stage": 52,
@@ -1233,7 +1222,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.125,
-   "ms": 2
+   "ms": 8
   },
   {
    "stage": 53,
@@ -1256,7 +1245,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.9285714285714286,
-   "ms": 4
+   "ms": 6
   },
   {
    "stage": 54,
@@ -1279,7 +1268,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 7
+   "ms": 10
   },
   {
    "stage": 55,
@@ -1302,7 +1291,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 4
+   "ms": 7
   },
   {
    "stage": 56,
@@ -1325,7 +1314,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 12
+   "ms": 19
   },
   {
    "stage": 57,
@@ -1348,7 +1337,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.9375,
-   "ms": 2
+   "ms": 6
   },
   {
    "stage": 58,
@@ -1371,7 +1360,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.782608695652174,
-   "ms": 13
+   "ms": 18
   },
   {
    "stage": 59,
@@ -1394,7 +1383,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 7
+   "ms": 5
   },
   {
    "stage": 60,
@@ -1417,7 +1406,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 9
+   "ms": 22
   },
   {
    "stage": 61,
@@ -1463,7 +1452,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 3
+   "ms": 2
   },
   {
    "stage": 63,
@@ -1486,7 +1475,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 1,
-   "ms": 5
+   "ms": 4
   },
   {
    "stage": 64,
@@ -1509,7 +1498,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.8823529411764706,
-   "ms": 7
+   "ms": 10
   },
   {
    "stage": 65,
@@ -1532,7 +1521,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.9333333333333333,
-   "ms": 5
+   "ms": 4
   },
   {
    "stage": 66,
@@ -1555,7 +1544,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.6,
-   "ms": 0
+   "ms": 1
   },
   {
    "stage": 67,
@@ -1578,7 +1567,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.8,
-   "ms": 16
+   "ms": 5
   },
   {
    "stage": 68,
@@ -1601,7 +1590,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 1,
-   "ms": 3
+   "ms": 2
   },
   {
    "stage": 69,
@@ -1624,7 +1613,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 15
+   "ms": 3
   },
   {
    "stage": 70,
@@ -1647,7 +1636,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 18
+   "ms": 14
   },
   {
    "stage": 71,
@@ -1693,7 +1682,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.05263157894736842,
-   "ms": 10
+   "ms": 12
   },
   {
    "stage": 73,
@@ -1716,7 +1705,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 7
+   "ms": 6
   },
   {
    "stage": 74,
@@ -1762,7 +1751,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.15,
-   "ms": 2
+   "ms": 7
   },
   {
    "stage": 76,
@@ -1808,7 +1797,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.9,
-   "ms": 3
+   "ms": 8
   },
   {
    "stage": 78,
@@ -1831,7 +1820,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 1,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 79,
@@ -1854,7 +1843,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 1
+   "ms": 3
   },
   {
    "stage": 80,
@@ -1877,7 +1866,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 3
+   "ms": 4
   },
   {
    "stage": 81,
@@ -1923,7 +1912,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 83,
@@ -1946,7 +1935,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.85,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 84,
@@ -1969,7 +1958,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.08333333333333333,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 85,
@@ -2015,7 +2004,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.42857142857142855,
-   "ms": 2
+   "ms": 1
   },
   {
    "stage": 87,
@@ -2038,7 +2027,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.13636363636363635,
-   "ms": 1
+   "ms": 3
   },
   {
    "stage": 88,
@@ -2084,7 +2073,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 90,
@@ -2107,7 +2096,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 91,
@@ -2130,7 +2119,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 1,
-   "ms": 1
+   "ms": 0
   },
   {
    "stage": 92,
@@ -2153,7 +2142,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 1,
-   "ms": 3
+   "ms": 2
   },
   {
    "stage": 93,
@@ -2176,7 +2165,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.4166666666666667,
-   "ms": 2
+   "ms": 1
   },
   {
    "stage": 94,
@@ -2222,7 +2211,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 6
+   "ms": 2
   },
   {
    "stage": 96,
@@ -2245,7 +2234,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.6,
-   "ms": 1
+   "ms": 0
   },
   {
    "stage": 97,
@@ -2291,7 +2280,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.8333333333333334,
-   "ms": 6
+   "ms": 2
   },
   {
    "stage": 99,
@@ -2337,7 +2326,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 101,
@@ -2360,7 +2349,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.21428571428571427,
-   "ms": 2
+   "ms": 1
   },
   {
    "stage": 102,
@@ -2406,7 +2395,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.13636363636363635,
-   "ms": 5
+   "ms": 4
   },
   {
    "stage": 104,
@@ -2452,7 +2441,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 7
+   "ms": 3
   },
   {
    "stage": 106,
@@ -2475,7 +2464,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.3333333333333333,
-   "ms": 1
+   "ms": 0
   },
   {
    "stage": 107,
@@ -2498,7 +2487,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.0625,
-   "ms": 3
+   "ms": 2
   },
   {
    "stage": 108,
@@ -2567,7 +2556,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 6
+   "ms": 4
   },
   {
    "stage": 111,
@@ -2590,7 +2579,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 0
+   "ms": 1
   },
   {
    "stage": 112,
@@ -2751,7 +2740,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.8,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 119,
@@ -2797,7 +2786,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 121,
@@ -2843,7 +2832,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.6363636363636364,
-   "ms": 5
+   "ms": 6
   },
   {
    "stage": 123,
@@ -2866,7 +2855,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.3333333333333333,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 124,
@@ -2912,7 +2901,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 126,
@@ -2935,7 +2924,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.07692307692307693,
-   "ms": 0
+   "ms": 1
   },
   {
    "stage": 127,
@@ -2958,7 +2947,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 3
+   "ms": 5
   },
   {
    "stage": 128,
@@ -3004,7 +2993,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 130,
@@ -3027,7 +3016,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 4
+   "ms": 5
   },
   {
    "stage": 131,
@@ -3073,7 +3062,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.9375,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 133,
@@ -3119,7 +3108,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 0
+   "ms": 2
   },
   {
    "stage": 135,
@@ -3142,7 +3131,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 3
+   "ms": 1
   },
   {
    "stage": 136,
@@ -3165,7 +3154,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.7777777777777778,
-   "ms": 0
+   "ms": 1
   },
   {
    "stage": 137,
@@ -3280,7 +3269,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.9444444444444444,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 142,
@@ -3303,7 +3292,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.47368421052631576,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 143,
@@ -3326,7 +3315,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.9444444444444444,
-   "ms": 5
+   "ms": 2
   },
   {
    "stage": 144,
@@ -3349,7 +3338,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.05,
-   "ms": 3
+   "ms": 4
   },
   {
    "stage": 145,
@@ -3372,7 +3361,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 1
+   "ms": 3
   },
   {
    "stage": 146,
@@ -3418,7 +3407,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 3
+   "ms": 7
   },
   {
    "stage": 148,
@@ -3441,7 +3430,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.42857142857142855,
-   "ms": 4
+   "ms": 5
   },
   {
    "stage": 149,
@@ -3464,7 +3453,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 150,
@@ -3487,7 +3476,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 151,
@@ -3556,7 +3545,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.95,
-   "ms": 3
+   "ms": 4
   },
   {
    "stage": 154,
@@ -3579,7 +3568,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.8695652173913043,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 155,
@@ -3625,7 +3614,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.4666666666666667,
-   "ms": 0
+   "ms": 1
   },
   {
    "stage": 157,
@@ -3648,7 +3637,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 2
+   "ms": 1
   },
   {
    "stage": 158,
@@ -3671,7 +3660,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.07142857142857142,
-   "ms": 0
+   "ms": 2
   },
   {
    "stage": 159,
@@ -3717,7 +3706,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 161,
@@ -3786,7 +3775,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.07142857142857142,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 164,
@@ -3809,7 +3798,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 165,
@@ -3855,7 +3844,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.8125,
-   "ms": 0
+   "ms": 1
   },
   {
    "stage": 167,
@@ -3878,7 +3867,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0.9,
-   "ms": 1
+   "ms": 0
   },
   {
    "stage": 168,
@@ -3924,7 +3913,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0.06666666666666667,
-   "ms": 0
+   "ms": 1
   },
   {
    "stage": 170,
@@ -3970,7 +3959,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 1
+   "ms": 4
   },
   {
    "stage": 172,
@@ -3993,7 +3982,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 3
+   "ms": 4
   },
   {
    "stage": 173,
@@ -4016,7 +4005,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0.043478260869565216,
-   "ms": 3
+   "ms": 4
   },
   {
    "stage": 174,
@@ -4039,7 +4028,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 3
+   "ms": 5
   },
   {
    "stage": 175,
@@ -4062,7 +4051,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 176,
@@ -4108,7 +4097,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 2
+   "ms": 4
   },
   {
    "stage": 178,
@@ -4131,7 +4120,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 2
+   "ms": 4
   },
   {
    "stage": 179,
@@ -4154,7 +4143,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 180,
@@ -4177,7 +4166,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 4
+   "ms": 8
   },
   {
    "stage": 181,
@@ -4200,7 +4189,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 0
+   "ms": 2
   },
   {
    "stage": 182,
@@ -4246,7 +4235,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 2
+   "ms": 5
   },
   {
    "stage": 184,
@@ -4269,7 +4258,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 0
+   "ms": 2
   },
   {
    "stage": 185,
@@ -4292,7 +4281,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0.05,
-   "ms": 2
+   "ms": 1
   },
   {
    "stage": 186,
@@ -4315,7 +4304,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 0
+   "ms": 1
   },
   {
    "stage": 187,
@@ -4338,7 +4327,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 188,
@@ -4361,7 +4350,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 189,
@@ -4384,7 +4373,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 0
+   "ms": 2
   },
   {
    "stage": 190,
@@ -4407,7 +4396,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 2
+   "ms": 4
   },
   {
    "stage": 191,
@@ -4453,7 +4442,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 2
+   "ms": 4
   },
   {
    "stage": 193,
@@ -4476,7 +4465,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 3
+   "ms": 7
   },
   {
    "stage": 194,
@@ -4499,7 +4488,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 195,
@@ -4522,7 +4511,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 2
+   "ms": 4
   },
   {
    "stage": 196,
@@ -4545,7 +4534,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.14285714285714285,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 197,
@@ -4568,7 +4557,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0.043478260869565216,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 198,
@@ -4591,7 +4580,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0.8095238095238095,
-   "ms": 2
+   "ms": 4
   },
   {
    "stage": 199,
@@ -4637,7 +4626,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 201,
@@ -4660,7 +4649,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0.17647058823529413,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 202,
@@ -4683,7 +4672,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 203,
@@ -4706,7 +4695,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 0
+   "ms": 1
   },
   {
    "stage": 204,
@@ -4775,7 +4764,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0.21428571428571427,
-   "ms": 0
+   "ms": 1
   },
   {
    "stage": 207,
@@ -4867,7 +4856,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0.17391304347826086,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 211,
@@ -4890,7 +4879,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0.15789473684210525,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 212,
@@ -4913,7 +4902,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0.125,
-   "ms": 0
+   "ms": 1
   },
   {
    "stage": 213,
@@ -4959,7 +4948,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0.05555555555555555,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 215,
@@ -4982,7 +4971,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0.125,
-   "ms": 0
+   "ms": 1
   },
   {
    "stage": 216,
@@ -5051,7 +5040,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0.13333333333333333,
-   "ms": 0
+   "ms": 1
   },
   {
    "stage": 219,
@@ -5097,7 +5086,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0.3333333333333333,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 221,
@@ -5120,7 +5109,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0.058823529411764705,
-   "ms": 1
+   "ms": 2
   },
   {
    "stage": 222,
@@ -5166,7 +5155,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 1
+   "ms": 3
   },
   {
    "stage": 224,
@@ -5212,7 +5201,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 1
+   "ms": 3
   },
   {
    "stage": 226,
@@ -5258,7 +5247,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 1
+   "ms": 9
   },
   {
    "stage": 228,
@@ -5281,7 +5270,7 @@
    "exploit": 0,
    "greedy": true,
    "undoHint": 0,
-   "ms": 2
+   "ms": 3
   },
   {
    "stage": 229,
@@ -5304,7 +5293,7 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0,
-   "ms": 2
+   "ms": 7
   },
   {
    "stage": 230,
@@ -5327,7 +5316,697 @@
    "exploit": 0,
    "greedy": false,
    "undoHint": 0.13333333333333333,
+   "ms": 14
+  },
+  {
+   "stage": 231,
+   "chapter": 24,
+   "name": "첫눈",
+   "cupcakes": 9,
+   "types": 2,
+   "spores": 2,
+   "customers": 0,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 9,
+   "winFirst": 9,
+   "pRandom": 1,
+   "bits": 0,
+   "wins": 40,
+   "minSpores": 2,
+   "traps": 0,
+   "near": 0,
+   "exploit": 0,
+   "greedy": true,
+   "undoHint": 0,
+   "ms": 3
+  },
+  {
+   "stage": 232,
+   "chapter": 24,
+   "name": "눈 위의 발자국",
+   "cupcakes": 16,
+   "types": 7,
+   "spores": 2,
+   "customers": 0,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 16,
+   "winFirst": 3,
+   "pRandom": 0.04022435897435897,
+   "bits": 4.6357867597988385,
+   "wins": 3,
+   "minSpores": 2,
+   "traps": 3,
+   "near": 3,
+   "exploit": 0,
+   "greedy": true,
+   "undoHint": 0.7692307692307693,
+   "ms": 15
+  },
+  {
+   "stage": 233,
+   "chapter": 24,
+   "name": "코코아 한 잔",
+   "cupcakes": 19,
+   "types": 8,
+   "spores": 2,
+   "customers": 0,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 19,
+   "winFirst": 2,
+   "pRandom": 0.05668016194331984,
+   "bits": 4.141012309527073,
+   "wins": 2,
+   "minSpores": 2,
+   "traps": 0,
+   "near": 11,
+   "exploit": 0,
+   "greedy": true,
+   "undoHint": 0.6470588235294118,
+   "ms": 11
+  },
+  {
+   "stage": 234,
+   "chapter": 24,
+   "name": "눈사람 셋",
+   "cupcakes": 27,
+   "types": 8,
+   "spores": 2,
+   "customers": 0,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 27,
+   "winFirst": 1,
+   "pRandom": 0.02880658436213992,
+   "bits": 5.117457581548177,
+   "wins": 7,
+   "minSpores": 2,
+   "traps": 7,
+   "near": 0,
+   "exploit": 0,
+   "greedy": false,
+   "undoHint": 0.23076923076923078,
+   "ms": 47
+  },
+  {
+   "stage": 235,
+   "chapter": 24,
+   "name": "눈 녹기 전에",
+   "cupcakes": 23,
+   "types": 6,
+   "spores": 3,
+   "customers": 1,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 23,
+   "winFirst": 2,
+   "pRandom": 0.017391304347826087,
+   "bits": 5.845490050944375,
+   "wins": 14,
+   "minSpores": 3,
+   "traps": 4,
+   "near": 0,
+   "exploit": 0,
+   "greedy": false,
+   "undoHint": 0,
+   "ms": 24
+  },
+  {
+   "stage": 236,
+   "chapter": 24,
+   "name": "작은 눈밭",
+   "cupcakes": 17,
+   "types": 6,
+   "spores": 2,
+   "customers": 0,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 17,
+   "winFirst": 2,
+   "pRandom": 0.0392156862745098,
+   "bits": 4.672425341971495,
+   "wins": 4,
+   "minSpores": 2,
+   "traps": 3,
+   "near": 0,
+   "exploit": 0,
+   "greedy": false,
+   "undoHint": 0,
+   "ms": 5
+  },
+  {
+   "stage": 237,
+   "chapter": 24,
+   "name": "마지막에 터뜨리기",
+   "cupcakes": 20,
+   "types": 7,
+   "spores": 3,
+   "customers": 0,
+   "wraps": 1,
+   "walls": 0,
+   "targets": 20,
+   "winFirst": 2,
+   "pRandom": 0.023333333333333334,
+   "bits": 5.421463768438277,
+   "wins": 16,
+   "minSpores": 3,
+   "traps": 6,
+   "near": 0,
+   "exploit": 0,
+   "greedy": false,
+   "undoHint": 0,
+   "ms": 52
+  },
+  {
+   "stage": 238,
+   "chapter": 24,
+   "name": "난로 앞에서",
+   "cupcakes": 21,
+   "types": 7,
+   "spores": 2,
+   "customers": 0,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 21,
+   "winFirst": 4,
+   "pRandom": 0.05555555555555556,
+   "bits": 4.169925001442312,
+   "wins": 6,
+   "minSpores": 2,
+   "traps": 0,
+   "near": 0,
+   "exploit": 0,
+   "greedy": true,
+   "undoHint": 0,
+   "ms": 19
+  },
+  {
+   "stage": 239,
+   "chapter": 24,
+   "name": "눈보라 손님",
+   "cupcakes": 23,
+   "types": 7,
+   "spores": 3,
+   "customers": 2,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 23,
+   "winFirst": 1,
+   "pRandom": 0.011594202898550725,
+   "bits": 6.430452551665532,
+   "wins": 8,
+   "minSpores": 3,
+   "traps": 5,
+   "near": 0,
+   "exploit": 0,
+   "greedy": false,
+   "undoHint": 0,
    "ms": 2
+  },
+  {
+   "stage": 240,
+   "chapter": 24,
+   "name": "하얀 진열대",
+   "cupcakes": 30,
+   "types": 6,
+   "spores": 3,
+   "customers": 2,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 30,
+   "winFirst": 1,
+   "pRandom": 0.006944444444444445,
+   "bits": 7.169925001442312,
+   "wins": 2,
+   "minSpores": 3,
+   "traps": 2,
+   "near": 0,
+   "exploit": 0,
+   "greedy": false,
+   "undoHint": 0,
+   "ms": 6
+  },
+  {
+   "stage": 241,
+   "chapter": 25,
+   "name": "자몽 한 조각",
+   "cupcakes": 5,
+   "types": 2,
+   "spores": 2,
+   "customers": 0,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 5,
+   "winFirst": 4,
+   "pRandom": 0.8,
+   "bits": 0.3219280948873623,
+   "wins": 4,
+   "minSpores": 2,
+   "traps": 0,
+   "near": 1,
+   "exploit": 0,
+   "greedy": true,
+   "undoHint": 1,
+   "ms": 1
+  },
+  {
+   "stage": 242,
+   "chapter": 25,
+   "name": "끊긴 길",
+   "cupcakes": 21,
+   "types": 8,
+   "spores": 2,
+   "customers": 0,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 21,
+   "winFirst": 1,
+   "pRandom": 0.023809523809523808,
+   "bits": 5.392317422778761,
+   "wins": 1,
+   "minSpores": 2,
+   "traps": 1,
+   "near": 1,
+   "exploit": 0,
+   "greedy": false,
+   "undoHint": 0.25,
+   "ms": 13
+  },
+  {
+   "stage": 243,
+   "chapter": 25,
+   "name": "요거트 쉬는 시간",
+   "cupcakes": 24,
+   "types": 7,
+   "spores": 2,
+   "customers": 0,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 24,
+   "winFirst": 2,
+   "pRandom": 0.04411764705882353,
+   "bits": 4.502500340529183,
+   "wins": 2,
+   "minSpores": 2,
+   "traps": 0,
+   "near": 17,
+   "exploit": 0,
+   "greedy": true,
+   "undoHint": 0.7727272727272727,
+   "ms": 14
+  },
+  {
+   "stage": 244,
+   "chapter": 25,
+   "name": "돌아가는 길",
+   "cupcakes": 21,
+   "types": 6,
+   "spores": 2,
+   "customers": 0,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 21,
+   "winFirst": 2,
+   "pRandom": 0.02142857142857143,
+   "bits": 5.54432051622381,
+   "wins": 2,
+   "minSpores": 2,
+   "traps": 4,
+   "near": 4,
+   "exploit": 0,
+   "greedy": false,
+   "undoHint": 0.21052631578947367,
+   "ms": 11
+  },
+  {
+   "stage": 245,
+   "chapter": 25,
+   "name": "시큼한 손님",
+   "cupcakes": 27,
+   "types": 7,
+   "spores": 3,
+   "customers": 1,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 27,
+   "winFirst": 2,
+   "pRandom": 0.01234567901234568,
+   "bits": 6.339850002884624,
+   "wins": 4,
+   "minSpores": 3,
+   "traps": 6,
+   "near": 0,
+   "exploit": 0,
+   "greedy": false,
+   "undoHint": 0,
+   "ms": 31
+  },
+  {
+   "stage": 246,
+   "chapter": 25,
+   "name": "작은 자몽",
+   "cupcakes": 16,
+   "types": 7,
+   "spores": 2,
+   "customers": 0,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 16,
+   "winFirst": 1,
+   "pRandom": 0.03125,
+   "bits": 5,
+   "wins": 1,
+   "minSpores": 2,
+   "traps": 0,
+   "near": 0,
+   "exploit": 0,
+   "greedy": true,
+   "undoHint": 0.13333333333333333,
+   "ms": 8
+  },
+  {
+   "stage": 247,
+   "chapter": 25,
+   "name": "두 갈래 자몽",
+   "cupcakes": 21,
+   "types": 6,
+   "spores": 3,
+   "customers": 1,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 21,
+   "winFirst": 1,
+   "pRandom": 0.017006802721088437,
+   "bits": 5.877744249949002,
+   "wins": 10,
+   "minSpores": 3,
+   "traps": 1,
+   "near": 0,
+   "exploit": 0,
+   "greedy": false,
+   "undoHint": 0,
+   "ms": 4
+  },
+  {
+   "stage": 248,
+   "chapter": 25,
+   "name": "달콤한 휴식",
+   "cupcakes": 23,
+   "types": 9,
+   "spores": 2,
+   "customers": 0,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 23,
+   "winFirst": 2,
+   "pRandom": 0.043478260869565216,
+   "bits": 4.523561956057013,
+   "wins": 2,
+   "minSpores": 2,
+   "traps": 0,
+   "near": 0,
+   "exploit": 0,
+   "greedy": true,
+   "undoHint": 0.047619047619047616,
+   "ms": 9
+  },
+  {
+   "stage": 249,
+   "chapter": 25,
+   "name": "자몽과 비닐",
+   "cupcakes": 21,
+   "types": 8,
+   "spores": 3,
+   "customers": 2,
+   "wraps": 2,
+   "walls": 0,
+   "targets": 21,
+   "winFirst": 1,
+   "pRandom": 0.007142857142857143,
+   "bits": 7.129283016944966,
+   "wins": 2,
+   "minSpores": 3,
+   "traps": 5,
+   "near": 0,
+   "exploit": 0,
+   "greedy": false,
+   "undoHint": 0,
+   "ms": 2
+  },
+  {
+   "stage": 250,
+   "chapter": 25,
+   "name": "시큼한 진열대",
+   "cupcakes": 30,
+   "types": 8,
+   "spores": 3,
+   "customers": 2,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 30,
+   "winFirst": 2,
+   "pRandom": 0.004285714285714285,
+   "bits": 7.866248611111173,
+   "wins": 3,
+   "minSpores": 3,
+   "traps": 3,
+   "near": 0,
+   "exploit": 0,
+   "greedy": false,
+   "undoHint": 0,
+   "ms": 6
+  },
+  {
+   "stage": 251,
+   "chapter": 26,
+   "name": "눈과 자몽",
+   "cupcakes": 18,
+   "types": 7,
+   "spores": 2,
+   "customers": 0,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 18,
+   "winFirst": 2,
+   "pRandom": 0.02279202279202279,
+   "bits": 5.455327220304561,
+   "wins": 2,
+   "minSpores": 2,
+   "traps": 0,
+   "near": 0,
+   "exploit": 0,
+   "greedy": true,
+   "undoHint": 0,
+   "ms": 6
+  },
+  {
+   "stage": 252,
+   "chapter": 26,
+   "name": "차가운 시큼함",
+   "cupcakes": 18,
+   "types": 7,
+   "spores": 2,
+   "customers": 0,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 18,
+   "winFirst": 1,
+   "pRandom": 0.015873015873015872,
+   "bits": 5.977279923499917,
+   "wins": 2,
+   "minSpores": 2,
+   "traps": 3,
+   "near": 2,
+   "exploit": 0,
+   "greedy": false,
+   "undoHint": 0.11764705882352941,
+   "ms": 8
+  },
+  {
+   "stage": 253,
+   "chapter": 26,
+   "name": "겨울 티타임",
+   "cupcakes": 24,
+   "types": 9,
+   "spores": 2,
+   "customers": 0,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 24,
+   "winFirst": 4,
+   "pRandom": 0.026785714285714284,
+   "bits": 5.222392421336448,
+   "wins": 6,
+   "minSpores": 2,
+   "traps": 0,
+   "near": 0,
+   "exploit": 0,
+   "greedy": true,
+   "undoHint": 0,
+   "ms": 9
+  },
+  {
+   "stage": 254,
+   "chapter": 26,
+   "name": "눈 속의 자몽",
+   "cupcakes": 21,
+   "types": 10,
+   "spores": 2,
+   "customers": 0,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 21,
+   "winFirst": 2,
+   "pRandom": 0.014285714285714287,
+   "bits": 6.129283016944966,
+   "wins": 2,
+   "minSpores": 2,
+   "traps": 0,
+   "near": 0,
+   "exploit": 0,
+   "greedy": true,
+   "undoHint": 0,
+   "ms": 6
+  },
+  {
+   "stage": 255,
+   "chapter": 26,
+   "name": "얼어붙은 길",
+   "cupcakes": 24,
+   "types": 9,
+   "spores": 3,
+   "customers": 1,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 24,
+   "winFirst": 2,
+   "pRandom": 0.007187174386662876,
+   "bits": 7.120359593215139,
+   "wins": 5,
+   "minSpores": 3,
+   "traps": 15,
+   "near": 0,
+   "exploit": 0,
+   "greedy": false,
+   "undoHint": 0,
+   "ms": 14
+  },
+  {
+   "stage": 256,
+   "chapter": 26,
+   "name": "작은 겨울",
+   "cupcakes": 18,
+   "types": 7,
+   "spores": 2,
+   "customers": 0,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 18,
+   "winFirst": 2,
+   "pRandom": 0.023148148148148147,
+   "bits": 5.4329594072761065,
+   "wins": 2,
+   "minSpores": 2,
+   "traps": 1,
+   "near": 0,
+   "exploit": 0,
+   "greedy": false,
+   "undoHint": 0.0625,
+   "ms": 7
+  },
+  {
+   "stage": 257,
+   "chapter": 26,
+   "name": "순서가 전부",
+   "cupcakes": 23,
+   "types": 10,
+   "spores": 3,
+   "customers": 1,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 23,
+   "winFirst": 2,
+   "pRandom": 0.011364211236333997,
+   "bits": 6.459358636276205,
+   "wins": 6,
+   "minSpores": 3,
+   "traps": 6,
+   "near": 0,
+   "exploit": 0,
+   "greedy": false,
+   "undoHint": 0,
+   "ms": 53
+  },
+  {
+   "stage": 258,
+   "chapter": 26,
+   "name": "마지막 쉼표",
+   "cupcakes": 16,
+   "types": 8,
+   "spores": 2,
+   "customers": 0,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 16,
+   "winFirst": 2,
+   "pRandom": 0.02142857142857143,
+   "bits": 5.54432051622381,
+   "wins": 2,
+   "minSpores": 2,
+   "traps": 0,
+   "near": 0,
+   "exploit": 0,
+   "greedy": true,
+   "undoHint": 0,
+   "ms": 42
+  },
+  {
+   "stage": 259,
+   "chapter": 26,
+   "name": "눈보라와 시큼",
+   "cupcakes": 27,
+   "types": 7,
+   "spores": 3,
+   "customers": 2,
+   "wraps": 1,
+   "walls": 0,
+   "targets": 27,
+   "winFirst": 2,
+   "pRandom": 0.004801097393689987,
+   "bits": 7.702420082269333,
+   "wins": 6,
+   "minSpores": 3,
+   "traps": 11,
+   "near": 0,
+   "exploit": 0,
+   "greedy": false,
+   "undoHint": 0,
+   "ms": 32
+  },
+  {
+   "stage": 260,
+   "chapter": 26,
+   "name": "겨울 진열대 마감",
+   "cupcakes": 28,
+   "types": 9,
+   "spores": 3,
+   "customers": 3,
+   "wraps": 0,
+   "walls": 0,
+   "targets": 28,
+   "winFirst": 1,
+   "pRandom": 0.0023809523809523807,
+   "bits": 8.714245517666123,
+   "wins": 1,
+   "minSpores": 3,
+   "traps": 9,
+   "near": 0,
+   "exploit": 0,
+   "greedy": false,
+   "undoHint": 0,
+   "ms": 16
   }
  ]
 }
