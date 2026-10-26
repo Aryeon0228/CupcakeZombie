@@ -1,0 +1,504 @@
+{
+  "version": 2,
+  "created": "2026-10-26",
+  "mode": "built-in image_gen",
+  "count": 20,
+  "assets": {
+    "zombie_mango": {
+      "file": "originals/zombie_mango.png",
+      "name_ko": "망고",
+      "width": 1267,
+      "height": 1241,
+      "content_bounds_alpha24": [
+        89,
+        65,
+        1217,
+        1171
+      ],
+      "suggested_foot_anchor_px": [
+        633.5,
+        1170
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.942788
+      ],
+      "transparent_fraction": 0.49196,
+      "sha256": "f6d19fb86d4a8b2a70d0e00005ab27617791345b408f48274967230416b7a725",
+      "status": "reserved"
+    },
+    "zombie_shine_muscat": {
+      "file": "originals/zombie_shine_muscat.png",
+      "name_ko": "샤인머스캣",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        140,
+        120,
+        1142,
+        1181
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1180
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.940989
+      ],
+      "transparent_fraction": 0.59283,
+      "sha256": "55de07820e6bce21b56616423fd5cbcf34ae065d550e1841ae7eab96cce175a9",
+      "status": "reserved"
+    },
+    "zombie_peach_oolong": {
+      "file": "originals/zombie_peach_oolong.png",
+      "name_ko": "복숭아 우롱차",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        110,
+        75,
+        1175,
+        1143
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1142
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.910686
+      ],
+      "transparent_fraction": 0.55656,
+      "sha256": "a85f1c1a0e084fedefdeec68438a957e3b2738f3e8223e720126d41ae66c569f",
+      "status": "reserved"
+    },
+    "zombie_raspberry_hibiscus": {
+      "file": "originals/zombie_raspberry_hibiscus.png",
+      "name_ko": "라즈베리 히비스커스",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        107,
+        111,
+        1198,
+        1186
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1185
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.944976
+      ],
+      "transparent_fraction": 0.53306,
+      "sha256": "2c4d98c7f845add4bc389cbe504fec04d84e84e8a97000da30aab43e49d62fe6",
+      "status": "reserved"
+    },
+    "zombie_honey_chamomile": {
+      "file": "originals/zombie_honey_chamomile.png",
+      "name_ko": "꿀 캐모마일",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        87,
+        85,
+        1200,
+        1152
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1151
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.917863
+      ],
+      "transparent_fraction": 0.53067,
+      "sha256": "83bb71c55f366ad2645061c168478344937e3524f6c9e147677f022af471c003",
+      "status": "reserved"
+    },
+    "zombie_hojicha": {
+      "file": "originals/zombie_hojicha.png",
+      "name_ko": "호지차",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        129,
+        118,
+        1181,
+        1168
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1167
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.930622
+      ],
+      "transparent_fraction": 0.57411,
+      "sha256": "79e26ccc66812bf9e61b0307c3326aa77ea9482b487b901f9a34196fe79dc8c4",
+      "status": "reserved"
+    },
+    "zombie_black_sesame": {
+      "file": "originals/zombie_black_sesame.png",
+      "name_ko": "흑임자",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        85,
+        118,
+        1199,
+        1167
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1166
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.929825
+      ],
+      "transparent_fraction": 0.53794,
+      "sha256": "543ea9c2e4080da9728d68ab9bace5d7d20e8c88445cbd1c80b399032999b51f",
+      "status": "reserved"
+    },
+    "zombie_salted_caramel": {
+      "file": "originals/zombie_salted_caramel.png",
+      "name_ko": "솔티드 캐러멜",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        103,
+        83,
+        1210,
+        1176
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1175
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.937002
+      ],
+      "transparent_fraction": 0.52386,
+      "sha256": "208cbaa9f4f565e12c56998ec2391ad8fceabc0cd765c3c0c47595ecc6e002c8",
+      "status": "reserved"
+    },
+    "zombie_maple_pecan": {
+      "file": "originals/zombie_maple_pecan.png",
+      "name_ko": "메이플 피칸",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        105,
+        124,
+        1189,
+        1144
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1143
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.911483
+      ],
+      "transparent_fraction": 0.57075,
+      "sha256": "f8b733cc48928a4fd16cf16e8d0fe2aaa725dfaab7e6418e2b43982d500e028d",
+      "status": "reserved"
+    },
+    "zombie_taro_coconut": {
+      "file": "originals/zombie_taro_coconut.png",
+      "name_ko": "타로 코코넛",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        109,
+        87,
+        1168,
+        1167
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1166
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.929825
+      ],
+      "transparent_fraction": 0.57426,
+      "sha256": "6782f861e25da91447a54058f00a693eee607fd22bf6b32d3c3d104153cc5e98",
+      "status": "reserved"
+    },
+    "zombie_fig_cream_cheese": {
+      "file": "originals/zombie_fig_cream_cheese.png",
+      "name_ko": "무화과 크림치즈",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        114,
+        66,
+        1185,
+        1188
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1187
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.946571
+      ],
+      "transparent_fraction": 0.54791,
+      "sha256": "c4ad6e5f7bed33352c975b7d632bf6d2b88243af02f54cc7d8811fda0b4af283",
+      "status": "reserved"
+    },
+    "zombie_cookies_cream": {
+      "file": "originals/zombie_cookies_cream.png",
+      "name_ko": "쿠키앤크림",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        107,
+        114,
+        1172,
+        1174
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1173
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.935407
+      ],
+      "transparent_fraction": 0.54044,
+      "sha256": "043afdb870342c30c37152fb90de7daa6f49357cc9bab8b958766118c3355b83",
+      "status": "reserved"
+    },
+    "zombie_basque_cheese": {
+      "file": "originals/zombie_basque_cheese.png",
+      "name_ko": "바스크 치즈",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        89,
+        96,
+        1187,
+        1153
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1152
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.91866
+      ],
+      "transparent_fraction": 0.54564,
+      "sha256": "66a96cc2177872342d32b78428a302e8e29911cc3074317ef9ca7d203573a5be",
+      "status": "reserved"
+    },
+    "zombie_grapefruit_yogurt": {
+      "file": "originals/zombie_grapefruit_yogurt.png",
+      "name_ko": "자몽 요거트",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        88,
+        26,
+        1221,
+        1210
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1209
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.964115
+      ],
+      "transparent_fraction": 0.49011,
+      "sha256": "f62380ce29883721346fc1e0f98de898ae08351072a8e350812730b506c813a9",
+      "status": "active",
+      "game_export": {
+        "file": "assets/zombie_grapefruit_yogurt.png",
+        "webp": "assets/webp/zombie_grapefruit_yogurt.webp",
+        "scale": 0.215,
+        "k": 0.5,
+        "padding": 3,
+        "file_sha256": "d748c4d0edde6cc1cb05516123fe407c210e571accd4779e0b211aebd45cc2ef",
+        "webp_sha256": "8cfe5a3f02172a6db24fd5583fd2f1b19668b7c170305a3cda5cd7b183f51bb8",
+        "size": [
+          273,
+          272
+        ]
+      }
+    },
+    "zombie_strawberry_milk": {
+      "file": "originals/zombie_strawberry_milk.png",
+      "name_ko": "딸기 우유",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        92,
+        74,
+        1210,
+        1182
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1181
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.941786
+      ],
+      "transparent_fraction": 0.49434,
+      "sha256": "2b61ae871f2ab487f1009fba9c51c11e046fa1246e21e47de1a16236a9cd726e",
+      "status": "reserved"
+    },
+    "zombie_coconut_snow": {
+      "file": "originals/zombie_coconut_snow.png",
+      "name_ko": "코코넛 스노우",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        84,
+        133,
+        1201,
+        1153
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1152
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.91866
+      ],
+      "transparent_fraction": 0.53882,
+      "sha256": "d93c3213c1644cac6fb26d688bd99edf825ff873ad593aff4a411de7f8328ab0",
+      "status": "active",
+      "game_export": {
+        "file": "assets/zombie_coconut_snow.png",
+        "webp": "assets/webp/zombie_coconut_snow.webp",
+        "scale": 0.23,
+        "k": 0.5,
+        "padding": 3,
+        "file_sha256": "7241cec5c5ecf49cde5da48b8934b132d8137e43f5a1465dd21f6d280e2d90af",
+        "webp_sha256": "7b562f1bb914e2b1eb8e74a09ea0046069fb3e9c60739b86b58a44a3cd2ee2f9",
+        "size": [
+          271,
+          287
+        ]
+      }
+    },
+    "zombie_double_choco_crunch": {
+      "file": "originals/zombie_double_choco_crunch.png",
+      "name_ko": "더블초코 크런치",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        141,
+        147,
+        1171,
+        1181
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1180
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.940989
+      ],
+      "transparent_fraction": 0.58154,
+      "sha256": "8bdab9e82ee8c8b45eb040da6357fd2c3d4ddc9a999572118027b67b44e5a1cd",
+      "status": "reserved"
+    },
+    "zombie_rose_vanilla": {
+      "file": "originals/zombie_rose_vanilla.png",
+      "name_ko": "로즈 바닐라",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        124,
+        133,
+        1172,
+        1145
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1144
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.912281
+      ],
+      "transparent_fraction": 0.56949,
+      "sha256": "a694a5dec87920a0b681b105e08a8cb7d9cd6e95933774e7fd2c813ad3fe3c57",
+      "status": "reserved"
+    },
+    "zombie_caramel_macchiato": {
+      "file": "originals/zombie_caramel_macchiato.png",
+      "name_ko": "카라멜 마키아토",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        104,
+        129,
+        1192,
+        1178
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1177
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.938596
+      ],
+      "transparent_fraction": 0.54084,
+      "sha256": "2ffe5a267c42b5ce4cd88d533b8c36d6963cb30340cb227f0e81b397bb254ac1",
+      "status": "reserved"
+    },
+    "zombie_orange_cream": {
+      "file": "originals/zombie_orange_cream.png",
+      "name_ko": "오렌지 크림",
+      "width": 1254,
+      "height": 1254,
+      "content_bounds_alpha24": [
+        85,
+        49,
+        1197,
+        1200
+      ],
+      "suggested_foot_anchor_px": [
+        627.0,
+        1199
+      ],
+      "suggested_anchor_normalized": [
+        0.5,
+        0.95614
+      ],
+      "transparent_fraction": 0.49905,
+      "sha256": "b129e30434d86947be14d438604f03a0ae40c62f17b830416a075d3607b3c872",
+      "status": "reserved"
+    }
+  },
+  "purpose": "Approved zombie art; two live flavors and eighteen reserved sprites. No new game rules or stages.",
+  "active_flavors": [
+    "coconut_snow",
+    "grapefruit_yogurt"
+  ],
+  "baseline_source_commit": "68dea6d7f730fbb54bbb90a03e54eacdf4d53a1b",
+  "baseline_public_commit": "9c60ddecbfb3a7f8b75942aed0cde89df5b106ca",
+  "source_pixels_unchanged": true,
+  "reserved_count": 18,
+  "previous_art": "previous/ contains the two superseded game PNGs and their WebP twins. All other original game zombies remain unchanged."
+}

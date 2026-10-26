@@ -1,6 +1,6 @@
 """Bring a hand-drawn cupcake pair (fresh + zombie) into assets/ at game resolution.
 
-python3 tools/import-cupcake.py <src-dir> <key> [--scale 0.26] [--k 0.5]
+python3 tools/import-cupcake.py <src-dir> <key> [--scale 0.26] [--k 0.5] [--zombie-only]
 
 Reads <src-dir>/<key>.png and <src-dir>/zombie_<key>.png (the 1254-class PNGs the art packages ship),
 crops to the alpha bounding box, resizes by --scale (chosen so the cup is as wide as blueberry's, ~155 px),
@@ -14,11 +14,12 @@ ap.add_argument('src'); ap.add_argument('key')
 ap.add_argument('--scale', type=float, default=0.26)
 ap.add_argument('--k', type=float, default=0.5)
 ap.add_argument('--pad', type=int, default=3)
+ap.add_argument('--zombie-only', action='store_true', help='Replace only the zombie; preserve the current fresh sprite.')
 a = ap.parse_args()
 root = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 scale_file = os.path.join(root, 'assets/scale.json')
 K = json.load(open(scale_file)) if os.path.exists(scale_file) else {}
-for name in [a.key, 'zombie_' + a.key]:
+for name in (['zombie_' + a.key] if a.zombie_only else [a.key, 'zombie_' + a.key]):
     im = Image.open(os.path.join(a.src, name + '.png')).convert('RGBA')
     bb = im.getbbox(); im = im.crop(bb)
     w, h = round(im.width * a.scale), round(im.height * a.scale)

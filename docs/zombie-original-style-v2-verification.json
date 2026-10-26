@@ -1,0 +1,256 @@
+{
+  "changedAssets": [
+    "zombie_coconut_snow",
+    "zombie_grapefruit_yogurt"
+  ],
+  "otherHTMLUnchanged": true,
+  "cases": [
+    {
+      "level": 231,
+      "result": "win",
+      "newZombies": [
+        {
+          "type": "k",
+          "key": "zombie_coconut_snow"
+        }
+      ],
+      "imageMeta": {
+        "coconut": {
+          "w": 271,
+          "h": 287,
+          "ax": 134.46230110159118,
+          "ay": 260,
+          "k": 0.5
+        },
+        "grapefruit": {
+          "w": 273,
+          "h": 272,
+          "ax": 147.664442071543,
+          "ay": 259,
+          "k": 0.5
+        }
+      },
+      "collected": {
+        "k": 3
+      },
+      "viewport": {
+        "w": 390,
+        "h": 844
+      }
+    },
+    {
+      "level": 241,
+      "result": "win",
+      "newZombies": [
+        {
+          "type": "f",
+          "key": "zombie_grapefruit_yogurt"
+        }
+      ],
+      "imageMeta": {
+        "coconut": {
+          "w": 271,
+          "h": 287,
+          "ax": 134.46230110159118,
+          "ay": 260,
+          "k": 0.5
+        },
+        "grapefruit": {
+          "w": 273,
+          "h": 272,
+          "ax": 147.664442071543,
+          "ay": 259,
+          "k": 0.5
+        }
+      },
+      "collected": {
+        "k": 3,
+        "f": 3
+      },
+      "viewport": {
+        "w": 390,
+        "h": 844
+      }
+    },
+    {
+      "level": 260,
+      "result": "win",
+      "newZombies": [
+        {
+          "type": "f",
+          "key": "zombie_grapefruit_yogurt"
+        },
+        {
+          "type": "f",
+          "key": "zombie_grapefruit_yogurt"
+        },
+        {
+          "type": "k",
+          "key": "zombie_coconut_snow"
+        },
+        {
+          "type": "k",
+          "key": "zombie_coconut_snow"
+        },
+        {
+          "type": "k",
+          "key": "zombie_coconut_snow"
+        }
+      ],
+      "imageMeta": {
+        "coconut": {
+          "w": 271,
+          "h": 287,
+          "ax": 134.46230110159118,
+          "ay": 260,
+          "k": 0.5
+        },
+        "grapefruit": {
+          "w": 273,
+          "h": 272,
+          "ax": 147.664442071543,
+          "ay": 259,
+          "k": 0.5
+        }
+      },
+      "collected": {
+        "k": 3,
+        "f": 3
+      },
+      "viewport": {
+        "w": 390,
+        "h": 844
+      }
+    },
+    {
+      "level": 231,
+      "result": "win",
+      "newZombies": [
+        {
+          "type": "k",
+          "key": "zombie_coconut_snow"
+        }
+      ],
+      "imageMeta": {
+        "coconut": {
+          "w": 271,
+          "h": 287,
+          "ax": 134.46230110159118,
+          "ay": 260,
+          "k": 0.5
+        },
+        "grapefruit": {
+          "w": 273,
+          "h": 272,
+          "ax": 147.664442071543,
+          "ay": 259,
+          "k": 0.5
+        }
+      },
+      "collected": {
+        "k": 3
+      },
+      "viewport": {
+        "w": 1280,
+        "h": 900
+      }
+    },
+    {
+      "level": 241,
+      "result": "win",
+      "newZombies": [
+        {
+          "type": "f",
+          "key": "zombie_grapefruit_yogurt"
+        }
+      ],
+      "imageMeta": {
+        "coconut": {
+          "w": 271,
+          "h": 287,
+          "ax": 134.46230110159118,
+          "ay": 260,
+          "k": 0.5
+        },
+        "grapefruit": {
+          "w": 273,
+          "h": 272,
+          "ax": 147.664442071543,
+          "ay": 259,
+          "k": 0.5
+        }
+      },
+      "collected": {
+        "k": 3,
+        "f": 3
+      },
+      "viewport": {
+        "w": 1280,
+        "h": 900
+      }
+    },
+    {
+      "level": 260,
+      "result": "win",
+      "newZombies": [
+        {
+          "type": "f",
+          "key": "zombie_grapefruit_yogurt"
+        },
+        {
+          "type": "f",
+          "key": "zombie_grapefruit_yogurt"
+        },
+        {
+          "type": "k",
+          "key": "zombie_coconut_snow"
+        },
+        {
+          "type": "k",
+          "key": "zombie_coconut_snow"
+        },
+        {
+          "type": "k",
+          "key": "zombie_coconut_snow"
+        }
+      ],
+      "imageMeta": {
+        "coconut": {
+          "w": 271,
+          "h": 287,
+          "ax": 134.46230110159118,
+          "ay": 260,
+          "k": 0.5
+        },
+        "grapefruit": {
+          "w": 273,
+          "h": 272,
+          "ax": 147.664442071543,
+          "ay": 259,
+          "k": 0.5
+        }
+      },
+      "collected": {
+        "k": 3,
+        "f": 3
+      },
+      "viewport": {
+        "w": 1280,
+        "h": 900
+      }
+    }
+  ],
+  "errors": [],
+  "collectionBacks": "both updated",
+  "levelCount": 260,
+  "sourceCommitBefore": "68dea6d7f730fbb54bbb90a03e54eacdf4d53a1b",
+  "publicCommitBefore": "9c60ddecbfb3a7f8b75942aed0cde89df5b106ca",
+  "originalsRegistered": 20,
+  "reservedFlavors": 18,
+  "scope": "Two live zombie sprites + collection backs; reserve eighteen originals. No rules, levels, fresh art, music or UI changes.",
+  "publicationMethod": "Replace only the two ASSETS values in the current official self-contained HTML, then refresh the build stamp; preserve all other contents. Source PNG/WebP pairs updated for future normal builds.",
+  "nativeDeviceTested": false,
+  "timestamp": "2026-10-26",
+  "verifiedCandidateHTMLSHA256": "34ccb2b22cae545cfcc416e8b0c61878cf4ab4d397f2123191f64d44fd78d5ac",
+  "visualReview": "Mobile stage screenshots and fully flipped collection cards inspected; cup size and foot placement accepted."
+}
