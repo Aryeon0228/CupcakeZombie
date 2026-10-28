@@ -34,7 +34,9 @@ for (const [key, size, left, right, reach] of [
   ['pending_lemon_yogurt', [242,356], [27,267], [215,267], 30],
   ['espresso', [233,379], [28,283], [209,282], 32],
   ['blueberry', [256,360], [30,252], [225,251], 34],
-  ['cinnamon_roll', [256,360], [36,243], [220,240], 34]
+  ['cinnamon_roll', [256,360], [36,243], [220,240], 34],
+  ['coconut_snow', [329,322], [72,229], [252,234], 31],
+  ['grapefruit_yogurt', [328,330], [75,241], [254,245], 35]
 ]) {
   const arm = ([x,y], side) => ({ pivot: [x,y], side,
     cut: [[x-side*1.5,y-4], [x+side*reach*.22,y+reach],
@@ -142,3 +144,4 @@ function drawCupcakeRig(g, key, x, by, sc, sx, sy, pose) {
   g.restore();
   return true;
 }
+

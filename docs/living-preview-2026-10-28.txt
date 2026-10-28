@@ -1,0 +1,25 @@
+Cupcake Zombie — living selection preview, 2026-10-28
+
+The first outward spread now travels as small baby spores above the artwork.
+The selected cupcake has a warm outline, faster continuous arm movement and
+small outward-flying tears. The affected cupcakes retain a sage/ivory outline
+and briefly pop/flap as their preview spore arrives. Snow targets stay blue.
+Repeated target reactions are quieter than the first reaction.
+
+Removed the continuous dashed flight routes. Retained mechanic-specific snow,
+sour and sprinkle board cues. The preview still shows the first outward spread,
+not a promised full chain reaction. Butterfly-style arm cutouts now cover the
+coconut and grapefruit runtime sprites as well as the original cast.
+
+Preview state is render-only. It is keyed to the current state object, focus and
+selection, and discarded on cancellation, firing, undo or restart. No timers
+change gameplay. Reduced motion keeps outlines and removes flight/cry/flap motion.
+
+Validation: 18 selection cases (nine flavor types, 390px and 1280px viewports),
+unchanged gameplay state, target-set agreement, Escape cancellation, available
+arm rigs, reduced-motion check, and actual stage 16/61 solution playthroughs at
+both widths. Four wins; no page errors. Source modules were substituted into the
+existing release bundle; stage data, audio, UI and corrected zombie sizes remain.
+
+Changed source: src/game-render.js and src/cupcake-reactions.js.
+The original layered PSD art is not changed by this animation implementation.

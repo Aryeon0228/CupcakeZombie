@@ -574,13 +574,14 @@ function draw(dt) {
   const focusIdx = introOpen ? -1 : hover >= 0 ? hover : selected >= 0 ? selected : (cursorShown ? cursor : -1);
   const canPreview = focusIdx >= 0 && !busy && !result && canTarget(state, focusIdx);
   const preview = canPreview ? previewOf(state, focusIdx) : null;
+  syncPreviewFeeling(focusIdx, preview);
   if (focusIdx >= 0 && !result && !introOpen) {
     ctx.save(); ctx.lineWidth = Math.max(2, S * 0.045);
     ctx.fillStyle = canPreview ? 'rgba(246,200,93,.3)' : 'rgba(74,46,39,.06)';
     ctx.strokeStyle = canPreview ? '#806022' : 'rgba(74,46,39,0.4)';
     ctx.beginPath(); ctx.ellipse(cxOf(focusIdx), wellY(focusIdx), S * 0.43, S * 0.28, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.restore();
   }
-  // Routes travel behind the artwork; target silhouettes remain readable above.
+  // Environmental cues sit below the cupcakes; traveling baby spores stay above.
   if (preview) drawPreview(focusIdx, T, preview);
   for (const k of state.customers) {
     if (k.done && !k.pending) continue;
@@ -609,8 +610,13 @@ function draw(dt) {
     if (!v) continue;
     if (v.gone) { if (!(arm && arm.idx === i)) drawSoldGhost(i, v, sc); continue; }
     if (arm && arm.idx === i && arm.fresh && now - arm.t0 > 430) continue;
-    if (preview && preview.targets.includes(i)) drawPreviewOutline(i, v, sc);
+    if (preview && (i === focusIdx || preview.targets.includes(i) || preview.frost.includes(i))) drawPreviewOutline(i, v, sc);
     drawCupcake(i, v, sc);
+  }
+
+  if (preview) {
+    drawPreviewFlights();
+    if (selected === focusIdx) drawPreviewTears(focusIdx);
   }
 
   for (const k of state.customers) {
@@ -646,14 +652,97 @@ function previewOf(s, i) {
   const frost = ty.frost ? ringOf(trial, i).filter(j => !trial.cells[j].inf && !trial.cells[j].pend) : [];
   return { spreads, targets, frost, sour };
 }
+// A selection is one self-contained performance. Switching focus/state, firing,
+// undoing or restarting discards it immediately; no delayed callbacks mutate play.
+const PREVIEW_PERIOD = 2300;
+let previewFeeling = { source: -1, state: null, held: false, started: 0, routes: [], targets: new Map() };
+function syncPreviewFeeling(source, preview) {
+  if (!preview) { previewFeeling.source = -1; previewFeeling.state = null; return; }
+  const held = selected === source;
+  if (previewFeeling.source === source && previewFeeling.state === state && previewFeeling.held === held) return;
+  const routes = preview.spreads.filter(sp => preview.targets.includes(sp.to)).map((sp, rank) => ({
+    ...sp, delay: 90 + rank * 45, duration: 350 + Math.min(3, sp.dist || 1) * 60
+  }));
+  const targets = new Map();
+  for (const route of routes) {
+    const arrival = route.delay + route.duration;
+    if (!targets.has(route.to) || arrival < targets.get(route.to).arrival) targets.set(route.to, { arrival, kind: 'target' });
+  }
+  (preview.frost || []).forEach((j, n) => targets.set(j, { arrival: 180 + n * 45, kind: 'frost' }));
+  previewFeeling = { source, state, held, started: now, routes, targets };
+}
+function previewEmotion(i) {
+  const quiet = { kind: '', dy: 0, sx: 1, sy: 1, arms: 0, eyes: 1, active: false };
+  if (previewFeeling.source < 0) return quiet;
+  const age = Math.max(0, now - previewFeeling.started);
+  if (i === previewFeeling.source) {
+    const active = previewFeeling.held && !reduceMotion;
+    return { ...quiet, kind: 'source', active, arms: active ? (.92 + .52 * Math.sin(age / 230 * Math.PI * 2)) * Math.min(1, age / 100) : 0, eyes: active ? 1.45 : 1 };
+  }
+  const target = previewFeeling.targets.get(i);
+  if (!target) return quiet;
+  const phase = age % PREVIEW_PERIOD - target.arrival;
+  const active = !reduceMotion && phase >= 0 && phase < 400;
+  const strength = age < PREVIEW_PERIOD ? 1 : .55;
+  const pop = active ? Math.sin(phase / 400 * Math.PI) * strength : 0;
+  return { kind: target.kind, active, dy: -S * .055 * pop, sx: 1 - .025 * pop, sy: 1 + .065 * pop,
+    arms: pop * (.55 + .28 * Math.sin(phase / 160 * Math.PI * 2)), eyes: 1 + .2 * pop };
+}
+function previewFace(i) {
+  const v = vis[i], key = freshSpriteKey(v), m = META[key], profile = CUPCAKE_RIG_PROFILES[key];
+  const armY = profile && profile.arms.length ? profile.arms.reduce((s, a) => s + a.pivot[1], 0) / profile.arms.length : m.ay - m.w * .35;
+  const faceY = armY - m.w * .30, sc = spriteScale() * (m.k || 1);
+  return { x: cxOf(i), y: baseY(i) + (faceY - m.ay) * sc, half: m.w * .22 * sc };
+}
+function previewFlightPoint(route, p) {
+  const source = previewFeeling.source;
+  if (route.style === 'roll') {
+    const pts = [[cxOf(source), wellY(source) - S * .15], ...route.path.map(j => [cxOf(j), wellY(j) - S * .15])];
+    return pathPoint(pts, p);
+  }
+  const a = previewFace(source), b = previewFace(route.to);
+  const lift = S * (route.style === 'lob' ? .55 : .30), q = 1 - p;
+  return [q*q*a.x + 2*q*p*(a.x+b.x)/2 + p*p*b.x, q*q*a.y + 2*q*p*(Math.min(a.y,b.y)-lift) + p*p*b.y];
+}
+function drawPreviewFlights() {
+  if (reduceMotion || previewFeeling.source < 0 || !IMG.spore_round) return;
+  const age = (now - previewFeeling.started) % PREVIEW_PERIOD;
+  const size = Math.min(22, Math.max(14, S * .30));
+  for (const route of previewFeeling.routes) {
+    const p = (age - route.delay) / route.duration;
+    if (p < 0 || p > 1) continue;
+    const [x,y] = previewFlightPoint(route, p);
+    ctx.save(); ctx.translate(x,y); ctx.rotate(Math.sin(p*Math.PI) * .22);
+    ctx.globalAlpha = .92 * Math.min(1,p/.12,(1-p)/.12);
+    ctx.shadowColor = '#fff9e6'; ctx.shadowBlur = 3;
+    ctx.drawImage(IMG.spore_round,-size/2,-size/2,size,size); ctx.restore();
+  }
+}
+function drawPreviewTears(i) {
+  if (reduceMotion || previewFeeling.source !== i || !previewFeeling.held) return;
+  const face = previewFace(i), age = now - previewFeeling.started, r = Math.max(2.6, S * .055);
+  for (const side of [-1,1]) {
+    const q = ((age + (side > 0 ? 340 : 0)) % 780) / 780;
+    const x = face.x + side * (face.half + S * (.02 + q * .16));
+    const y = face.y + S * (.03 + q * .19 - Math.sin(q*Math.PI) * .12);
+    ctx.save(); ctx.translate(x,y); ctx.rotate(side * (.7 + q * .25));
+    ctx.globalAlpha = Math.sin(q*Math.PI) * .92;
+    ctx.fillStyle = '#B7E4ED'; ctx.strokeStyle = '#6D6556'; ctx.lineWidth = Math.max(.8,S*.018);
+    ctx.beginPath(); ctx.moveTo(0,-r*1.7); ctx.bezierCurveTo(r*1.2,-r*.2,r*1.25,r,0,r*1.2);ctx.bezierCurveTo(-r*1.25,r,-r*1.2,-r*.2,0,-r*1.7);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle = '#FFFCEF';ctx.beginPath();ctx.ellipse(-r*.2,0,r*.22,r*.4,0,0,Math.PI*2);ctx.fill();ctx.restore();
+  }
+}
 const PREVIEW_OUTLINES = {};
-function previewOutlineArt(key) {
-  if (PREVIEW_OUTLINES[key]) return PREVIEW_OUTLINES[key];
-  const im = IMG[key], m = META[key]; if (!im || !m) return null;
+function previewOutlineArt(key, kind = 'target') {
+  const cacheKey = key + ':' + kind;
+  if (PREVIEW_OUTLINES[cacheKey]) return PREVIEW_OUTLINES[cacheKey];
+  const rig = prepareCupcakeRig(key);
+  const im = rig ? rig.body : IMG[key], m = META[key]; if (!im || !m) return null;
   const pad = Math.ceil(10 / (m.k || 1));
   const art = document.createElement('canvas'); art.width = im.width + pad * 2; art.height = im.height + pad * 2;
   const g = art.getContext('2d');
-  for (const [radius, color] of [[8, '#647c38'], [5.5, '#FFF9E5']]) {
+  const colors = kind === 'source' ? ['#926A3F','#FFE2A4'] : kind === 'frost' ? ['#7EABC0','#EFFBFF'] : ['#72874A','#FFF9E8'];
+  for (const [radius, color] of [[8, colors[0]], [5.5, colors[1]]]) {
     const layer = document.createElement('canvas'); layer.width = art.width; layer.height = art.height;
     const l = layer.getContext('2d'), r = radius / (m.k || 1);
     for (let n = 0; n < 20; n++) {
@@ -662,7 +751,7 @@ function previewOutlineArt(key) {
     l.globalCompositeOperation = 'source-in'; l.fillStyle = color; l.fillRect(0, 0, layer.width, layer.height);
     g.drawImage(layer, 0, 0);
   }
-  return PREVIEW_OUTLINES[key] = { art, pad };
+  return PREVIEW_OUTLINES[cacheKey] = { art, pad };
 }
 function freshSpriteKey(v) {
   let key = v.t === 'b' ? (v.lid > 0 ? 'butter' : 'butter_open') : TYPES[v.t].key;
@@ -676,39 +765,15 @@ function zombieFlip(v) {
 }
 function drawPreviewOutline(i, v, sc) {
   const zombie = isZombieShown(v);
-  const key = zombie ? zombieKey(v) : freshSpriteKey(v), m = META[key], outline = previewOutlineArt(key);
+  const emotion = previewEmotion(i);
+  const key = zombie ? zombieKey(v) : freshSpriteKey(v), m = META[key], outline = previewOutlineArt(key, emotion.kind);
   if (!outline || !m) return;
   const pose = cupcakePose(v);
-  ctx.save(); ctx.translate(cxOf(i), baseY(i)); ctx.scale(sc * (m.k || 1) * pose.sx * (zombie && zombieFlip(v) ? -1 : 1), sc * (m.k || 1) * pose.sy);
+  ctx.save(); ctx.translate(cxOf(i), baseY(i) + emotion.dy); ctx.scale(sc * (m.k || 1) * pose.sx * emotion.sx * (zombie && zombieFlip(v) ? -1 : 1), sc * (m.k || 1) * pose.sy * emotion.sy);
   ctx.drawImage(outline.art, -m.ax - outline.pad, -m.ay - outline.pad); ctx.restore();
 }
 function drawPreview(i, T, preview = previewOf(state, i)) {
   ctx.save();
-  const dash = Math.max(2, S * 0.045), gap = Math.max(4, S * 0.095);
-  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  for (const sp of preview.spreads) {
-    const fresh = preview.targets.includes(sp.to);
-    ctx.beginPath();
-    if (sp.style === 'roll') {
-      ctx.moveTo(cxOf(i), wellY(i));
-      sp.path.forEach(c => ctx.lineTo(cxOf(c), wellY(c)));
-      if (sp.miss && sp.exit) ctx.lineTo(padX + (sp.exit[1] + 0.5) * S, padTop + (sp.exit[0] + 0.5) * S + S * 0.24);
-    } else {
-      const c = sp.path[sp.path.length - 1];
-      const ax = cxOf(i), ay = cyOf(i) - S * 0.25, bx = cxOf(c), by = cyOf(c) - S * 0.2;
-      const lift = sp.style === 'lob' ? S * (sp.dist === 2 ? 0.9 : 0.5) : S * 0.25;
-      ctx.moveTo(ax, ay); ctx.quadraticCurveTo((ax + bx) / 2, Math.min(ay, by) - lift, bx, by);
-    }
-    // A dark backing under bright lime dashes reads on the grey tray and on every chapter background.
-    ctx.setLineDash([]); ctx.strokeStyle = fresh ? 'rgba(74,46,39,.6)' : 'rgba(74,46,39,.22)';
-    ctx.lineWidth = Math.max(4.5, S * 0.095); ctx.lineCap = 'round'; ctx.stroke();
-    ctx.setLineDash([dash, gap]);
-    // Negative offset advances dashes from the path's start toward its end.
-    ctx.lineDashOffset = reduceMotion ? 0 : -(T * 34) % (dash + gap);
-    ctx.strokeStyle = fresh ? '#C6F542' : 'rgba(198,245,66,.4)';
-    ctx.lineWidth = Math.max(2.4, S * 0.05); ctx.stroke();
-  }
-  ctx.setLineDash([]);
   // where the snow will fall: a soft blue ring and a little flake over each neighbour
   for (const j of (preview.frost || [])) {
     const x = cxOf(j), y = wellY(j), bob = reduceMotion ? 0 : Math.sin(T * 3 + j) * S * 0.02;
@@ -810,16 +875,16 @@ function drawSourBadge(g, x, y, r) {
   g.restore();
 }
 function drawCupcake(i, v, sc) {
-  const x0 = cxOf(i), sw = swayPose(v), by = baseY(i);
+  const emotion = previewEmotion(i);
+  const x0 = cxOf(i), sw = swayPose(v), by = baseY(i) + emotion.dy;
   const zombie = isZombieShown(v);
-  const pose = cupcakePose(v), sx = pose.sx * sw.sx, sy = pose.sy * sw.sy;
+  const pose = cupcakePose(v), sx = pose.sx * sw.sx * emotion.sx, sy = pose.sy * sw.sy * emotion.sy;
   ctx.save(); ctx.fillStyle = 'rgba(60, 40, 40, 0.18)';
   ctx.beginPath(); ctx.ellipse(x0, by - S * 0.04, S * 0.33, S * 0.09, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
   const freshKey = freshSpriteKey(v);
   if (!zombie) {
-    const react = v.reactAt >= 0 && selected === i && !busy && !result && !introOpen && v.infAt < 0 &&
-      !(v.bumpAt >= 0 && now - v.bumpAt < 420) &&
-      drawCupcakeReaction(ctx, freshKey, x0, by, sc, sx, sy, now - v.reactAt, reduceMotion, true);
+    const react = emotion.active && v.infAt < 0 &&
+      drawCupcakeRig(ctx, freshKey, x0, by, sc, sx, sy, emotion);
     if (!react) drawSpriteAt(ctx, freshKey, x0, by, sc, 0, sx, sy);
     // The tint shares the exact same pose; rotating a second copy made two
     // outlines shimmer against each other during the infection fade.
@@ -1014,5 +1079,6 @@ function drawTexts() {
     ctx.restore();
   }
 }
+
 
 
