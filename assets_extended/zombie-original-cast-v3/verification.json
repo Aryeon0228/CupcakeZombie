@@ -1,0 +1,881 @@
+{
+  "changedAssets": [
+    "zombie_basic",
+    "zombie_berry",
+    "zombie_blueberry",
+    "zombie_butter",
+    "zombie_cherry",
+    "zombie_cinnamon_roll",
+    "zombie_cream",
+    "zombie_earl_grey",
+    "zombie_espresso",
+    "zombie_lemon_yogurt",
+    "zombie_sprinkle"
+  ],
+  "otherHTMLUnchanged": true,
+  "stages": [
+    {
+      "width": 390,
+      "stage": 1,
+      "result": "win",
+      "zombies": [
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "stage": 16,
+      "result": "win",
+      "zombies": [
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "b",
+          "key": "zombie_butter"
+        },
+        {
+          "type": "b",
+          "key": "zombie_butter"
+        },
+        {
+          "type": "b",
+          "key": "zombie_butter"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "stage": 61,
+      "result": "win",
+      "zombies": [
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "u",
+          "key": "zombie_blueberry"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "stage": 260,
+      "result": "win",
+      "zombies": [
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "f",
+          "key": "zombie_grapefruit_yogurt"
+        },
+        {
+          "type": "c",
+          "key": "zombie_cherry"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "m",
+          "key": "zombie_cream"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "m",
+          "key": "zombie_cream"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "c",
+          "key": "zombie_cherry"
+        },
+        {
+          "type": "f",
+          "key": "zombie_grapefruit_yogurt"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "u",
+          "key": "zombie_blueberry"
+        },
+        {
+          "type": "c",
+          "key": "zombie_cherry"
+        },
+        {
+          "type": "m",
+          "key": "zombie_cream"
+        },
+        {
+          "type": "e",
+          "key": "zombie_espresso"
+        },
+        {
+          "type": "k",
+          "key": "zombie_coconut_snow"
+        },
+        {
+          "type": "s",
+          "key": "zombie_sprinkle"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "k",
+          "key": "zombie_coconut_snow"
+        },
+        {
+          "type": "m",
+          "key": "zombie_cream"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "k",
+          "key": "zombie_coconut_snow"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        }
+      ]
+    },
+    {
+      "width": 1280,
+      "stage": 1,
+      "result": "win",
+      "zombies": [
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        }
+      ]
+    },
+    {
+      "width": 1280,
+      "stage": 16,
+      "result": "win",
+      "zombies": [
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "b",
+          "key": "zombie_butter"
+        },
+        {
+          "type": "b",
+          "key": "zombie_butter"
+        },
+        {
+          "type": "b",
+          "key": "zombie_butter"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        }
+      ]
+    },
+    {
+      "width": 1280,
+      "stage": 61,
+      "result": "win",
+      "zombies": [
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "u",
+          "key": "zombie_blueberry"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        }
+      ]
+    },
+    {
+      "width": 1280,
+      "stage": 260,
+      "result": "win",
+      "zombies": [
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "f",
+          "key": "zombie_grapefruit_yogurt"
+        },
+        {
+          "type": "c",
+          "key": "zombie_cherry"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "m",
+          "key": "zombie_cream"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "m",
+          "key": "zombie_cream"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "c",
+          "key": "zombie_cherry"
+        },
+        {
+          "type": "f",
+          "key": "zombie_grapefruit_yogurt"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "u",
+          "key": "zombie_blueberry"
+        },
+        {
+          "type": "c",
+          "key": "zombie_cherry"
+        },
+        {
+          "type": "m",
+          "key": "zombie_cream"
+        },
+        {
+          "type": "e",
+          "key": "zombie_espresso"
+        },
+        {
+          "type": "k",
+          "key": "zombie_coconut_snow"
+        },
+        {
+          "type": "s",
+          "key": "zombie_sprinkle"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "k",
+          "key": "zombie_coconut_snow"
+        },
+        {
+          "type": "m",
+          "key": "zombie_cream"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        },
+        {
+          "type": "k",
+          "key": "zombie_coconut_snow"
+        },
+        {
+          "type": "x",
+          "key": "zombie_berry"
+        },
+        {
+          "type": "o",
+          "key": "zombie_basic"
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "width": 390,
+      "type": "o",
+      "key": "zombie_basic"
+    },
+    {
+      "width": 390,
+      "type": "x",
+      "key": "zombie_berry"
+    },
+    {
+      "width": 390,
+      "type": "s",
+      "key": "zombie_sprinkle"
+    },
+    {
+      "width": 390,
+      "type": "c",
+      "key": "zombie_cherry"
+    },
+    {
+      "width": 390,
+      "type": "m",
+      "key": "zombie_cream"
+    },
+    {
+      "width": 390,
+      "type": "b",
+      "key": "zombie_butter"
+    },
+    {
+      "width": 390,
+      "type": "g",
+      "key": "zombie_earl_grey"
+    },
+    {
+      "width": 390,
+      "type": "l",
+      "key": "zombie_lemon_yogurt"
+    },
+    {
+      "width": 390,
+      "type": "e",
+      "key": "zombie_espresso"
+    },
+    {
+      "width": 390,
+      "type": "u",
+      "key": "zombie_blueberry"
+    },
+    {
+      "width": 390,
+      "type": "r",
+      "key": "zombie_cinnamon_roll"
+    },
+    {
+      "width": 1280,
+      "type": "o",
+      "key": "zombie_basic"
+    },
+    {
+      "width": 1280,
+      "type": "x",
+      "key": "zombie_berry"
+    },
+    {
+      "width": 1280,
+      "type": "s",
+      "key": "zombie_sprinkle"
+    },
+    {
+      "width": 1280,
+      "type": "c",
+      "key": "zombie_cherry"
+    },
+    {
+      "width": 1280,
+      "type": "m",
+      "key": "zombie_cream"
+    },
+    {
+      "width": 1280,
+      "type": "b",
+      "key": "zombie_butter"
+    },
+    {
+      "width": 1280,
+      "type": "g",
+      "key": "zombie_earl_grey"
+    },
+    {
+      "width": 1280,
+      "type": "l",
+      "key": "zombie_lemon_yogurt"
+    },
+    {
+      "width": 1280,
+      "type": "e",
+      "key": "zombie_espresso"
+    },
+    {
+      "width": 1280,
+      "type": "u",
+      "key": "zombie_blueberry"
+    },
+    {
+      "width": 1280,
+      "type": "r",
+      "key": "zombie_cinnamon_roll"
+    }
+  ],
+  "errors": [],
+  "loaded": [
+    {
+      "key": "zombie_basic",
+      "w": 246,
+      "h": 242,
+      "ax": 133.0084416121824,
+      "ay": 226,
+      "k": 0.5,
+      "complete": true
+    },
+    {
+      "key": "zombie_berry",
+      "w": 251,
+      "h": 246,
+      "ax": 134.44102564102565,
+      "ay": 230,
+      "k": 0.5,
+      "complete": true
+    },
+    {
+      "key": "zombie_blueberry",
+      "w": 262,
+      "h": 258,
+      "ax": 139.47411122584452,
+      "ay": 243,
+      "k": 0.5,
+      "complete": true
+    },
+    {
+      "key": "zombie_butter",
+      "w": 234,
+      "h": 236,
+      "ax": 121.1774880255455,
+      "ay": 232,
+      "k": 0.5,
+      "complete": true
+    },
+    {
+      "key": "zombie_cherry",
+      "w": 267,
+      "h": 260,
+      "ax": 143.6387211642669,
+      "ay": 254,
+      "k": 0.5,
+      "complete": true
+    },
+    {
+      "key": "zombie_cinnamon_roll",
+      "w": 261,
+      "h": 253,
+      "ax": 143.0195659062104,
+      "ay": 248,
+      "k": 0.5,
+      "complete": true
+    },
+    {
+      "key": "zombie_cream",
+      "w": 252,
+      "h": 253,
+      "ax": 135.04072647220693,
+      "ay": 239,
+      "k": 0.5,
+      "complete": true
+    },
+    {
+      "key": "zombie_earl_grey",
+      "w": 264,
+      "h": 262,
+      "ax": 139.04033575991681,
+      "ay": 241,
+      "k": 0.5,
+      "complete": true
+    },
+    {
+      "key": "zombie_espresso",
+      "w": 266,
+      "h": 250,
+      "ax": 142.74288848836298,
+      "ay": 245,
+      "k": 0.5,
+      "complete": true
+    },
+    {
+      "key": "zombie_lemon_yogurt",
+      "w": 259,
+      "h": 247,
+      "ax": 140.84352420169373,
+      "ay": 242,
+      "k": 0.5,
+      "complete": true
+    },
+    {
+      "key": "zombie_sprinkle",
+      "w": 237,
+      "h": 240,
+      "ax": 126.89852993904626,
+      "ay": 231,
+      "k": 0.5,
+      "complete": true
+    }
+  ],
+  "htmlSHA256": "549f4454b969d77fa757e4a586d933e2f6622b36d5c329d051824a71242437aa"
+}

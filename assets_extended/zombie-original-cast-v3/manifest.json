@@ -1,0 +1,485 @@
+{
+  "version": 3,
+  "created": "2026-10-28",
+  "generator": "built-in image_gen",
+  "count": 11,
+  "runtime_k": 0.5,
+  "assets": {
+    "zombie_basic": {
+      "size": [
+        1254,
+        1254
+      ],
+      "bounds_alpha40": [
+        87,
+        166,
+        1207,
+        1158
+      ],
+      "transparent_fraction": 0.543573,
+      "sha256": "1d48c7c112dea469fca5f5f330c1bd77937ab929e70f97716da01679acccbfdb",
+      "name_ko": "초코 머핀",
+      "file": "assets/zombie_basic.png",
+      "prompt": "prompts/zombie_basic.txt",
+      "previous": "before/zombie_basic.webp",
+      "crop_alpha_bbox": [
+        0,
+        30,
+        1211,
+        1222
+      ],
+      "uniform_scale": 0.1982142857142857,
+      "fresh_display_width": 111.0,
+      "runtime_png": "runtime/assets/zombie_basic.png",
+      "runtime_webp": "runtime/assets/webp/zombie_basic.webp",
+      "runtime": {
+        "size": [
+          246,
+          242
+        ],
+        "bounds_alpha40": [
+          20,
+          30,
+          242,
+          227
+        ],
+        "transparent_fraction": 0.519838,
+        "sha256": "f4d0ce910bb77258edc1507e3f4fc01a17adc1bc85973b207cc1313de0ad161e"
+      },
+      "game_key": "zombie_basic"
+    },
+    "zombie_berry": {
+      "size": [
+        1254,
+        1254
+      ],
+      "bounds_alpha40": [
+        86,
+        34,
+        1202,
+        1177
+      ],
+      "transparent_fraction": 0.523136,
+      "sha256": "cae3806dec0bfbcba3fce6478e7dd7decb0ff92c61f1f5368d13c1c8d010a3ed",
+      "name_ko": "딸기",
+      "file": "assets/zombie_berry.png",
+      "prompt": "prompts/zombie_berry.txt",
+      "previous": "before/zombie_berry.webp",
+      "crop_alpha_bbox": [
+        0,
+        31,
+        1230,
+        1238
+      ],
+      "uniform_scale": 0.1989247311827957,
+      "fresh_display_width": 111.0,
+      "runtime_png": "runtime/assets/zombie_berry.png",
+      "runtime_webp": "runtime/assets/webp/zombie_berry.webp",
+      "runtime": {
+        "size": [
+          251,
+          246
+        ],
+        "bounds_alpha40": [
+          20,
+          3,
+          243,
+          231
+        ],
+        "transparent_fraction": 0.507515,
+        "sha256": "7234743563507d2500d35ea1fda6bde3f54c4a5612f97f43a8951448ab6ec2a2"
+      },
+      "game_key": "zombie_berry"
+    },
+    "zombie_sprinkle": {
+      "size": [
+        1254,
+        1254
+      ],
+      "bounds_alpha40": [
+        62,
+        18,
+        1218,
+        1225
+      ],
+      "transparent_fraction": 0.492757,
+      "sha256": "b6632fe91a90272d2b20af5ac9c63086242cecbf3684bc941024dd1a6db9bfe0",
+      "name_ko": "스프링클",
+      "file": "assets/zombie_sprinkle.png",
+      "prompt": "prompts/zombie_sprinkle.txt",
+      "previous": "before/zombie_sprinkle.webp",
+      "crop_alpha_bbox": [
+        0,
+        13,
+        1224,
+        1254
+      ],
+      "uniform_scale": 0.18858131487889274,
+      "fresh_display_width": 109.0,
+      "runtime_png": "runtime/assets/zombie_sprinkle.png",
+      "runtime_webp": "runtime/assets/webp/zombie_sprinkle.webp",
+      "runtime": {
+        "size": [
+          237,
+          240
+        ],
+        "bounds_alpha40": [
+          14,
+          4,
+          233,
+          232
+        ],
+        "transparent_fraction": 0.496115,
+        "sha256": "1f08df00d66050c12b4bc4b0133777f49de4612d8e56538a3ddc9418801dcb96"
+      },
+      "game_key": "zombie_sprinkle"
+    },
+    "zombie_cherry": {
+      "size": [
+        1254,
+        1254
+      ],
+      "bounds_alpha40": [
+        128,
+        22,
+        1182,
+        1194
+      ],
+      "transparent_fraction": 0.572582,
+      "sha256": "e899ae3c5be088a3288c53c361f1274172e81ea3dce08dae49fc0681f96a754d",
+      "name_ko": "체리",
+      "file": "assets/zombie_cherry.png",
+      "prompt": "prompts/zombie_cherry.txt",
+      "previous": "before/zombie_cherry.webp",
+      "crop_alpha_bbox": [
+        0,
+        0,
+        1239,
+        1206
+      ],
+      "uniform_scale": 0.21062618595825428,
+      "fresh_display_width": 111.0,
+      "runtime_png": "runtime/assets/zombie_cherry.png",
+      "runtime_webp": "runtime/assets/webp/zombie_cherry.webp",
+      "runtime": {
+        "size": [
+          267,
+          260
+        ],
+        "bounds_alpha40": [
+          30,
+          7,
+          252,
+          255
+        ],
+        "transparent_fraction": 0.564823,
+        "sha256": "2da4d0f327ef12cf6533fc866190f5fe40fa133a0eeb75d88f623ddd14811c9d"
+      },
+      "game_key": "zombie_cherry"
+    },
+    "zombie_cream": {
+      "size": [
+        1254,
+        1254
+      ],
+      "bounds_alpha40": [
+        96,
+        73,
+        1199,
+        1182
+      ],
+      "transparent_fraction": 0.535043,
+      "sha256": "25203f57b65b5ee21dedd717e63f68c19d4112b9a24438f4a47f33ae39599f05",
+      "name_ko": "휘핑크림",
+      "file": "assets/zombie_cream.png",
+      "prompt": "prompts/zombie_cream.txt",
+      "previous": "before/zombie_cream.webp",
+      "crop_alpha_bbox": [
+        0,
+        4,
+        1222,
+        1232
+      ],
+      "uniform_scale": 0.20126926563916592,
+      "fresh_display_width": 111.0,
+      "runtime_png": "runtime/assets/zombie_cream.png",
+      "runtime_webp": "runtime/assets/webp/zombie_cream.webp",
+      "runtime": {
+        "size": [
+          252,
+          253
+        ],
+        "bounds_alpha40": [
+          22,
+          17,
+          245,
+          240
+        ],
+        "transparent_fraction": 0.526664,
+        "sha256": "53645b8561899d93061d3cd568a73583b349bf8dc61d03fa53a172d7474ef7ac"
+      },
+      "game_key": "zombie_cream"
+    },
+    "zombie_butter": {
+      "size": [
+        1254,
+        1254
+      ],
+      "bounds_alpha40": [
+        83,
+        206,
+        1203,
+        1190
+      ],
+      "transparent_fraction": 0.55666,
+      "sha256": "5cbbf90701ea94b212e42b21d0f75e17a38d3597582b98d11a90ee23ea08b64a",
+      "name_ko": "버터",
+      "file": "assets/zombie_butter.png",
+      "prompt": "prompts/zombie_butter.txt",
+      "previous": "before/zombie_butter.webp",
+      "crop_alpha_bbox": [
+        53,
+        31,
+        1205,
+        1192
+      ],
+      "uniform_scale": 0.1982142857142857,
+      "fresh_display_width": 111.0,
+      "runtime_png": "runtime/assets/zombie_butter.png",
+      "runtime_webp": "runtime/assets/webp/zombie_butter.webp",
+      "runtime": {
+        "size": [
+          234,
+          236
+        ],
+        "bounds_alpha40": [
+          9,
+          37,
+          231,
+          233
+        ],
+        "transparent_fraction": 0.492214,
+        "sha256": "f1163ecf32cf5de3f0e6e1b7ebc7b5a4c652e4e7d6bb844f9c7b40c7a7c3bd4c"
+      },
+      "game_key": "zombie_butter",
+      "correction_prompt": "prompts/zombie_butter_no_hat.txt",
+      "alternate": "variants/zombie_butter_with_hat.png",
+      "note": "In-game zombie has no tin hat because the lid has already been knocked off."
+    },
+    "zombie_earl_grey": {
+      "size": [
+        1254,
+        1254
+      ],
+      "bounds_alpha40": [
+        89,
+        95,
+        1189,
+        1174
+      ],
+      "transparent_fraction": 0.528461,
+      "sha256": "e06434a294fadddf0354dfa2417d448057824224b38f56b95b37870b8bfb73f3",
+      "name_ko": "얼그레이",
+      "file": "assets/zombie_earl_grey.png",
+      "prompt": "prompts/zombie_earl_grey.txt",
+      "previous": "before/zombie_earl_grey.webp",
+      "crop_alpha_bbox": [
+        0,
+        32,
+        1234,
+        1254
+      ],
+      "uniform_scale": 0.20909090909090908,
+      "fresh_display_width": 115.0,
+      "runtime_png": "runtime/assets/zombie_earl_grey.png",
+      "runtime_webp": "runtime/assets/webp/zombie_earl_grey.webp",
+      "runtime": {
+        "size": [
+          264,
+          262
+        ],
+        "bounds_alpha40": [
+          22,
+          16,
+          252,
+          242
+        ],
+        "transparent_fraction": 0.522814,
+        "sha256": "4a747cdfc6304deb069d870affb1f7e140b7b3fc61b4138dbd4202d8134b0b83"
+      },
+      "game_key": "zombie_earl_grey"
+    },
+    "zombie_lemon_yogurt": {
+      "size": [
+        1254,
+        1254
+      ],
+      "bounds_alpha40": [
+        97,
+        62,
+        1189,
+        1191
+      ],
+      "transparent_fraction": 0.537456,
+      "sha256": "03024eac70dc9205df90a0040908f675f767f4a7d13aefca1a838eef1cbf8e7e",
+      "name_ko": "레몬요거트",
+      "file": "assets/zombie_lemon_yogurt.png",
+      "prompt": "prompts/zombie_lemon_yogurt.txt",
+      "previous": "before/zombie_lemon_yogurt.webp",
+      "crop_alpha_bbox": [
+        0,
+        51,
+        1200,
+        1196
+      ],
+      "uniform_scale": 0.21062271062271062,
+      "fresh_display_width": 115.0,
+      "runtime_png": "runtime/assets/zombie_lemon_yogurt.png",
+      "runtime_webp": "runtime/assets/webp/zombie_lemon_yogurt.webp",
+      "runtime": {
+        "size": [
+          259,
+          247
+        ],
+        "bounds_alpha40": [
+          23,
+          5,
+          254,
+          243
+        ],
+        "transparent_fraction": 0.488112,
+        "sha256": "dc452d05ba7318067a8ee3ebf944f29eef3a7aab75f51e63abc58b39ce064141"
+      },
+      "game_key": "zombie_lemon_yogurt"
+    },
+    "zombie_espresso": {
+      "size": [
+        1254,
+        1254
+      ],
+      "bounds_alpha40": [
+        104,
+        78,
+        1197,
+        1168
+      ],
+      "transparent_fraction": 0.534342,
+      "sha256": "e6d4a2347c807bf4e5c4b5355f1d012eaecc077bf2393e02d9b16454e1d56776",
+      "name_ko": "에스프레소",
+      "file": "assets/zombie_espresso.png",
+      "prompt": "prompts/zombie_espresso.txt",
+      "previous": "before/zombie_espresso.webp",
+      "crop_alpha_bbox": [
+        0,
+        19,
+        1232,
+        1174
+      ],
+      "uniform_scale": 0.21134492223238793,
+      "fresh_display_width": 115.5,
+      "runtime_png": "runtime/assets/zombie_espresso.png",
+      "runtime_webp": "runtime/assets/webp/zombie_espresso.webp",
+      "runtime": {
+        "size": [
+          266,
+          250
+        ],
+        "bounds_alpha40": [
+          25,
+          15,
+          256,
+          246
+        ],
+        "transparent_fraction": 0.500361,
+        "sha256": "205de173475d867a8266bd93420e49a459af2ca90b4e20a4f35bbe76826c0634"
+      },
+      "game_key": "zombie_espresso"
+    },
+    "zombie_blueberry": {
+      "size": [
+        1254,
+        1254
+      ],
+      "bounds_alpha40": [
+        91,
+        83,
+        1198,
+        1178
+      ],
+      "transparent_fraction": 0.51119,
+      "sha256": "bc1b644b00528d923adbabf37e7bde229c28d4eaacf09f46aec3d259f85590cc",
+      "name_ko": "블루베리",
+      "file": "assets/zombie_blueberry.png",
+      "prompt": "prompts/zombie_blueberry.txt",
+      "previous": "before/zombie_blueberry.webp",
+      "crop_alpha_bbox": [
+        0,
+        17,
+        1234,
+        1230
+      ],
+      "uniform_scale": 0.20776874435411022,
+      "fresh_display_width": 115.0,
+      "runtime_png": "runtime/assets/zombie_blueberry.png",
+      "runtime_webp": "runtime/assets/webp/zombie_blueberry.webp",
+      "runtime": {
+        "size": [
+          262,
+          258
+        ],
+        "bounds_alpha40": [
+          22,
+          17,
+          252,
+          244
+        ],
+        "transparent_fraction": 0.50395,
+        "sha256": "c825606a6fa92b64f3d1e7c880691f2401ea006ab5ce23777891851f809ec4b9"
+      },
+      "game_key": "zombie_blueberry"
+    },
+    "zombie_cinnamon_roll": {
+      "size": [
+        1254,
+        1254
+      ],
+      "bounds_alpha40": [
+        112,
+        80,
+        1198,
+        1183
+      ],
+      "transparent_fraction": 0.522636,
+      "sha256": "d66433909f3f582e292f26ce255f913845e1dfb616d6bd26b36ee09af587a0e3",
+      "name_ko": "시나몬롤",
+      "file": "assets/zombie_cinnamon_roll.png",
+      "prompt": "prompts/zombie_cinnamon_roll.txt",
+      "previous": "before/zombie_cinnamon_roll.webp",
+      "crop_alpha_bbox": [
+        0,
+        23,
+        1204,
+        1190
+      ],
+      "uniform_scale": 0.21178637200736647,
+      "fresh_display_width": 115.0,
+      "runtime_png": "runtime/assets/zombie_cinnamon_roll.png",
+      "runtime_webp": "runtime/assets/webp/zombie_cinnamon_roll.webp",
+      "runtime": {
+        "size": [
+          261,
+          253
+        ],
+        "bounds_alpha40": [
+          26,
+          15,
+          257,
+          249
+        ],
+        "transparent_fraction": 0.483455,
+        "sha256": "c9810cf36f5da5255da084c0876ff339c4c9ff2367b73c8eeca30acea66400b0"
+      },
+      "game_key": "zombie_cinnamon_roll"
+    }
+  }
+}
