@@ -1,0 +1,343 @@
+{
+  "method": "Uniform scale by sqrt(fresh alpha-weighted area / zombie alpha-weighted area); 3 decimal precision. Butter reference is butter_open. Feet stay anchored by the existing measure/drawSpriteAt implementation.",
+  "rows": [
+    {
+      "key": "basic",
+      "freshKey": "basic",
+      "fresh": {
+        "w": 111,
+        "h": 114,
+        "area": 8965.9,
+        "k": 1
+      },
+      "zombie": {
+        "w": 111.0,
+        "h": 98.5,
+        "area": 6774.96,
+        "k": 0.5
+      },
+      "heightRatio": 0.864,
+      "areaRatio": 0.756,
+      "equalAreaScale": 1.15,
+      "newK": 0.575,
+      "enlargement": 1.15,
+      "corrected": {
+        "w": 127.65,
+        "h": 113.27,
+        "areaRatio": 0.9998
+      }
+    },
+    {
+      "key": "berry",
+      "freshKey": "berry",
+      "fresh": {
+        "w": 111,
+        "h": 148,
+        "area": 10497.15,
+        "k": 1
+      },
+      "zombie": {
+        "w": 111.5,
+        "h": 114.0,
+        "area": 7196.18,
+        "k": 0.5
+      },
+      "heightRatio": 0.77,
+      "areaRatio": 0.686,
+      "equalAreaScale": 1.208,
+      "newK": 0.604,
+      "enlargement": 1.208,
+      "corrected": {
+        "w": 134.69,
+        "h": 137.71,
+        "areaRatio": 1.0011
+      }
+    },
+    {
+      "key": "blueberry",
+      "freshKey": "blueberry",
+      "fresh": {
+        "w": 115.0,
+        "h": 156.0,
+        "area": 12084.26,
+        "k": 0.5
+      },
+      "zombie": {
+        "w": 115.0,
+        "h": 113.5,
+        "area": 7950.64,
+        "k": 0.5
+      },
+      "heightRatio": 0.728,
+      "areaRatio": 0.658,
+      "equalAreaScale": 1.233,
+      "newK": 0.616,
+      "enlargement": 1.232,
+      "corrected": {
+        "w": 141.68,
+        "h": 139.83,
+        "areaRatio": 0.9987
+      }
+    },
+    {
+      "key": "butter",
+      "freshKey": "butter_open",
+      "fresh": {
+        "w": 111,
+        "h": 127,
+        "area": 9497.91,
+        "k": 1
+      },
+      "zombie": {
+        "w": 111.0,
+        "h": 98.0,
+        "area": 6638.83,
+        "k": 0.5
+      },
+      "heightRatio": 0.772,
+      "areaRatio": 0.699,
+      "equalAreaScale": 1.196,
+      "newK": 0.598,
+      "enlargement": 1.196,
+      "corrected": {
+        "w": 132.76,
+        "h": 117.21,
+        "areaRatio": 0.9999
+      }
+    },
+    {
+      "key": "cherry",
+      "freshKey": "cherry",
+      "fresh": {
+        "w": 111,
+        "h": 174,
+        "area": 10121.01,
+        "k": 1
+      },
+      "zombie": {
+        "w": 111.0,
+        "h": 124.0,
+        "area": 7128.94,
+        "k": 0.5
+      },
+      "heightRatio": 0.713,
+      "areaRatio": 0.704,
+      "equalAreaScale": 1.192,
+      "newK": 0.596,
+      "enlargement": 1.192,
+      "corrected": {
+        "w": 132.31,
+        "h": 147.81,
+        "areaRatio": 1.0003
+      }
+    },
+    {
+      "key": "cinnamon_roll",
+      "freshKey": "cinnamon_roll",
+      "fresh": {
+        "w": 115.0,
+        "h": 148.0,
+        "area": 11610.39,
+        "k": 0.5
+      },
+      "zombie": {
+        "w": 115.5,
+        "h": 117.0,
+        "area": 8115.5,
+        "k": 0.5
+      },
+      "heightRatio": 0.791,
+      "areaRatio": 0.699,
+      "equalAreaScale": 1.196,
+      "newK": 0.598,
+      "enlargement": 1.196,
+      "corrected": {
+        "w": 138.14,
+        "h": 139.93,
+        "areaRatio": 0.9999
+      }
+    },
+    {
+      "key": "coconut_snow",
+      "freshKey": "coconut_snow",
+      "fresh": {
+        "w": 114.5,
+        "h": 146.0,
+        "area": 11635.15,
+        "k": 0.5
+      },
+      "zombie": {
+        "w": 128.5,
+        "h": 117.5,
+        "area": 9319.36,
+        "k": 0.5
+      },
+      "heightRatio": 0.805,
+      "areaRatio": 0.801,
+      "equalAreaScale": 1.117,
+      "newK": 0.559,
+      "enlargement": 1.118,
+      "corrected": {
+        "w": 143.66,
+        "h": 131.37,
+        "areaRatio": 1.0012
+      }
+    },
+    {
+      "key": "cream",
+      "freshKey": "cream",
+      "fresh": {
+        "w": 111,
+        "h": 153,
+        "area": 10870.35,
+        "k": 1
+      },
+      "zombie": {
+        "w": 111.5,
+        "h": 111.5,
+        "area": 7166.6,
+        "k": 0.5
+      },
+      "heightRatio": 0.729,
+      "areaRatio": 0.659,
+      "equalAreaScale": 1.232,
+      "newK": 0.616,
+      "enlargement": 1.232,
+      "corrected": {
+        "w": 137.37,
+        "h": 137.37,
+        "areaRatio": 1.0002
+      }
+    },
+    {
+      "key": "earl_grey",
+      "freshKey": "earl_grey",
+      "fresh": {
+        "w": 115.0,
+        "h": 189.0,
+        "area": 12078.69,
+        "k": 0.5
+      },
+      "zombie": {
+        "w": 115.0,
+        "h": 113.0,
+        "area": 7821.75,
+        "k": 0.5
+      },
+      "heightRatio": 0.598,
+      "areaRatio": 0.648,
+      "equalAreaScale": 1.243,
+      "newK": 0.621,
+      "enlargement": 1.242,
+      "corrected": {
+        "w": 142.83,
+        "h": 140.35,
+        "areaRatio": 0.9996
+      }
+    },
+    {
+      "key": "espresso",
+      "freshKey": "espresso",
+      "fresh": {
+        "w": 115.5,
+        "h": 188.5,
+        "area": 12054.04,
+        "k": 0.5
+      },
+      "zombie": {
+        "w": 115.5,
+        "h": 115.5,
+        "area": 7896.85,
+        "k": 0.5
+      },
+      "heightRatio": 0.613,
+      "areaRatio": 0.655,
+      "equalAreaScale": 1.235,
+      "newK": 0.618,
+      "enlargement": 1.236,
+      "corrected": {
+        "w": 142.76,
+        "h": 142.76,
+        "areaRatio": 1.0006
+      }
+    },
+    {
+      "key": "grapefruit_yogurt",
+      "freshKey": "grapefruit_yogurt",
+      "fresh": {
+        "w": 109.5,
+        "h": 154.0,
+        "area": 10794.73,
+        "k": 0.5
+      },
+      "zombie": {
+        "w": 122.0,
+        "h": 128.0,
+        "area": 8947.27,
+        "k": 0.5
+      },
+      "heightRatio": 0.831,
+      "areaRatio": 0.829,
+      "equalAreaScale": 1.098,
+      "newK": 0.549,
+      "enlargement": 1.098,
+      "corrected": {
+        "w": 133.96,
+        "h": 140.54,
+        "areaRatio": 0.9994
+      }
+    },
+    {
+      "key": "lemon_yogurt",
+      "freshKey": "lemon_yogurt",
+      "fresh": {
+        "w": 115.0,
+        "h": 174.0,
+        "area": 13047.85,
+        "k": 0.5
+      },
+      "zombie": {
+        "w": 115.5,
+        "h": 119.0,
+        "area": 7774.36,
+        "k": 0.5
+      },
+      "heightRatio": 0.684,
+      "areaRatio": 0.596,
+      "equalAreaScale": 1.295,
+      "newK": 0.648,
+      "enlargement": 1.296,
+      "corrected": {
+        "w": 149.69,
+        "h": 154.22,
+        "areaRatio": 1.0011
+      }
+    },
+    {
+      "key": "sprinkle",
+      "freshKey": "sprinkle",
+      "fresh": {
+        "w": 109,
+        "h": 160,
+        "area": 11126.88,
+        "k": 1
+      },
+      "zombie": {
+        "w": 109.5,
+        "h": 114.0,
+        "area": 6745.92,
+        "k": 0.5
+      },
+      "heightRatio": 0.713,
+      "areaRatio": 0.606,
+      "equalAreaScale": 1.284,
+      "newK": 0.642,
+      "enlargement": 1.284,
+      "corrected": {
+        "w": 140.6,
+        "h": 146.38,
+        "areaRatio": 0.9991
+      }
+    }
+  ]
+}
